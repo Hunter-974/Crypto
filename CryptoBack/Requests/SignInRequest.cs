@@ -2,6 +2,6 @@
 {
     public class SignInRequest : LogInRequest
     {
-        public byte[] Location { get; set; }
+        public string Location { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CryptoBack.Models.Abstract;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,39 +8,25 @@ namespace CryptoBack.Models
     public class User : Entity
     {
         [Required]
-        public byte[] Name { get; set; }
+        public string Name { get; set; }
 
-        [Required]
-        public byte[] Password { get; set; }
+        [Required, JsonIgnore]
+        public string Password { get; set; }
 
-        public byte[] Location { get; set; }
+        public string Location { get; set; }
 
+        [JsonIgnore]
         public DateTime SignInDate { get; set; }
 
+        [JsonIgnore]
         public TimeSpan SessionLifetime { get; set; }
 
+        [JsonIgnore]
         public Guid? Token { get; set; }
 
+        [JsonIgnore]
         public DateTime? LogInDate { get; set; }
-
-
-        public bool HasName(byte[] name)
-        {
-            return Name.UnsafeCompare(name);
-        }
-
-        public bool HasNameAndPassword(byte[] name, byte[] password)
-        {
-            bool hasName = HasName(name);
-            bool hasPassword = false;
-
-            if (hasName)
-            {
-                hasPassword = Password.UnsafeCompare(password);
-            }
-
-            return hasName && hasPassword;
-        }
+        
 
         public bool HasAliveSession()
         {

@@ -23,8 +23,12 @@ namespace CryptoBack.Models
         public virtual IList<Attachment> Attachments { get; set; }
 
 
-        public byte[] Title { get; set; }
+        public string Title { get; set; }
 
-        public byte[] Text { get; set; }
+        public string Text { get; set; }
+
+
+        [NotMapped]
+        public IList<ReactionCount> ReactionCounts { get; set; }
     }
 }

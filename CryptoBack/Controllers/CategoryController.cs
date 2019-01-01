@@ -20,16 +20,22 @@ namespace CryptoBack.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet("list")]
-        public IList<Category> GetAll()
+        [HttpGet]
+        public IList<Category> GetParents()
         {
-            return _categoryService.GetAll();
+            return _categoryService.GetParents();
+        }
+
+        [HttpGet("{parentId}")]
+        public IList<Category> GetChildren(long parentId)
+        {
+            return _categoryService.GetChildren(parentId);
         }
 
         [HttpPost("{parentId?}")]
-        public Category Create(long? parentId, [FromBody] byte[] name)
+        public Category Create(long? parentId, [FromBody] string name)
         {
-            return ForLoggedUser(user => _categoryService.Create(name, parentId));
+            return ForLoggedUser(user => _categoryService.Create(user.Id, name, parentId));
         }
     }
 }

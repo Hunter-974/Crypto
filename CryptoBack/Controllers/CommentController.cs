@@ -2,10 +2,7 @@
 using CryptoBack.Models;
 using CryptoBack.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CryptoBack.Controllers
 {
@@ -39,19 +36,19 @@ namespace CryptoBack.Controllers
         }
 
         [HttpPost("article/{articleId}")]
-        public Comment AddForArticle(long articleId, byte[] text)
+        public Comment CreateForArticle(long articleId, string text)
         {
-            return ForLoggedUser(user => _commentService.AddForArticle(user.Id, articleId, text));
+            return ForLoggedUser(user => _commentService.CreateForArticle(user.Id, articleId, text));
         }
 
         [HttpPost("comment/{parentId}")]
-        public Comment AddForComment(long parentId, [FromBody] byte[] text)
+        public Comment CreateForComment(long parentId, [FromBody] string text)
         {
-            return ForLoggedUser(user => _commentService.AddForComment(user.Id, parentId, text));
+            return ForLoggedUser(user => _commentService.CreateForComment(user.Id, parentId, text));
         }
 
         [HttpPut("{id}")]
-        public Comment Edit(long id, [FromBody] byte[] text)
+        public Comment Edit(long id, [FromBody] string text)
         {
             return ForLoggedUser(user => _commentService.Edit(user.Id, id, text));
         }

@@ -4,9 +4,9 @@ namespace CryptoBack.Requests
 {
     public class LogInRequest
     {
-        public byte[] Name { get; set; }
+        public string Name { get; set; }
 
-        public byte[] Password { get; set; }
+        public string Password { get; set; }
 
         public TimeSpan SessionLifetime { get; set; }
     }

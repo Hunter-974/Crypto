@@ -27,6 +27,10 @@ namespace CryptoBack.Models
         public virtual IList<Reaction> Reactions { get; set; }
 
 
-        public byte[] Text { get; set; }
+        public string Text { get; set; }
+
+
+        [NotMapped]
+        public IList<ReactionCount> ReactionCounts { get; set; }
     }
 }

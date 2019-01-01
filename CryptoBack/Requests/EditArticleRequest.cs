@@ -2,8 +2,8 @@
 {
     public class EditArticleRequest
     {
-        public byte[] Title { get; set; }
+        public string Title { get; set; }
 
-        public byte[] Text { get; set; }
+        public string Text { get; set; }
     }
 }

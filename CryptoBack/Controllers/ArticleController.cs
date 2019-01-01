@@ -19,7 +19,7 @@ namespace CryptoBack.Controllers
         }
 
         [HttpGet("list/{categoryId}/{index}/{count}")]
-        public IList<Article> GetList(long categoryId, int index, int count)
+        public Page<Article> GetList(long categoryId, int index, int count)
         {
             return _articleService.GetList(categoryId, index, count);
         }

@@ -13,9 +13,9 @@ namespace CryptoBack.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<byte[]>(nullable: false),
-                    Password = table.Column<byte[]>(nullable: false),
-                    Location = table.Column<byte[]>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    Location = table.Column<string>(nullable: true),
                     SignInDate = table.Column<DateTime>(nullable: false),
                     SessionLifetime = table.Column<TimeSpan>(nullable: false),
                     Token = table.Column<Guid>(nullable: true),
@@ -34,7 +34,7 @@ namespace CryptoBack.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CategoryId = table.Column<long>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
-                    Name = table.Column<byte[]>(nullable: false)
+                    Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,8 +63,8 @@ namespace CryptoBack.Migrations
                     VersionDate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<long>(nullable: false),
                     CategoryId = table.Column<long>(nullable: false),
-                    Title = table.Column<byte[]>(nullable: true),
-                    Text = table.Column<byte[]>(nullable: true)
+                    Title = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,7 +94,7 @@ namespace CryptoBack.Migrations
                     UserId = table.Column<long>(nullable: false),
                     ArticleId = table.Column<long>(nullable: true),
                     CommentId = table.Column<long>(nullable: true),
-                    Text = table.Column<byte[]>(nullable: true)
+                    Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -127,8 +127,8 @@ namespace CryptoBack.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ArticleId = table.Column<long>(nullable: true),
                     CommentId = table.Column<long>(nullable: true),
-                    Title = table.Column<byte[]>(nullable: true),
-                    Data = table.Column<byte[]>(nullable: true)
+                    Title = table.Column<string>(nullable: true),
+                    Data = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -156,7 +156,7 @@ namespace CryptoBack.Migrations
                     UserId = table.Column<long>(nullable: false),
                     ArticleId = table.Column<long>(nullable: true),
                     CommentId = table.Column<long>(nullable: true),
-                    ReactionType = table.Column<byte[]>(nullable: true)
+                    ReactionType = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

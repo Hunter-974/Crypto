@@ -24,6 +24,6 @@ namespace CryptoBack.Models
 
 
         [Required]
-        public byte[] Name { get; set; }
+        public string Name { get; set; }
     }
 }

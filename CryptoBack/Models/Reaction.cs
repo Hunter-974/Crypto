@@ -22,6 +22,6 @@ namespace CryptoBack.Models
         public virtual Comment Comment { get; set; }
 
 
-        public byte[] ReactionType { get; set; }
+        public string ReactionType { get; set; }
     }
 }

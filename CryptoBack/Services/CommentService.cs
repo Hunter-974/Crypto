@@ -13,16 +13,15 @@ namespace CryptoBack.Services
         IList<Comment> GetListForArticle(long articleId, int index, int count);
         IList<Comment> GetListForComment(long commentId, int index, int count);
         IList<Comment> GetAllVersions(long id);
-        Comment AddForArticle(long userId, long articleId, byte[] text);
-        Comment AddForComment(long userId, long commentId, byte[] text);
-        Comment Edit(long userId, long id, byte[] text);
+        Comment CreateForArticle(long userId, long articleId, string text);
+        Comment CreateForComment(long userId, long commentId, string text);
+        Comment Edit(long userId, long id, string text);
     }
 
     public class CommentService : BaseService, ICommentService
     {
         public CommentService(Context context) : base(context)
         {
-
         }
 
         public IList<Comment> GetListForArticle(long articleId, int index, int count)
@@ -41,6 +40,11 @@ namespace CryptoBack.Services
                 .Where(a => a.ArticleId == articleId && a.CommentId == commentId)
                 .Skip(index).Take(count).ToList();
 
+            foreach (var comment in list)
+            {
+                SetReactionCounts(comment);
+            }
+
             return list;
         }
 
@@ -54,17 +58,17 @@ namespace CryptoBack.Services
             return related;
         }
 
-        public Comment AddForArticle(long userId, long articleId, byte[] text)
+        public Comment CreateForArticle(long userId, long articleId, string text)
         {
             return Add(userId, articleId, null, text);
         }
 
-        public Comment AddForComment(long userId, long commentId, byte[] text)
+        public Comment CreateForComment(long userId, long commentId, string text)
         {
             return Add(userId, null, commentId, text);
         }
 
-        private Comment Add(long userId, long? articleId, long? commentId, byte[] text)
+        private Comment Add(long userId, long? articleId, long? commentId, string text)
         {
             var comment = new Comment
             {
@@ -82,7 +86,7 @@ namespace CryptoBack.Services
             return comment;
         }
 
-        public Comment Edit(long userId, long id, byte[] text)
+        public Comment Edit(long userId, long id, string text)
         {
             var oldComment = Context.Comments
                 .Include(c => c.Children)
@@ -101,7 +105,7 @@ namespace CryptoBack.Services
 
             var newComment = oldComment;
 
-            if (!oldComment.Text.UnsafeCompare(text))
+            if (oldComment.Text != text)
             {
                 newComment = new Comment
                 {
@@ -129,7 +133,19 @@ namespace CryptoBack.Services
                 Context.SaveChanges();
             }
 
+            SetReactionCounts(newComment);
+
             return newComment;
+        }
+
+        private void SetReactionCounts(Comment comment)
+        {
+            var reactionCounts = Context.Reactions
+                .Where(r => r.CommentId == comment.Id)
+                .GroupBy(r => r.ReactionType)
+                .Select(g => new ReactionCount() { ReactionType = g.Key, Count = g.Count() })
+                .ToList();
+            comment.ReactionCounts = reactionCounts;
         }
     }
 }

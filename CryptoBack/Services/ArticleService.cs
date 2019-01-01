@@ -5,17 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CryptoBack.Services
 {
     public interface IArticleService
     {
-        IList<Article> GetList(long categoryId, int index, int count);
+        Page<Article> GetList(long categoryId, int index, int count);
         Article Get(long id);
         IList<Article> GetAllVersions(long id);
-        Article Create(long userId, long categoryId, byte[] title, byte[] text);
-        Article Edit(long userId, long id, byte[] newTitle, byte[] newText);
+        Article Create(long userId, long categoryId, string title, string text);
+        Article Edit(long userId, long id, string newTitle, string newText);
     }
 
     public class ArticleService : BaseService, IArticleService
@@ -25,19 +24,32 @@ namespace CryptoBack.Services
 
         }
 
-        public IList<Article> GetList(long categoryId, int index, int count)
+        public Page<Article> GetList(long categoryId, int index, int count)
         {
             var list = Context.Articles.Where(a => a.CategoryId == categoryId).Skip(index).Take(count).ToList();
+            var totalCount = Context.Articles.Count(a => a.CategoryId == categoryId);
+
             foreach (var article in list)
             {
                 article.Text = null;
+                SetReactionCounts(article);
             }
-            return list;
+
+            return new Page<Article>
+            {
+                Items = list,
+                Index = index,
+                Count = count,
+                TotalCount = totalCount
+            };
         }
 
         public Article Get(long id)
         {
             var article = Context.Articles.FirstOrDefault(a => a.Id == id);
+
+            SetReactionCounts(article);
+
             return article;
         }
 
@@ -51,7 +63,7 @@ namespace CryptoBack.Services
             return related;
         }
 
-        public Article Create(long userId, long categoryId, byte[] title, byte[] text)
+        public Article Create(long userId, long categoryId, string title, string text)
         {
             var existing = Context.Articles.FirstOrDefault(a => a.CategoryId == categoryId && a.Title == title);
             if (existing != null)
@@ -74,7 +86,7 @@ namespace CryptoBack.Services
             return article;
         }
 
-        public Article Edit(long userId, long id, byte[] newTitle, byte[] newText)
+        public Article Edit(long userId, long id, string newTitle, string newText)
         {
             var existing = Context.Articles
                 .Include(a => a.Comments)
@@ -88,7 +100,7 @@ namespace CryptoBack.Services
 
             var article = existing;
 
-            if (existing.Title.UnsafeCompare(newTitle) || existing.Text.UnsafeCompare(newText))
+            if (existing.Title == newTitle || existing.Text == newText)
             {
                 article = new Article()
                 {
@@ -119,8 +131,20 @@ namespace CryptoBack.Services
             {
                 article = existing;
             }
+
+            SetReactionCounts(article);
             
             return article;
+        }
+
+        private void SetReactionCounts(Article article)
+        {
+            var reactionCounts = Context.Reactions
+                .Where(r => r.ArticleId == article.Id)
+                .GroupBy(r => r.ReactionType)
+                .Select(g => new ReactionCount() {ReactionType = g.Key, Count = g.Count()})
+                .ToList();
+            article.ReactionCounts = reactionCounts;
         }
     }
 }

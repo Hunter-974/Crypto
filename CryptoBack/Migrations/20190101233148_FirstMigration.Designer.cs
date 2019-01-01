@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoBack.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20181229235421_FirstMigration")]
+    [Migration("20190101233148_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,9 @@ namespace CryptoBack.Migrations
 
                     b.Property<Guid>("CorrelationUid");
 
-                    b.Property<byte[]>("Text");
+                    b.Property<string>("Text");
 
-                    b.Property<byte[]>("Title");
+                    b.Property<string>("Title");
 
                     b.Property<long>("UserId");
 
@@ -53,9 +53,9 @@ namespace CryptoBack.Migrations
 
                     b.Property<long?>("CommentId");
 
-                    b.Property<byte[]>("Data");
+                    b.Property<string>("Data");
 
-                    b.Property<byte[]>("Title");
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 
@@ -73,7 +73,7 @@ namespace CryptoBack.Migrations
 
                     b.Property<long?>("CategoryId");
 
-                    b.Property<byte[]>("Name")
+                    b.Property<string>("Name")
                         .IsRequired();
 
                     b.Property<long>("UserId");
@@ -98,7 +98,7 @@ namespace CryptoBack.Migrations
 
                     b.Property<Guid>("CorrelationUid");
 
-                    b.Property<byte[]>("Text");
+                    b.Property<string>("Text");
 
                     b.Property<long>("UserId");
 
@@ -124,7 +124,7 @@ namespace CryptoBack.Migrations
 
                     b.Property<long?>("CommentId");
 
-                    b.Property<byte[]>("ReactionType");
+                    b.Property<string>("ReactionType");
 
                     b.Property<long>("UserId");
 
@@ -144,14 +144,14 @@ namespace CryptoBack.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<byte[]>("Location");
+                    b.Property<string>("Location");
 
                     b.Property<DateTime?>("LogInDate");
 
-                    b.Property<byte[]>("Name")
+                    b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<byte[]>("Password")
+                    b.Property<string>("Password")
                         .IsRequired();
 
                     b.Property<TimeSpan>("SessionLifetime");

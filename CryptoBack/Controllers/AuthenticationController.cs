@@ -22,13 +22,13 @@ namespace CryptoBack.Controllers
         }
 
         [HttpPost("signin")]
-        public User SignIn([FromBody] SignInRequest request)
+        public Guid SignIn([FromBody] SignInRequest request)
         {
             return _userService.SignIn(request.Name, request.Password, request.Location, request.SessionLifetime);
         }
 
         [HttpPost("login")]
-        public User LogIn([FromBody] LogInRequest request)
+        public Guid LogIn([FromBody] LogInRequest request)
         {
             return _userService.LogIn(request.Name, request.Password, request.SessionLifetime);
         }

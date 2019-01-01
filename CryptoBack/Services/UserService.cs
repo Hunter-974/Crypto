@@ -8,8 +8,8 @@ namespace CryptoBack.Services
 {
     public interface IUserService
     {
-        User SignIn(byte[] name, byte[] password, byte[] location, TimeSpan sessionLifetime);
-        User LogIn(byte[] name, byte[] password, TimeSpan sessionLifetime);
+        Guid SignIn(string name, string password, string location, TimeSpan sessionLifetime);
+        Guid LogIn(string name, string password, TimeSpan sessionLifetime);
         void LogOut(Guid token);
         User GetAuthenticatedUser(Guid token);
     }
@@ -20,9 +20,9 @@ namespace CryptoBack.Services
         {
         }
 
-        public User SignIn(byte[] name, byte[] password, byte[] location, TimeSpan sessionLifetime)
+        public Guid SignIn(string name, string password, string location, TimeSpan sessionLifetime)
         {
-            if (Context.Users.Any(u => u.HasName(name)))
+            if (Context.Users.Any(u => u.Name == name))
             {
                 throw new Exception("Username already exists.");
             }
@@ -40,12 +40,12 @@ namespace CryptoBack.Services
             Context.Users.Add(user);
             Context.SaveChanges();
 
-            return user;
+            return user.Token.Value;
         }
 
-        public User LogIn(byte[] name, byte[] password, TimeSpan sessionLifetime)
+        public Guid LogIn(string name, string password, TimeSpan sessionLifetime)
         {
-            var user = Context.Users.FirstOrDefault(u => u.HasNameAndPassword(name, password));
+            var user = Context.Users.FirstOrDefault(u => u.Name == name && u.Password == password);
             if (user != null)
             {
                 throw new Exception("Authentication failed.");
@@ -56,7 +56,7 @@ namespace CryptoBack.Services
             Context.Users.Update(user);
             Context.SaveChanges();
 
-            return user;
+            return user.Token.Value;
         }
 
         public void LogOut(Guid token)
