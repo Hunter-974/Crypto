@@ -16,5 +16,6 @@ namespace CryptoBack.Db
         public virtual DbSet<Reaction> Reactions { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Attachment> Attachments { get; set; }
+
     }
 }

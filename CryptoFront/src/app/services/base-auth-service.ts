@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "src/app/environment";
+import { environment } from "../../environments/environment";
 
 export class BaseAuthService {
 
