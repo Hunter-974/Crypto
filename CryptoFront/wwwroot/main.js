@@ -323,7 +323,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-login></app-login>\n<router-outlet></router-outlet>"
+module.exports = "<app-login></app-login>\r\n<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -461,7 +461,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  home works!\n</p>\n"
+module.exports = "<p>\r\n  home works!\r\n</p>\r\n"
 
 /***/ }),
 
@@ -564,7 +564,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\" *ngIf=\"!isLoggedIn && !isSigningIn\">\n  <div class=\"col\">\n    <input type=\"text\" [(ngModel)]=\"name\" placeholder=\"name\">\n  </div>\n  <div class=\"col\">\n    <input type=\"password\" [(ngModel)]=\"password\" placeholder=\"password\">\n  </div>\n  <div class=\"col\">\n    <button (click)=\"login()\">Login</button>\n  </div>\n  <div class=\"col\">\n    <a (click)=\"startCreating()\">Create account</a>\n  </div>\n</div>\n\n<div class=\"row\" *ngIf=\"isSigningIn\">\n  <div class=\"col\">\n    <input type=\"text\" [(ngModel)]=\"name\" placeholder=\"name\">\n  </div>\n  <div class=\"col\">\n    <input type=\"password\" [(ngModel)]=\"password\" placeholder=\"password\">\n  </div>\n  <div class=\"col\">\n    <input type=\"text\" [(ngModel)]=\"location\" placeholder=\"location\">\n  </div>\n  <div class=\"col\">\n    <button (click)=\"create()\">Sign in</button>\n  </div>\n  <div class=\"col\">\n    <a (click)=\"cancelCreating()\">Cancel</a>\n  </div>\n</div>\n\n<div class=\"row\" *ngIf=\"isLoggedIn\">\n  <div class=\"col\">\n    {{ decName }} ({{ decLocation }})\n  </div>\n  <div class=\"col\">\n    <button value=\"Logout\" (click)=\"logout()\"></button>\n  </div>\n</div>"
+module.exports = "<div class=\"row\" *ngIf=\"!isLoggedIn && !isSigningIn\">\r\n  <div class=\"col\">\r\n    <input type=\"text\" [(ngModel)]=\"name\" placeholder=\"name\">\r\n  </div>\r\n  <div class=\"col\">\r\n    <input type=\"password\" [(ngModel)]=\"password\" placeholder=\"password\">\r\n  </div>\r\n  <div class=\"col\">\r\n    <button (click)=\"login()\">Login</button>\r\n  </div>\r\n  <div class=\"col\">\r\n    <a (click)=\"startCreating()\">Create account</a>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"row\" *ngIf=\"isSigningIn\">\r\n  <div class=\"col\">\r\n    <input type=\"text\" [(ngModel)]=\"name\" placeholder=\"name\">\r\n  </div>\r\n  <div class=\"col\">\r\n    <input type=\"password\" [(ngModel)]=\"password\" placeholder=\"password\">\r\n  </div>\r\n  <div class=\"col\">\r\n    <input type=\"text\" [(ngModel)]=\"location\" placeholder=\"location\">\r\n  </div>\r\n  <div class=\"col\">\r\n    <button (click)=\"create()\">Sign in</button>\r\n  </div>\r\n  <div class=\"col\">\r\n    <a (click)=\"cancelCreating()\">Cancel</a>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"row\" *ngIf=\"isLoggedIn\">\r\n  <div class=\"col\">\r\n    {{ decName }} ({{ decLocation }})\r\n  </div>\r\n  <div class=\"col\">\r\n    <button value=\"Logout\" (click)=\"logout()\"></button>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -1191,7 +1191,7 @@ src_environments_environmentLoader__WEBPACK_IMPORTED_MODULE_4__["environmentLoad
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\GIT\Crypto\CryptoFront\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\Git\Crypto\CryptoFront\src\main.ts */"./src/main.ts");
 
 
 /***/ })
