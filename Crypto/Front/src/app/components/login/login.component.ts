@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    debugger;
     var encName = this.cryptoService.encrypt(this.name, "MesCouilles").toString();
     var encPassword = this.cryptoService.encrypt(this.password, "MesCouilles").toString();
 

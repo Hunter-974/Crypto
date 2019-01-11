@@ -24,10 +24,11 @@ export class AuthService extends BaseAuthService {
   }
 
   logIn(name: string, password: string, sessionLifetime: Duration): Observable<string> {
+    var timespan = `${sessionLifetime.hours()}:${sessionLifetime.minutes()}:${sessionLifetime.seconds()}`;
     return this.http.post<string>(`${this.baseUrl}/login`, {
       name: name,
       password: password,
-      sessionLifetime: sessionLifetime.toISOString()
+      sessionLifetime: timespan
     }, this.getOptions());
   }
 
