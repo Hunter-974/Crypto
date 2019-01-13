@@ -1,9 +1,17 @@
-<div class="input-group">
-  <div class="input-group-prepend" (click)="toggle()">
-    <span class="input-group-text">Key</span>
+<div class="row">
+  <div class="col input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Key</span>
+    </div>
+    <input class="form-control" type="text" [(ngModel)]="key" *ngIf="edit" />
+    <div class="input-group-append">
+      <button class="form-control btn btn-warning" (click)="change()" *ngIf="!edit">Change</button>
+      <button class="form-control btn btn-success" (click)="submit()" *ngIf="edit">OK</button>
+      <button class="form-control btn btn-danger" (click)="cancel()" *ngIf="edit && hasKey">Cancel</button>
+    </div>
   </div>
-  <input class="form-control" type="text" [(ngModel)]="key" *ngIf="edit" />
-  <div class="input-group-append">
-    <button class="form-control btn btn-success" (click)="submit()" *ngIf="edit">OK</button>
-  </div>
+</div>
+
+<div class="row">
+  <app-error-message class="col-12" [error]="error"></app-error-message>
 </div>

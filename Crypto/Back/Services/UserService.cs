@@ -9,7 +9,7 @@ namespace Crypto.Back.Services
     public interface IUserService
     {
         Guid SignUp(string name, string password, string location, TimeSpan sessionLifetime);
-        Guid LogIn(string name, string password, TimeSpan sessionLifetime);
+        Guid LogIn(string name, string password, string location, TimeSpan sessionLifetime);
         void LogOut(Guid token);
         User GetAuthenticatedUser(Guid token);
     }
@@ -43,7 +43,7 @@ namespace Crypto.Back.Services
             return user.Token.Value;
         }
 
-        public Guid LogIn(string name, string password, TimeSpan sessionLifetime)
+        public Guid LogIn(string name, string password, string location, TimeSpan sessionLifetime)
         {
             var user = Context.Users.FirstOrDefault(u => u.Name == name && u.Password == password);
             if (user == null)
@@ -51,6 +51,7 @@ namespace Crypto.Back.Services
                 throw new Exception("Authentication failed.");
             }
 
+            user.Location = location;
             user.SessionLifetime = sessionLifetime;
             user.SetLoggedIn();
             Context.Users.Update(user);

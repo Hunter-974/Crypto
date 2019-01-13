@@ -19,7 +19,7 @@ namespace Crypto.Back.Controllers
     }
 
     [HttpPost("signup")]
-    public Guid SignUp([FromBody] SignInRequest request)
+    public Guid SignUp([FromBody] LogInRequest request)
     {
       return _userService.SignUp(request.Name, request.Password, request.Location, request.SessionLifetime);
     }
@@ -27,7 +27,7 @@ namespace Crypto.Back.Controllers
     [HttpPost("login")]
     public Guid LogIn([FromBody] LogInRequest request)
     {
-      return _userService.LogIn(request.Name, request.Password, request.SessionLifetime);
+      return _userService.LogIn(request.Name, request.Password, request.Location, request.SessionLifetime);
     }
 
     [HttpPost("logout")]

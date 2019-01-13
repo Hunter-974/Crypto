@@ -8,29 +8,40 @@ import { CryptoService } from 'src/app/services/crypto/crypto.service';
 })
 export class KeyComponent implements OnInit {
 
-  showKey: boolean = false;
+  hasKey = false;
   edit: boolean = true;
   key: string;
+  error: string;
 
   constructor(private cryptoService: CryptoService) { }
 
   ngOnInit() {
+    this.hasKey = this.cryptoService.hasKey();
+    this.edit = !this.hasKey;
   }
 
-  toggle() {
+  change() {
     this.edit = !this.edit;
   }
 
-  show() {
-    this.showKey = true;
-  }
-
-  hide() {
-    this.showKey = false;
-  }
-
   submit() {
-    this.cryptoService.setKey(this.key);
+    this.error = null;
+    try {
+      this.cryptoService.setKey(this.key);
+      this.hasKey = true;
+      this.key = null;
+      this.edit = false;
+    } catch (ex) {
+      this.error = ex.toString();
+    }
+  }
+
+  cancel() {
+    this.error = null;
+    if (!this.hasKey) {
+      this.error = Error("Please provide a key.").toString();
+    }
+
     this.key = null;
     this.edit = false;
   }

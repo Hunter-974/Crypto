@@ -3,6 +3,7 @@ using Crypto.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Net;
 
 namespace Crypto.Back.Controllers.Abstract
 {
@@ -46,7 +47,11 @@ namespace Crypto.Back.Controllers.Abstract
             var user = GetLoggedUser();
             T entity = null;
 
-            if (user != null)
+            if (user == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            }
+            else
             {
                 entity = execute(user);
             }
@@ -58,7 +63,11 @@ namespace Crypto.Back.Controllers.Abstract
         {
             var user = GetLoggedUser();
 
-            if (user != null)
+            if (user == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            }
+            else
             {
                 execute(user);
             }

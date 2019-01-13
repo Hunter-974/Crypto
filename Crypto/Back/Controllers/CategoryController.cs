@@ -1,5 +1,6 @@
 using Crypto.Back.Controllers.Abstract;
 using Crypto.Back.Models;
+using Crypto.Back.Requests;
 using Crypto.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -33,9 +34,9 @@ namespace Crypto.Back.Controllers
         }
 
         [HttpPost("{parentId?}")]
-        public Category Create(long? parentId, [FromBody] string name)
+        public Category Create(long? parentId, [FromBody] Request<string> name)
         {
-            return ForLoggedUser(user => _categoryService.Create(user.Id, name, parentId));
+            return ForLoggedUser(user => _categoryService.Create(user.Id, name.Value, parentId));
         }
     }
 }

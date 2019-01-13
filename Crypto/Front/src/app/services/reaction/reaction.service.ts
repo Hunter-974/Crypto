@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseAuthService } from '../base-auth-service';
 import { Reaction } from 'src/app/models/reaction';
+import { encrypt } from '../crypto/crypto.module';
 
 @Injectable({
   providedIn: 'root'
@@ -14,18 +15,32 @@ export class ReactionService extends BaseAuthService {
   }
 
   getForArticle(articleId: number): Observable<Reaction[]> {
-    return this.http.get<Reaction[]>(`${this.baseUrl}/article/${articleId}`, this.getOptions());
+    return this.get<Reaction[]>(`article/${articleId}`);
   }
 
   getForComment(commentId: number): Observable<Reaction[]> {
-    return this.http.get<Reaction[]>(`${this.baseUrl}/comment/${commentId}`, this.getOptions());
+    return this.get<Reaction[]>(`comment/${commentId}`);
   }
 
   setForArticle(articleId: number, reactionType: string): Observable<Reaction> {
-    return this.http.post<Reaction>(`${this.baseUrl}/article/${articleId}`, reactionType, this.getOptions());
+    return this.post<Reaction>(`article/${articleId}`,
+      { value: encrypt(reactionType) },
+      (subscriber) => {
+        if (!reactionType || !reactionType.length) {
+          subscriber.error(Error("Please provide a reaction type."));
+        }
+      }
+    );
   }
 
   setForComment(commentId: number, reactionType: string): Observable<Reaction> {
-    return this.http.post<Reaction>(`${this.baseUrl}/comment/${commentId}`, reactionType, this.getOptions());
+    return this.post<Reaction>(`comment/${commentId}`,
+      { value: encrypt(reactionType) },
+      (subscriber) => {
+        if (!reactionType || !reactionType.length) {
+          subscriber.error(Error("Please provide a reaction type."));
+        }
+      }
+    );
   }
 }

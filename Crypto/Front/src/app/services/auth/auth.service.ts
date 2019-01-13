@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BaseAuthService } from '../base-auth-service';
-import { Observable, ObjectUnsubscribedError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { Duration } from 'moment';
-import { encrypt, hash } from '../crypto/crypto.module';
+import { hash, encrypt } from '../crypto/crypto.module';
 
 @Injectable({
   providedIn: 'root'
@@ -16,48 +16,41 @@ export class AuthService extends BaseAuthService {
   }
 
   public signup(name: string, password: string, location: string, sessionLifetime: Duration): Observable<string> {
-    var observable = new Observable<string>(
-      subscriber => {
-        this.http.post<string>(`${this.baseUrl}/signup`, {
-          name: name,
-          password: hash(password),
-          location: location,
-          sessionLifetime: this.getDurationString(sessionLifetime)
-        }, this.getOptions()).subscribe(
-          result => {
-            BaseAuthService.token = result;
-            subscriber.next(result);
-            subscriber.complete();
-          },
-          error => {
-            subscriber.error(error);
-          });
-      });
-    return observable;
+    return this.post("signup",
+      {
+        name: name,
+        password: hash(password),
+        location: encrypt(location),
+        sessionLifetime: this.getDurationString(sessionLifetime)
+      },
+      (subscriber) => {
+        if (!name || !name.length || !password || !password.length) {
+          subscriber.error(Error("Please provide a name and a password."));
+        }
+      },
+      (result) => { BaseAuthService.token = result; }
+    );
   }
 
-  public login(name: string, password: string, sessionLifetime: Duration): Observable<string> {
-    var observable = new Observable<string>(
-      subscriber => {
-        this.http.post<string>(`${this.baseUrl}/login`, {
-          name: name,
-          password: hash(password),
-          sessionLifetime: this.getDurationString(sessionLifetime)
-        }, this.getOptions()).subscribe(
-          result => {
-            BaseAuthService.token = result;
-            subscriber.next(result);
-            subscriber.complete();
-          },
-          error => {
-            subscriber.error(error);
-          });
-      });
-    return observable;
+  public login(name: string, password: string, location: string, sessionLifetime: Duration): Observable<string> {
+    return this.post("login",
+      {
+        name: name,
+        password: hash(password),
+        location: encrypt(location),
+        sessionLifetime: this.getDurationString(sessionLifetime)
+      },
+      (subscriber) => {
+        if (!name || !name.length || !password || !password.length) {
+          subscriber.error(Error("Please provide a name and a password."));
+        }
+      },
+      (result) => { BaseAuthService.token = result; }
+    );
   }
 
   public logout(): Observable<User> {
-    return this.http.post<User>(`${this.baseUrl}/logout`, {}, this.getOptions());
+    return this.post("logout", null);
   }
 
   private getDurationString(duration: Duration): string {

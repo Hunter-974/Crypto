@@ -1,5 +1,6 @@
 using Crypto.Back.Controllers.Abstract;
 using Crypto.Back.Models;
+using Crypto.Back.Requests;
 using Crypto.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -30,15 +31,15 @@ namespace Crypto.Back.Controllers
         }
 
         [HttpPost("article/{articleId}")]
-        public Reaction SetForArticle(long userId, long articleId, string reactionType)
+        public Reaction SetForArticle(long userId, long articleId, [FromBody] Request<string> reactionType)
         {
-            return ForLoggedUser(user => _reactionService.SetForArticle(user.Id, articleId, reactionType));
+            return ForLoggedUser(user => _reactionService.SetForArticle(user.Id, articleId, reactionType.Value));
         }
 
         [HttpPost("comment/{commentId}")]
-        public Reaction SetForComment(long userId, long commentId, string reactionType)
+        public Reaction SetForComment(long userId, long commentId, [FromBody] Request<string> reactionType)
         {
-            return ForLoggedUser(user => _reactionService.SetForComment(user.Id, commentId, reactionType));
+            return ForLoggedUser(user => _reactionService.SetForComment(user.Id, commentId, reactionType.Value));
         }
     }
 }

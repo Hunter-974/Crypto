@@ -33,13 +33,6 @@ namespace Crypto.Back.Services
 
         public Category Create(long userId, string name, long? parentId)
         {
-            IList<Category> siblings = Context.Categories.Where(c => c.CategoryId == parentId).ToList();
-
-            if (siblings.Any(c => c.Name == name))
-            {
-                throw new Exception("Category name already exists.");
-            }
-
             var category = new Category()
             {
                 Name = name,

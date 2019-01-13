@@ -8,6 +8,8 @@ namespace Crypto.Back.Requests
 
         public string Password { get; set; }
 
+        public string Location { get; set; }
+
         public TimeSpan SessionLifetime { get; set; }
     }
 }

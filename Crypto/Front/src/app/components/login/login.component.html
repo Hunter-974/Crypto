@@ -1,20 +1,14 @@
 <div class="row">
-  <div class="col input-group" *ngIf="!isLoggedIn && !isSigningUp">
-    <input class="form-control" type="text" [(ngModel)]="name" placeholder="name" />
-    <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
-    <input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />
-    <div class="input-group-append">
-      <button class="form-control btn btn-success" (click)="login()">Login</button>
-      <button class="form-control btn btn-warning" (click)="startCreating()">Signup</button>
-    </div>
-  </div>
-
-  <div class="col input-group" *ngIf="isSigningUp">
+  <div class="col input-group" *ngIf="!isLoggedIn">
     <input class="form-control" type="text" [(ngModel)]="name" placeholder="name" />
     <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
     <input class="form-control" type="text" [(ngModel)]="location" placeholder="location" />
-    <input class="form-control" type="time" min="00:00" max="12:00" required="required" [(ngModel)]="sessionLifetime" />
-    <div class="input-group-append">
+    <input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />
+    <div class="input-group-append" *ngIf="!isSigningUp">
+      <button class="form-control btn btn-success" (click)="login()">Login</button>
+      <button class="form-control btn btn-warning" (click)="startCreating()">Signup</button>
+    </div>
+    <div class="input-group-append" *ngIf="isSigningUp">
       <button class="form-control btn btn-success" (click)="signup()">Signup</button>
       <button class="form-control btn btn-danger" (click)="cancelCreating()">Cancel</button>
     </div>
@@ -30,6 +24,6 @@
   </div>
 </div>
 
-<div class="row" *ngIf="error">
-  <div class="col-12 text-right">{{ error }}</div>
+<div class="row">
+  <app-error-message class="col-12" [error]="error" [addclass]="'text-right'"></app-error-message>
 </div>

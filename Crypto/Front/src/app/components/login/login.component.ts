@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit {
   }
 
   signup() {
+    this.error = null;
     this.authService.signup(this.name, this.password, this.location, duration("00:05:00")).subscribe(
       result => {
-        this.error = null;
         this.isSigningUp = false;
         this.isLoggedIn = true;
       },
@@ -38,10 +38,10 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.error = null;
     var sessionLifetimeDuration = duration(this.sessionLifetime);
-    this.authService.login(this.name, this.password, sessionLifetimeDuration).subscribe(
+    this.authService.login(this.name, this.password, this.location, sessionLifetimeDuration).subscribe(
       result => {
-        this.error = null;
         this.isLoggedIn = true;
       },
       error => { this.error = error.toString(); }

@@ -1,0 +1,62 @@
+<div class="card">
+  <div class="card-header">
+    <h4>Category list</h4>
+  </div>
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col-12">
+        <ul>
+          <li *ngFor="let category of categoryList">
+
+            <div class="row">
+              <div class="col-12">
+                <a href="javascript:void(0)" class="text-primary" (click)="openParent(category)">{{ category.name | decrypt }}</a>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="category.isOpened">
+              <div class="col-12 font-weight-bold">Subcategories</div>
+
+              <div class="col-12">
+                <ul>
+                  <li *ngFor="let subCategory of category.children">
+                    <a href="javascript:void(0)" class="text-primary" (click)="openChild(subCategory.id)">{{ subCategory.name | decrypt }}</a>
+                  </li>
+                </ul>
+              </div>
+              
+              <div class="col-12 input-group mt-1">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">New subcategory</span>
+                </div>
+                <input type="text" class="form-control" [(ngModel)]="newSubCategoryName" />
+                <div class="input-group-append">
+                  <button class="form-control btn btn-success" (click)="createChild(category)">Create</button>
+                </div>
+              </div>
+              <app-error-message class="col-12" [error]="subCategoryError"></app-error-message>
+            </div>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12 input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">New category</span>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="newCategoryName" />
+        <div class="input-group-append">
+          <button class="form-control btn btn-success" (click)="createParent()">Create</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <app-error-message class="col-12" [error]="categoryError"></app-error-message>
+    </div>
+
+  </div>
+</div>
