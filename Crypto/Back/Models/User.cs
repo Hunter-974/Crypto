@@ -16,7 +16,7 @@ namespace Crypto.Back.Models
         public string Location { get; set; }
 
         [JsonIgnore]
-        public DateTime SignInDate { get; set; }
+        public DateTime SignUpDate { get; set; }
 
         [JsonIgnore]
         public TimeSpan SessionLifetime { get; set; }

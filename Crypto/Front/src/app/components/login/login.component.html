@@ -1,41 +1,35 @@
-<div class="row" *ngIf="!isLoggedIn && !isSigningIn">
-  <div class="col">
-    <input type="text" [(ngModel)]="name" placeholder="name">
+<div class="row">
+  <div class="col input-group" *ngIf="!isLoggedIn && !isSigningUp">
+    <input class="form-control" type="text" [(ngModel)]="name" placeholder="name" />
+    <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
+    <input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />
+    <div class="input-group-append">
+      <button class="form-control btn btn-success" (click)="login()">Login</button>
+      <button class="form-control btn btn-warning" (click)="startCreating()">Signup</button>
+    </div>
   </div>
-  <div class="col">
-    <input type="password" [(ngModel)]="password" placeholder="password">
+
+  <div class="col input-group" *ngIf="isSigningUp">
+    <input class="form-control" type="text" [(ngModel)]="name" placeholder="name" />
+    <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
+    <input class="form-control" type="text" [(ngModel)]="location" placeholder="location" />
+    <input class="form-control" type="time" min="00:00" max="12:00" required="required" [(ngModel)]="sessionLifetime" />
+    <div class="input-group-append">
+      <button class="form-control btn btn-success" (click)="signup()">Signup</button>
+      <button class="form-control btn btn-danger" (click)="cancelCreating()">Cancel</button>
+    </div>
   </div>
-  <div class="col">
-    <button (click)="login()">Login</button>
-  </div>
-  <div class="col">
-    <a (click)="startCreating()">Create account</a>
+
+  <div class="col justify-content-end input-group" *ngIf="isLoggedIn">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ name }} ({{ location }})</span>
+    </div>
+    <div class="input-group-append">
+      <button class="form-control btn btn-danger" value="Logout" (click)="logout()">Logout</button>
+    </div>
   </div>
 </div>
 
-<div class="row" *ngIf="isSigningIn">
-  <div class="col">
-    <input type="text" [(ngModel)]="name" placeholder="name">
-  </div>
-  <div class="col">
-    <input type="password" [(ngModel)]="password" placeholder="password">
-  </div>
-  <div class="col">
-    <input type="text" [(ngModel)]="location" placeholder="location">
-  </div>
-  <div class="col">
-    <button (click)="create()">Sign in</button>
-  </div>
-  <div class="col">
-    <a (click)="cancelCreating()">Cancel</a>
-  </div>
-</div>
-
-<div class="row" *ngIf="isLoggedIn">
-  <div class="col">
-    {{ decName }} ({{ decLocation }})
-  </div>
-  <div class="col">
-    <button value="Logout" (click)="logout()"></button>
-  </div>
+<div class="row" *ngIf="error">
+  <div class="col-12 text-right">{{ error }}</div>
 </div>

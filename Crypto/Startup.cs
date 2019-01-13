@@ -16,8 +16,6 @@ namespace Crypto
   {
     private Process _npmProcess;
 
-
-
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
@@ -31,6 +29,7 @@ namespace Crypto
       var sqliteConnectionString = Configuration.GetConnectionString("sqlite");
 
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
       services.AddDbContext<Context>(options => options.UseSqlite(sqliteConnectionString));
 
       services.AddScoped<IArticleService, ArticleService>();

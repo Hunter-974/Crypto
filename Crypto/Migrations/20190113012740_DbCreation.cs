@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Crypto.Back.Migrations
+namespace Crypto.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class DbCreation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace Crypto.Back.Migrations
                     Name = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
                     Location = table.Column<string>(nullable: true),
-                    SignInDate = table.Column<DateTime>(nullable: false),
+                    SignUpDate = table.Column<DateTime>(nullable: false),
                     SessionLifetime = table.Column<TimeSpan>(nullable: false),
                     Token = table.Column<Guid>(nullable: true),
                     LogInDate = table.Column<DateTime>(nullable: true)

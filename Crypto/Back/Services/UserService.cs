@@ -33,7 +33,7 @@ namespace Crypto.Back.Services
                 Password = password,
                 Location = location,
                 SessionLifetime = sessionLifetime,
-                SignInDate = DateTime.Now,
+                SignUpDate = DateTime.Now,
                 LogInDate = DateTime.Now,
                 Token = Guid.NewGuid()
             };
@@ -46,7 +46,7 @@ namespace Crypto.Back.Services
         public Guid LogIn(string name, string password, TimeSpan sessionLifetime)
         {
             var user = Context.Users.FirstOrDefault(u => u.Name == name && u.Password == password);
-            if (user != null)
+            if (user == null)
             {
                 throw new Exception("Authentication failed.");
             }

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth/auth.service';
@@ -12,7 +12,12 @@ import { HomeComponent } from './components/home/home.component';
 import { RouterModule, Route } from '@angular/router';
 import { CryptoService } from './services/crypto/crypto.service';
 import { HomeModule } from './components/home/home.module';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { HeaderModule } from './components/header/header.module';
+import { EncryptedPipe } from './pipes/encrypted.pipe';
+import { CryptoModule } from './services/crypto/crypto.module';
+
+export let InjectorInstance: Injector;
 
 const routes: Route[] = [
   { path: "", component: HomeComponent }
@@ -20,17 +25,19 @@ const routes: Route[] = [
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    EncryptedPipe
   ],
   imports: [
+    CryptoModule.forRoot(),
     LoginModule,
     HomeModule,
+    HeaderModule,
     BrowserModule,
     RouterModule.forRoot(routes),
     HttpClientModule
   ],
   providers: [
-    CryptoService,
     AuthService,
     ArticleService,
     CategoryService,
@@ -39,4 +46,8 @@ const routes: Route[] = [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) {
+    InjectorInstance = injector;
+  }
+}

@@ -3,13 +3,17 @@ import { HttpClient } from '@angular/common/http'
 import { BaseAuthService } from '../base-auth-service';
 import { Observable } from 'rxjs';
 import { Article } from 'src/app/models/article';
+import { CryptoService } from '../crypto/crypto.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService extends BaseAuthService {
 
-  constructor(http: HttpClient) {
+  constructor(
+    http: HttpClient,
+    cryptoService: CryptoService
+  ) {
     super(http, "article");
   }
   

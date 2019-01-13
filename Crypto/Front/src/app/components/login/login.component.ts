@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
-import { CryptoService } from '../../services/crypto/crypto.service';
-import { duration } from 'moment';
+import { duration, Duration } from 'moment';
 
 @Component({
   selector: 'app-login',
@@ -11,47 +10,63 @@ import { duration } from 'moment';
 export class LoginComponent implements OnInit {
 
   isLoggedIn: boolean;
-  isSigningIn: boolean;
+  isSigningUp: boolean;
 
   name: string;
   password: string;
   location: string;
-
-  decName: string;
-  decLocation: string;
+  sessionLifetime: string = "01:00";
+  
+  error: string;
 
   constructor(
-    private cryptoService: CryptoService,
     private authService: AuthService
   ) { }
 
   ngOnInit() {
   }
 
-  login() {
-    var encName = this.cryptoService.encrypt(this.name, "MesCouilles").toString();
-    var encPassword = this.cryptoService.encrypt(this.password, "MesCouilles").toString();
+  signup() {
+    this.authService.signup(this.name, this.password, this.location, duration("00:05:00")).subscribe(
+      result => {
+        this.error = null;
+        this.isSigningUp = false;
+        this.isLoggedIn = true;
+      },
+      error => { this.error = error; }
+    );
+  }
 
-    this.authService.logIn(encName, encPassword, duration("00:05:00")).subscribe(
-      result => {},
-      error => {}
+  login() {
+    var sessionLifetimeDuration = duration(this.sessionLifetime);
+    this.authService.login(this.name, this.password, sessionLifetimeDuration).subscribe(
+      result => {
+        this.error = null;
+        this.isLoggedIn = true;
+      },
+      error => { this.error = error.toString(); }
     )
   }
 
+  logout() {
+    this.error = null;
+    this.authService.logout().subscribe(
+      result => {
+        this.error = null;
+        this.isLoggedIn = false;
+      },
+      error => { this.error = error; }
+    );
+  }
+
   startCreating() {
-    this.isSigningIn = true;
+    this.error = null;
+    this.isSigningUp = true;
   }
 
   cancelCreating() {
-    this.isSigningIn = false;
-  }
-
-  create() {
-
-  }
-
-  logout() {
-
+    this.error = null;
+    this.isSigningUp = false;
   }
 
 }

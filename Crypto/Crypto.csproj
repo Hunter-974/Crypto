@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.1" />
@@ -14,13 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Back\Db\sqlite.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Folder Include="Back\JsonConverters\" />
+    <Folder Include="Back\Migrations\" />
     <Folder Include="Front\dist\" />
+    <Folder Include="Front\src\app\code\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

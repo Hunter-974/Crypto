@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { AES, enc } from 'crypto-js'
+import { Injectable, SkipSelf, Optional } from '@angular/core';
+import { AES, enc, SHA256 } from 'crypto-js'
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +8,21 @@ export class CryptoService {
 
   constructor() { }
 
-  encrypt(data: string, key: string): string {
-    return AES.encrypt(data, key).toString();
+  private key: string;
+
+  public setKey(key: string) {
+    this.key = key;
   }
 
-  decrypt(data: string, key: string): string {
-    return AES.decrypt(data, key).toString(enc.Utf8);
+  public encrypt(data: string): string {
+    return AES.encrypt(data, this.key).toString();
+  }
+
+  public decrypt(data: string): string {
+    return AES.decrypt(data, this.key).toString(enc.Utf8);
+  }
+
+  public hash(data: string): string {
+    return SHA256(data).toString();
   }
 }
