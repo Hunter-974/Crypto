@@ -1,50 +1,28 @@
 ﻿using System;
 
-using Mono.Nat;
+using Open.Nat;
 
 namespace Crypto
 {
     public static class UPnP
     {
-        public static void ConfigureForwarding()
+        public async static void ConfigureForwarding(int localPort, int remotePort)
         {
-            NatUtility.DeviceFound += DeviceFound;
-            NatUtility.DeviceLost += DeviceLost;
-            NatUtility.StartDiscovery();
-
-
-            NatUtility.UnhandledException += NatUtility_UnhandledException;
-            Console.WriteLine("Recherche lancée...");
-        }
-
-        static void NatUtility_UnhandledException(object sender, UnhandledExceptionEventArgs args)
-        {
-            Console.WriteLine(args.ExceptionObject);
-        }
-
-
-        private static void DeviceFound(object sender, DeviceEventArgs args)
-        {
-            INatDevice device = args.Device;
-
-            int port = 80;
-
-            while(device.GetSpecificMapping(Protocol.Tcp, port).PublicPort != -1)
+            var discoverer = new NatDiscoverer();
+            var cts = new System.Threading.CancellationTokenSource(10000);
+            try
             {
-                port++;
-                Console.WriteLine("Port changé pour " + port);
+                var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
+                var ip = await device.GetExternalIPAsync();
+                await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, localPort, remotePort, "Crypto"));
+                Console.WriteLine("L'Adresse URL à communiquer à vos amis est http://{0}", ip);
             }
-
-            device.CreatePortMap(new Mapping(Protocol.Tcp, port, port));
-
-            Console.WriteLine("Port ouvert sur:"+device.GetExternalIP().ToString());
+            catch(NatDeviceNotFoundException)
+            {
+                Console.WriteLine("Impossible d'ouvrir la correspondance " + localPort + ":" + remotePort + ". Vos amis pourraient ne pas pouvoir accéder à vos ressources.");
+            }
         }
 
-        private static void DeviceLost(object sender, DeviceEventArgs args)
-        {
-            INatDevice device = args.Device;
-
-        }
 
 
     }

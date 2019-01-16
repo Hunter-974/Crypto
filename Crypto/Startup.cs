@@ -41,8 +41,7 @@ namespace Crypto
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-        UPnP.ConfigureForwarding();
-            return;
+        UPnP.ConfigureForwarding(Configuration.GetSection("UPnP").GetValue<int>("localPort"), Configuration.GetSection("UPnP").GetValue<int>("remotePort"));
       app.Use(async (context, next) =>
       {
         await next();
