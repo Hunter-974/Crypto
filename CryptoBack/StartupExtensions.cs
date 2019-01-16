@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 
+
 namespace CryptoBack
 {
     public static class StartupExtensions
@@ -28,6 +29,7 @@ namespace CryptoBack
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.ConfigureCryptoBackDependancyInjection(dbContextAction);
         }
+
 
         public static void ConfigureCryptoBackAsApplicationPart(
             this IServiceCollection services, Action<DbContextOptionsBuilder> dbContextAction)

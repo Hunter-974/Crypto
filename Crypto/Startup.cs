@@ -41,6 +41,8 @@ namespace Crypto
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
+        UPnP.ConfigureForwarding();
+            return;
       app.Use(async (context, next) =>
       {
         await next();
