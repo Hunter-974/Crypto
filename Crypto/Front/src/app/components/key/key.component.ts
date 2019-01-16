@@ -27,6 +27,9 @@ export class KeyComponent implements OnInit {
   submit() {
     this.error = null;
     try {
+      if (!this.key || !this.key.length) {
+        throw Error("Please provide a key.");
+      }
       this.cryptoService.setKey(this.key);
       this.hasKey = true;
       this.key = null;
@@ -34,6 +37,13 @@ export class KeyComponent implements OnInit {
     } catch (ex) {
       this.error = ex.toString();
     }
+  }
+
+  clear() {
+    this.cryptoService.setKey(null);
+    this.key = null;
+    this.hasKey = false;
+    this.edit = false;
   }
 
   cancel() {

@@ -1,0 +1,27 @@
+<ng-template #defaultTemplate let-item="item">
+  <div>{{item.id}}</div>
+</ng-template>
+
+<div [class]="containerClass" *ngIf="page">
+  <template *ngFor="let item of page.items; let i = index"
+            [ngTemplateOutlet]="itemTemplate || defaultTemplate"
+            [ngTemplateOutletContext]="{item: item}">
+  </template>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <button class="btn btn-warning form-control" (click)="next()">&lt;&lt;</button>
+      </div>
+      <input type="number" class="form-control" style="width: 80px" min="1" [attr.max]="pageCount"
+             [(ngModel)]="displayedPageIndex" />
+      <div class="input-group-append">
+        <span class="input-group-text">/ {{ pageCount }}</span>
+        <button class="btn btn-success form-control" (click)="setPageIndex()">Go</button>
+        <button class="btn btn-warning form-control" (click)="next()">&gt;&gt;</button>
+      </div>
+    </div>
+  </div>
+</div>

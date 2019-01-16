@@ -3,27 +3,32 @@
     <h4>Articles</h4>
   </div>
   <div class="card-body">
-
     <div class="row">
       <div class="col-12">
-        <ul>
-          <li *ngFor="let article of articleList">
-            <div class="row">
-              <div class="col-12">
-                <a class="text-secondary" href="javascript:void(0)" (click)="openArticle(article.id)">{{ article.title | decrypt }}</a>
+        <app-pager [pageSize]="10" [containerClass]="list-group"
+                   [getMethod]="getListMethod">
+          <ng-template let-item="item">
+            <a class="list-group-item list-group-item-action list-group-item-secondary mb-1" href="javascript:void()" (click)="open(item.id)">
+              <div class="row">
+                <div class="col">
+                  <h5 [innerHTML]="item.title | decrypt"></h5>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-
+              <div class="row">
+                <p class="col-12 text-secondary">
+                  Todo...
+                </p>
               </div>
-            </div>
-          </li>
-        </ul>
+            </a>
+          </ng-template>
+        </app-pager>
+      </div>
+      
+    </div>
+    <div class="row">
+      <div class="col-3 col-lg-2 col-xl-1">
+        <button class="form-control btn btn-success" (click)="create()">Create</button>
       </div>
     </div>
-
-    <button class="form-control btn btn-success" (click)="create()">Create</button>
-
   </div>
 </div>

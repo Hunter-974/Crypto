@@ -11,9 +11,6 @@ export class CryptoService {
   private key: string;
 
   public setKey(key: string) {
-    if (!key || !key.length) {
-      throw Error("Please provide a key.");
-    }
     this.key = key;
   }
 

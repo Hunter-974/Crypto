@@ -6,6 +6,7 @@
     <input class="form-control" type="text" [(ngModel)]="key" *ngIf="edit" />
     <div class="input-group-append">
       <button class="form-control btn btn-warning" (click)="change()" *ngIf="!edit">Change</button>
+      <button class="form-control btn btn-danger" (click)="clear()" *ngIf="!edit && hasKey">Clear</button>
       <button class="form-control btn btn-success" (click)="submit()" *ngIf="edit">OK</button>
       <button class="form-control btn btn-danger" (click)="cancel()" *ngIf="edit && hasKey">Cancel</button>
     </div>

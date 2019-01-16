@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ArticleService } from 'src/app/services/article/article.service';
 import { Article } from 'src/app/models/article';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Page } from 'src/app/models/page';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-article-list',
@@ -11,8 +13,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ArticleListComponent implements OnInit {
 
   categoryId: number;
-  articlePage: Page<Article>;
   error: string;
+  getListMethod: (i: number, s: number) => Observable<Page<Article>> =
+    (i: number, s: number) => this.getList(i, s);
 
   constructor(
     private articleService: ArticleService,
@@ -23,14 +26,10 @@ export class ArticleListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getArticleList();
   }
 
-  getArticleList() {
-    this.articleService.getList(this.categoryId, 0, 20).subscribe(
-      result => { this.articlePage = result; },
-      error => { this.error = error.toString(); }
-    );
+  getList(pageIndex: number, pageSize: number) {
+    return this.articleService.getList(this.categoryId, pageIndex, pageSize);
   }
 
   open(id: number) {
@@ -40,6 +39,4 @@ export class ArticleListComponent implements OnInit {
   create() {
     this.router.navigate(["/article", "new", this.categoryId.toString()]);
   }
-
-
 }

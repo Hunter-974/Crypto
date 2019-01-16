@@ -1,26 +1,26 @@
 <div class="card">
   <div class="card-header">
-    <h4 *ngIf="!editing && article">{{ article.title | decrypt }}</h4>
+    <h4 *ngIf="!editing && article" [innerHTML]="article.title | decrypt"></h4>
     <input class="form-control" type="text" [(ngModel)]="newTitle" *ngIf="editing || creating" />
   </div>
   <div class="card-body">
     <div class="row">
-      <p class="col-12" *ngIf="!editing && !creating && article">{{ article.text | decrypt }}</p>
+      <p class="col-12" *ngIf="!editing && !creating && article" [innerHTML]="article.text | decrypt"></p>
       <div class="col-12 form-group" *ngIf="editing || creating">
         <textarea class="form-control" type="text" [(ngModel)]="newText" rows="20"></textarea>
       </div>
     </div>
-    <div class="row" *ngIf="!editing && !creating">
-      <button class="form-control btn btn-warning col-12" (click)="edit()">Edit</button>
-    </div>
-    <div class="row" *ngIf="editing">
-      <div class="col-12 form-group">
-        <button class="form-control btn btn-success" (click)="save()">Save</button>
-        <button class="form-control btn btn-success" (click)="cancel()">Cancel</button>
+    <div class="row">
+      <div class="col-auto" *ngIf="!editing && !creating">
+        <button class="form-control btn btn-warning" (click)="edit()">Edit</button>
       </div>
-    </div>
-    <div class="row" *ngIf="creating">
-      <div class="col-12 form-group">
+      <div class="col-auto" *ngIf="editing && !creating">
+        <div class="form-inline">
+          <button class="form-control btn btn-success" (click)="save()">Save</button>
+          <button class="form-control btn btn-danger ml-2" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+      <div class="col-auto" *ngIf="!editing && creating">
         <button class="form-control btn btn-success" (click)="create()" *ngIf="creating">Create</button>
       </div>
     </div>
