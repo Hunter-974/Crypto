@@ -1,11 +1,15 @@
 <div class="card">
   <div class="card-header">
     <h4 *ngIf="!editing && article" [innerHTML]="article.title | decrypt"></h4>
+    <div>
+      <span class="text-primary">{{ article.user.name }} (#{{ article.user.id }})</span>&nbsp;
+      <span class="text-info">{{ article.versionDate | date:"dd/MM/yyyy hh:mm" }}</span>
+    </div>
     <input class="form-control" type="text" [(ngModel)]="newTitle" *ngIf="editing || creating" />
   </div>
   <div class="card-body">
     <div class="row">
-      <p class="col-12" *ngIf="!editing && !creating && article" [innerHTML]="article.text | decrypt"></p>
+      <p class="col-12 text-justify" *ngIf="!editing && !creating && article" [innerHTML]="article.text | decrypt"></p>
       <div class="col-12 form-group" *ngIf="editing || creating">
         <textarea class="form-control" type="text" [(ngModel)]="newText" rows="20"></textarea>
       </div>
@@ -26,6 +30,15 @@
     </div>
     <div class="row">
       <app-error-message class="col-12" [error]="error"></app-error-message>
+    </div>
+  </div>
+</div>
+<div class="card mt-2">
+  <div class="card-body">
+    <div class="row justify-content-right">
+      <div class="col-md-11 col-10">
+        <app-comment-list [articleId]="article.id"></app-comment-list>
+      </div>
     </div>
   </div>
 </div>

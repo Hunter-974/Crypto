@@ -11,17 +11,17 @@
 
             <div class="row">
               <div class="col-12">
-                <a href="javascript:void(0)" class="text-primary" (click)="openParent(category)">{{ category.name | decrypt }}</a>
+                <a href="javascript:void(0)" class="text-primary" (click)="openParent(category)" [innerHTML]="category.name | decrypt"></a>
               </div>
             </div>
 
-            <div class="row" *ngIf="category.isOpened">
+            <div class="row" *ngIf="openedParentId == category.id">
               <div class="col-12 font-weight-bold">Subcategories</div>
 
               <div class="col-12">
                 <ul>
                   <li *ngFor="let subCategory of category.children">
-                    <a href="javascript:void(0)" class="text-primary" (click)="openChild(subCategory.id)">{{ subCategory.name | decrypt }}</a>
+                    <a href="javascript:void(0)" class="text-primary" (click)="openChild(subCategory.id)" [innerHTML]="subCategory.name | decrypt"></a>
                   </li>
                 </ul>
               </div>

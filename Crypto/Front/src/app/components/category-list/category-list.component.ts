@@ -15,6 +15,7 @@ export class CategoryListComponent implements OnInit {
   newSubCategoryName: string;
   categoryError: string;
   subCategoryError: string;
+  openedParentId: number;
 
   constructor(
     private categoryService: CategoryService,
@@ -38,11 +39,11 @@ export class CategoryListComponent implements OnInit {
     this.categoryService.getChildren(parent.id).subscribe(
       result => {
         parent.children = result;
-        parent.isOpened = true;
+        this.openedParentId = parent.id;
       },
       error => {
         this.subCategoryError = error.toString();
-        parent.isOpened = true;
+        this.openedParentId = parent.id;
       }
     );
   }
@@ -70,8 +71,8 @@ export class CategoryListComponent implements OnInit {
   }
 
   openParent(parent: Category) {
-    if (parent.isOpened) {
-      parent.isOpened = false;
+    if (this.openedParentId == parent.id) {
+      this.openedParentId = null;
     } else {
       this.getChildrenList(parent);
     }

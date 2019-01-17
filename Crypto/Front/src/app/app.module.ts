@@ -20,6 +20,8 @@ import { ArticleComponent } from './components/article/article.component';
 import { ArticleListModule } from './components/article-list/article-list.module';
 import { ArticleModule } from './components/article/article.module';
 import { ArticleListComponent } from './components/article-list/article-list.component';
+import { ReactionListComponent } from './components/reaction-list/reaction-list.component';
+import { ReactionComponent } from './components/reaction/reaction.component';
 
 const routes: Route[] = [
   { path: "", component: HomeComponent },
@@ -31,7 +33,9 @@ const routes: Route[] = [
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ReactionListComponent,
+    ReactionComponent
   ],
   imports: [
     CryptoModule.forRoot(),

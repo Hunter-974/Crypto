@@ -26,7 +26,9 @@ namespace Crypto.Back.Services
 
         public Page<Article> GetList(long categoryId, int index, int count)
         {
-            var list = Context.Articles.Where(a => a.CategoryId == categoryId).Skip(index).Take(count).ToList();
+            var list = Context.Articles.Where(a => a.CategoryId == categoryId).Skip(index).Take(count)
+                .Include(a => a.User).ToList();
+
             var totalCount = Context.Articles.Count(a => a.CategoryId == categoryId);
 
             foreach (var article in list)
@@ -46,7 +48,7 @@ namespace Crypto.Back.Services
 
         public Article Get(long id)
         {
-            var article = Context.Articles.FirstOrDefault(a => a.Id == id);
+            var article = Context.Articles.Include(a => a.User).FirstOrDefault(a => a.Id == id);
 
             SetReactionCounts(article);
 

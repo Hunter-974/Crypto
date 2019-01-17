@@ -13,16 +13,19 @@ export class DecryptPipe implements PipeTransform {
     private sanitizer: DomSanitizer) { }
 
   transform(value: any, args?: any): any {
-    let decrypted =
+    let result =
       this.sanitizer.bypassSecurityTrustHtml(
         "<span class=\"bg-dark p-1\" style=\"font-family: 'Lucida Console'; color: #00FF00; border-radius: 5px \">Encrypted text</span>"
       );
     try {
-      decrypted = this.cryptoService.decrypt(value);
+      var decrypted = this.cryptoService.decrypt(value);
+      if (decrypted && decrypted.length) {
+        result = decrypted;
+      }
     } catch (ex) {
       window.console.log(ex.message);
     }
-    return decrypted;
+    return result;
   }
 
 }

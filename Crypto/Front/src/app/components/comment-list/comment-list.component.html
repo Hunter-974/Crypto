@@ -1,0 +1,28 @@
+<div *ngFor="let comment of comments">
+  <app-pager [pageSize]="20" [getMethod]="getMethod">
+    <ng-template let-item="comment">
+      <div class="row">
+        <div class="col-12">
+          <app-comment [comment]="comment"></app-comment>
+        </div>
+      </div>
+      <div class="row justify-content-right" *ngIf="comment.articleId">
+        <div class="col-md-11 col-10">
+
+          <!-- CommentList -->
+          <app-pager [pageSize]="20" [getMethod]="subGetMethod(comment.id)"
+                      *ngFor="let subComment of comment.children">
+            <ng-template let-item="subComment">
+              <div class="row">
+                <div class="col-12">
+                  <app-comment [comment]="subComment"></app-comment>
+                </div>
+              </div>
+            </ng-template>
+          </app-pager>
+
+        </div>
+      </div>
+    </ng-template>
+  </app-pager>
+</div>
