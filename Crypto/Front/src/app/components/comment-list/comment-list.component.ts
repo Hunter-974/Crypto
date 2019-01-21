@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { OnInit, Input, Component } from '@angular/core';
 import { CommentService } from 'src/app/services/comment/comment.service';
-import { Observable } from 'rxjs';
 import { Page } from 'src/app/models/page';
+import { Comment } from 'src/app/models/comment';
 
 @Component({
   selector: 'app-comment-list',
@@ -12,24 +12,28 @@ export class CommentListComponent implements OnInit {
 
   @Input() articleId: number;
 
-  getMethod: (i: number, s: number) => Observable<Page<Comment>>
-    = (i: number, s: number) => this.getForArticle(i, s);
+  comments: Page<Comment>;
+
+  static readonly pageSize: number = 20;
 
   constructor(private commentService: CommentService) { }
 
   ngOnInit() {
-    this.getComments();
+    this.comments = new Page<Comment>();
+    this.getForArticle();
   }
 
-  getComments() {
-      this.getMethod 
+  getForArticle() {
+    this.commentService.getForArticle(this.articleId, this.comments.index, CommentListComponent.pageSize).subscribe(
+      result => this.comments.addBefore(result),
+      error => { }
+    );
   }
 
-  getForArticle(index: number, size: number): Observable<Page<Comment>> {
-    return this.commentService.getForArticle(this.articleId, index, size)
-  }
-
-  subGetMethod(commentId: number) {
-    return (i: number, s: number) => this.commentService.getForComment(commentId, i, s);
+  getForComment(comment: Comment) {
+    this.commentService.getForComment(comment.id, comment.children.index, CommentListComponent.pageSize).subscribe(
+      result => comment.children.addBefore(result),
+      error => { }
+    );
   }
 }

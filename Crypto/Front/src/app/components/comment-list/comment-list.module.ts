@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommentListComponent } from './comment-list.component';
 import { CommentModule } from '../comment/comment.module';
-import { PagerModule } from '../pager/pager.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     CommentModule,
-    PagerModule
+    FormsModule
   ],
   declarations: [CommentListComponent],
   exports: [CommentListComponent]

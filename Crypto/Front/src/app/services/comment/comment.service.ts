@@ -4,6 +4,7 @@ import { BaseAuthService } from '../base-auth-service';
 import { Page } from 'src/app/models/page';
 import { Observable } from 'rxjs';
 import { encrypt } from '../crypto/crypto.module';
+import { Comment } from '../../models/comment';
 
 @Injectable({
   providedIn: 'root'

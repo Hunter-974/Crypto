@@ -31,7 +31,7 @@ namespace Crypto.Back.Controllers
         }
 
         [HttpGet("{id}/versions")]
-        public IList<Article> GetAllVersions(long id)
+        public Page<Article> GetAllVersions(long id)
         {
             return _articleService.GetAllVersions(id);
         }

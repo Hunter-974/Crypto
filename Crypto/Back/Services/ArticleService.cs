@@ -12,7 +12,7 @@ namespace Crypto.Back.Services
     {
         Page<Article> GetList(long categoryId, int index, int count);
         Article Get(long id);
-        IList<Article> GetAllVersions(long id);
+        Page<Article> GetAllVersions(long id);
         Article Create(long userId, long categoryId, string title, string text);
         Article Edit(long userId, long id, string newTitle, string newText);
     }
@@ -55,13 +55,13 @@ namespace Crypto.Back.Services
             return article;
         }
 
-        public IList<Article> GetAllVersions(long id)
+        public Page<Article> GetAllVersions(long id)
         {
             var article = Get(id);
             var related = Context.Articles
                 .Where(a => a.CorrelationUid == article.CorrelationUid)
                 .OrderByDescending(a => a.VersionDate)
-                .ToList();
+                .ToPage();
             return related;
         }
 

@@ -10,9 +10,9 @@ namespace Crypto.Back.Services
 {
     public interface ICommentService
     {
-        IList<Comment> GetListForArticle(long articleId, int index, int count);
-        IList<Comment> GetListForComment(long commentId, int index, int count);
-        IList<Comment> GetAllVersions(long id);
+        Page<Comment> GetListForArticle(long articleId, int index, int count);
+        Page<Comment> GetListForComment(long commentId, int index, int count);
+        Page<Comment> GetAllVersions(long id);
         Comment CreateForArticle(long userId, long articleId, string text);
         Comment CreateForComment(long userId, long commentId, string text);
         Comment Edit(long userId, long id, string text);
@@ -24,21 +24,21 @@ namespace Crypto.Back.Services
         {
         }
 
-        public IList<Comment> GetListForArticle(long articleId, int index, int count)
+        public Page<Comment> GetListForArticle(long articleId, int index, int count)
         {
             return GetList(articleId, null, index, count);
         }
 
-        public IList<Comment> GetListForComment(long commentId, int index, int count)
+        public Page<Comment> GetListForComment(long commentId, int index, int count)
         {
             return GetList(null, commentId, index, count);
         }
 
-        private IList<Comment> GetList(long? articleId, long? commentId, int index, int count)
+        private Page<Comment> GetList(long? articleId, long? commentId, int index, int count)
         {
             var list = Context.Comments
                 .Where(a => a.ArticleId == articleId && a.CommentId == commentId)
-                .Skip(index).Take(count).ToList();
+                .Skip(index).Take(count).ToPage();
 
             foreach (var comment in list)
             {
@@ -48,13 +48,13 @@ namespace Crypto.Back.Services
             return list;
         }
 
-        public IList<Comment> GetAllVersions(long id)
+        public Page<Comment> GetAllVersions(long id)
         {
             var comment = Context.Comments.FirstOrDefault(c => c.Id == id);
             var related = Context.Comments
                 .Where(c => c.CorrelationUid == comment.CorrelationUid && c.Id != id)
                 .OrderByDescending(c => c.VersionDate)
-                .ToList();
+                .ToPage();
             return related;
         }
 
