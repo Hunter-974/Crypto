@@ -42,7 +42,7 @@ export class ArticleComponent implements OnInit {
   getArticle() {
     this.articleService.getArticle(this.articleId).subscribe(
       result => this.copyResult(result),
-      error => this.error = error.toString();
+      error => this.error = error.toString()
     );
   }
 

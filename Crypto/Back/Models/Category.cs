@@ -7,8 +7,8 @@ namespace Crypto.Back.Models
 {
     public class Category : Entity, IComposite<Category>
     {
-        [ForeignKey("Category.Id")]
-        public long? CategoryId { get; set; }
+        [Column("CategoryId"), ForeignKey("Category.Id")]
+        public long? ParentId { get; set; }
 
         [ForeignKey("User.Id")]
         public long UserId { get; set; }

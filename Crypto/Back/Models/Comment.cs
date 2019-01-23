@@ -12,8 +12,8 @@ namespace Crypto.Back.Models
         [ForeignKey("Article.Id")]
         public long? ArticleId { get; set; }
 
-        [ForeignKey("Comment.Id")]
-        public long? CommentId { get; set; }
+        [Column("CommentId"), ForeignKey("Comment.Id")]
+        public long? ParentId { get; set; }
 
 
         public virtual User User { get; set; }

@@ -7,6 +7,7 @@ namespace Crypto.Back.Models.Abstract
 {
     public interface IComposite<T> where T : Entity, IComposite<T>, new()
     {
+        long? ParentId { get; set; }
         T Parent { get; set; }
         IList<T> Children { get; set; }
     }

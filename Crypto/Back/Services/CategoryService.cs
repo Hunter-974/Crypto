@@ -23,12 +23,12 @@ namespace Crypto.Back.Services
 
         public IList<Category> GetParents()
         {
-            return Context.Categories.Where(c => c.CategoryId == null).ToList();
+            return Context.Categories.Where(c => c.ParentId == null).ToList();
         }
 
         public IList<Category> GetChildren(long parentId)
         {
-            return Context.Categories.Where(c => c.CategoryId == parentId).ToList();
+            return Context.Categories.Where(c => c.ParentId == parentId).ToList();
         }
 
         public Category Create(long userId, string name, long? parentId)
@@ -36,7 +36,7 @@ namespace Crypto.Back.Services
             var category = new Category()
             {
                 Name = name,
-                CategoryId = parentId,
+                ParentId = parentId,
                 UserId = userId
             };
             Context.Categories.Add(category);

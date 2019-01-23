@@ -38,7 +38,7 @@ namespace Crypto.Back.Services
         private Page<Comment> GetList(long? articleId, long? commentId, int index, int count)
         {
             var page = Context.Comments
-                .Where(c => c.ArticleId == articleId && c.CommentId == commentId)
+                .Where(c => c.ArticleId == articleId && c.ParentId == commentId)
                 .Include(c => c.User)
                 .GetLastVersions()
                 .ToPage(index, count, c => c.VersionDate, OrderBy.Desc);
@@ -79,7 +79,7 @@ namespace Crypto.Back.Services
             {
                 UserId = userId,
                 ArticleId = articleId,
-                CommentId = commentId,
+                ParentId = commentId,
                 Text = text,
                 CorrelationUid = Guid.NewGuid(),
                 VersionDate = DateTime.Now
@@ -116,7 +116,7 @@ namespace Crypto.Back.Services
                 {
                     UserId = oldComment.UserId,
                     ArticleId = oldComment.ArticleId,
-                    CommentId = oldComment.CommentId,
+                    ParentId = oldComment.ParentId,
                     Text = text,
                     CorrelationUid = oldComment.CorrelationUid,
                     VersionDate = DateTime.Now
@@ -125,7 +125,7 @@ namespace Crypto.Back.Services
 
                 foreach (var child in oldComment.Children)
                 {
-                    child.CommentId = newComment.Id;
+                    child.ParentId = newComment.Id;
                     Context.Comments.Update(child);
                 }
 

@@ -1,4 +1,4 @@
-import { OnInit, Input, Component, forwardRef } from '@angular/core';
+import { OnInit, Input, Component, EventEmitter, Output } from '@angular/core';
 import { Comment } from '../../models/comment';
 
 @Component({
@@ -9,6 +9,7 @@ import { Comment } from '../../models/comment';
 export class CommentComponent implements OnInit {
 
   @Input() comment: Comment;
+  @Output() reply: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 

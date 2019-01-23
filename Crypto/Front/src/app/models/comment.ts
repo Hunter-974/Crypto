@@ -5,6 +5,7 @@ import { Page } from "./page";
 
 export class Comment {
   public id: number;
+  public parentId: number;
   public user: User;
   public children: Page<Comment>;
   public reactions: Reaction[];

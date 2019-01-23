@@ -9,7 +9,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12">
-          <app-comment [comment]="comment"></app-comment>
+          <app-comment [comment]="comment" (reply)="comment.isWriting = true"></app-comment>
         </div>
       </div>
       <div>
@@ -41,11 +41,6 @@
                 <a href="javascript:void(0)" class="text-primary" (click)="comment.isWriting = false">Close</a>
               </div>
               <app-error-message class="col-auto" [error]="comment.error"></app-error-message>
-            </div>
-            <div class="row mt-2" *ngIf="!comment.isWriting">
-              <div class="col-auto">
-                <a href="javascript:void(0)" class="text-primary" (click)="comment.isWriting = true">Reply</a>
-              </div>
             </div>
           </div>
         </div>
