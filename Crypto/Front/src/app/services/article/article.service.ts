@@ -25,8 +25,8 @@ export class ArticleService extends BaseAuthService {
     return this.get<Article>(`${id}`);
   }
 
-  getVersion(id: number): Observable<Article[]> {
-    return this.get<Article[]>(`${id}/versions`);
+  getVersion(id: number): Observable<Page<Article>> {
+    return this.get<Page<Article>>(`${id}/versions`);
   }
 
   create(categoryId: number, title: string, text: string): Observable<Article> {

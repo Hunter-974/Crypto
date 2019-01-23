@@ -6,25 +6,41 @@ export class Page<T> {
 
   constructor() {
     this.items = [];
+    this.index = 0;
+    this.count = 0;
+    this.totalCount = 0;
   }
 
-  public addBefore(newPage: Page<T>) {
+  public addPageBefore(newPage: Page<T>) {
     for (let newItem of newPage.items) {
-      this.items.splice(0, 0, newItem);
+      this.addItemBefore(newItem);
     }
-    this.add(newPage);
+    this.addPage(newPage);
   }
 
-  public addAfter(newPage: Page<T>) {
+  public addPageAfter(newPage: Page<T>) {
     for (let newItem of newPage.items) {
-      this.items.push(newItem);
+      this.addItemAfter(newItem);
     }
-    this.add(newPage);
+    this.addPage(newPage);
   }
 
-  private add(newPage: Page<T>) {
-    this.index += newPage.count;
-    this.count += newPage.count;
+  public addItemBefore(newItem: T) {
+    this.items.splice(0, 0, newItem);
+    this.addItem();
+  }
+
+  public addItemAfter(newItem: T) {
+    this.items.push(newItem);
+    this.addItem();
+  }
+
+  private addPage(newPage: Page<T>) {
     this.totalCount = newPage.totalCount;
+  }
+
+  private addItem() {
+    this.index++;
+    this.count++;
   }
 }

@@ -13,14 +13,19 @@
   <div class="col-auto">
     <div class="input-group">
       <div class="input-group-prepend">
-        <button class="btn btn-warning form-control" (click)="next()">&lt;&lt;</button>
+        <button class="btn btn-secondary form-control" (click)="next()">&lt;&lt;</button>
       </div>
-      <input type="number" class="form-control" style="width: 80px" min="1" [attr.max]="pageCount"
-             [(ngModel)]="displayedPageIndex" />
+      <div class="input-group-append input-group-prepend" *ngIf="!isEditing" style="cursor: pointer;" (click)="isEditing = true">
+        <span class="input-group-text">{{ displayedPageIndex }}&nbsp;/&nbsp;{{ pageCount }}</span>
+      </div>
+      <input type="number" class="form-control" style="width: 70px;" *ngIf="isEditing"
+              min="1" [attr.max]="pageCount" [(ngModel)]="displayedPageIndex" />
+      <span class="input-group-text" *ngIf="isEditing">
+        &nbsp;/&nbsp;{{ pageCount }}&nbsp;
+        <a href="javascript:void(0)" (click)="setPageIndex()" *ngIf="isEditing">Go</a>
+      </span>
       <div class="input-group-append">
-        <span class="input-group-text">/ {{ pageCount }}</span>
-        <button class="btn btn-success form-control" (click)="setPageIndex()">Go</button>
-        <button class="btn btn-warning form-control" (click)="next()">&gt;&gt;</button>
+        <button class="btn btn-secondary form-control" (click)="next()">&gt;&gt;</button>
       </div>
     </div>
   </div>

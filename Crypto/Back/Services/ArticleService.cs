@@ -1,5 +1,6 @@
 using Crypto.Back.Db;
 using Crypto.Back.Models;
+using Crypto.Back.Models.Abstract;
 using Crypto.Back.Services.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -26,24 +27,18 @@ namespace Crypto.Back.Services
 
         public Page<Article> GetList(long categoryId, int index, int count)
         {
-            var list = Context.Articles.Where(a => a.CategoryId == categoryId).Skip(index).Take(count)
-                .Include(a => a.User).ToList();
+            var page = Context.Articles.Where(a => a.CategoryId == categoryId).Include(a => a.User)
+                .GetLastVersions().ToPage(index, count, a => a.VersionDate, OrderBy.Desc);
 
             var totalCount = Context.Articles.Count(a => a.CategoryId == categoryId);
 
-            foreach (var article in list)
+            foreach (var article in page.Items)
             {
                 article.Text = null;
                 SetReactionCounts(article);
             }
 
-            return new Page<Article>
-            {
-                Items = list,
-                Index = index,
-                Count = count,
-                TotalCount = totalCount
-            };
+            return page;
         }
 
         public Article Get(long id)
@@ -60,8 +55,7 @@ namespace Crypto.Back.Services
             var article = Get(id);
             var related = Context.Articles
                 .Where(a => a.CorrelationUid == article.CorrelationUid)
-                .OrderByDescending(a => a.VersionDate)
-                .ToPage();
+                .ToPage(0, int.MaxValue, a => a.VersionDate, OrderBy.Asc);
             return related;
         }
 

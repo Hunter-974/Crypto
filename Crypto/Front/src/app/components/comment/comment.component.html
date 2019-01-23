@@ -1,17 +1,19 @@
-<div class="row">
-  <div class="col-12">
-    <span class="text-primary">{{ comment.user.name }} (#{{ comment.user.id }})</span>&nbsp;
-    <span class="text-info">{{ comment.versionDate | date:"dd/MM/YYYY hh:mm" }}</span>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <div class="text-secondary" [innerHTML]="comment.text">
+<div *ngIf="comment">
+  <div class="row">
+    <div class="col-12">
+      <span class="text-primary">{{ comment.user.name }} (#{{ comment.user.id }})</span>&nbsp;
+      <span class="text-info">{{ comment.versionDate | date:"dd/MM/yyyy hh:mm" }}</span>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <!-- app-reaction-list -->
+  <div class="row">
+    <div class="col-12">
+      <div class="text-secondary" [innerHTML]="comment.text | decrypt">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <!-- app-reaction-list -->
+    </div>
   </div>
 </div>

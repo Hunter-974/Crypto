@@ -11,6 +11,7 @@ export class PagerComponent implements OnInit {
   page: Page<any>
   pageCount: number;
   displayedPageIndex: number;
+  isEditing: boolean;
 
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
   
@@ -61,5 +62,7 @@ export class PagerComponent implements OnInit {
     } else {
       this.page.index = this.displayedPageIndex - 1;
     }
+    this.get(this.page.index);
+    this.isEditing = false;
   }
 }

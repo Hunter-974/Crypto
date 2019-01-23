@@ -14,26 +14,58 @@ export class CommentListComponent implements OnInit {
 
   comments: Page<Comment>;
 
-  static readonly pageSize: number = 20;
+  newCommentText: string;
+  error: string;
+  isWriting: boolean;
 
   constructor(private commentService: CommentService) { }
 
   ngOnInit() {
     this.comments = new Page<Comment>();
-    this.getForArticle();
+    this.getForArticle(10, 5);
   }
 
-  getForArticle() {
-    this.commentService.getForArticle(this.articleId, this.comments.index, CommentListComponent.pageSize).subscribe(
-      result => this.comments.addBefore(result),
-      error => { }
+  getForArticle(count: number, childrenCount: number) {
+    this.commentService.getForArticle(this.articleId, this.comments.index, count).subscribe(
+      result => {
+        for (let comment of result.items) {
+          this.getForComment(comment, childrenCount);
+        }
+        this.comments.addPageBefore(result)
+      },
+      error => this.error = error
     );
   }
 
-  getForComment(comment: Comment) {
-    this.commentService.getForComment(comment.id, comment.children.index, CommentListComponent.pageSize).subscribe(
-      result => comment.children.addBefore(result),
-      error => { }
+  getForComment(comment: Comment, count: number) {
+    if (comment.children == null) {
+      comment.children = new Page<Comment>();
+    }
+    this.commentService.getForComment(comment.id, comment.children.index, count).subscribe(
+      result => comment.children.addPageBefore(result),
+      error => comment.error = error
     );
+  }
+
+  newComment() {
+    this.commentService.createForArticle(this.articleId, this.newCommentText)
+      .subscribe(
+        result => {
+          this.comments.addItemAfter(result);
+          this.newCommentText = null;
+        },
+        error => { }
+      );
+  }
+
+  newSubComment(parentComment: Comment) {
+    this.commentService.createForComment(parentComment.id, parentComment.newCommentText)
+      .subscribe(
+        result => {
+          parentComment.children.addItemAfter(result);
+          parentComment.newCommentText = null;
+        },
+        error => { }
+      );
   }
 }

@@ -1,43 +1,41 @@
-<div class="card">
+<div class="card" *ngIf="article">
   <div class="card-header">
-    <h4 *ngIf="!editing && article" [innerHTML]="article.title | decrypt"></h4>
+    <h4 *ngIf="!isEditing && article" [innerHTML]="article.title | decrypt"></h4>
     <div>
       <span class="text-primary">{{ article.user.name }} (#{{ article.user.id }})</span>&nbsp;
       <span class="text-info">{{ article.versionDate | date:"dd/MM/yyyy hh:mm" }}</span>
     </div>
-    <input class="form-control" type="text" [(ngModel)]="newTitle" *ngIf="editing || creating" />
+    <input class="form-control" type="text" [(ngModel)]="newTitle" *ngIf="isEditing || isCreating" />
   </div>
   <div class="card-body">
     <div class="row">
-      <p class="col-12 text-justify" *ngIf="!editing && !creating && article" [innerHTML]="article.text | decrypt"></p>
-      <div class="col-12 form-group" *ngIf="editing || creating">
+      <p class="col-12 text-justify" *ngIf="!isEditing && !isCreating && article" [innerHTML]="article.text | decrypt"></p>
+      <div class="col-12 form-group" *ngIf="isEditing || isCreating">
         <textarea class="form-control" type="text" [(ngModel)]="newText" rows="20"></textarea>
       </div>
     </div>
     <div class="row">
-      <div class="col-auto" *ngIf="!editing && !creating">
-        <button class="form-control btn btn-warning" (click)="edit()">Edit</button>
+      <div class="col-auto" *ngIf="!isEditing && !isCreating">
+          <button class="form-control btn btn-warning" (click)="edit()">Edit</button>
       </div>
-      <div class="col-auto" *ngIf="editing && !creating">
-        <div class="form-inline">
-          <button class="form-control btn btn-success" (click)="save()">Save</button>
-          <button class="form-control btn btn-danger ml-2" (click)="cancel()">Cancel</button>
-        </div>
+      <div class="col-auto" *ngIf="isEditing && !isCreating">
+          <div class="form-inline">
+              <button class="form-control btn btn-success" (click)="save()">Save</button>
+              <button class="form-control btn btn-danger ml-2" (click)="cancel()">Cancel</button>
+          </div>
       </div>
-      <div class="col-auto" *ngIf="!editing && creating">
-        <button class="form-control btn btn-success" (click)="create()" *ngIf="creating">Create</button>
+      <div class="col-auto" *ngIf="!isEditing && isCreating">
+          <button class="form-control btn btn-success" (click)="create()" *ngIf="isCreating">Create</button>
       </div>
-    </div>
-    <div class="row">
-      <app-error-message class="col-12" [error]="error"></app-error-message>
+      <app-error-message class="col-auto" [error]="error"></app-error-message>
     </div>
   </div>
 </div>
 <div class="card mt-2">
   <div class="card-body">
-    <div class="row justify-content-right">
-      <div class="col-md-11 col-10">
-        <app-comment-list [articleId]="article.id"></app-comment-list>
+    <div class="row">
+      <div class="col-12">
+        <app-comment-list *ngIf="article" [articleId]="article.id"></app-comment-list>
       </div>
     </div>
   </div>

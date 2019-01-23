@@ -11,4 +11,8 @@ export class Comment {
   public reactionCounts: ReactionCount[];
   public text: string;
   public versionDate: Date;
+
+  public newCommentText: string;
+  public error: string;
+  public isWriting: boolean;
 }

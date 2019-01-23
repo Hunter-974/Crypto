@@ -1,5 +1,6 @@
 using Crypto.Back.Controllers.Abstract;
 using Crypto.Back.Models;
+using Crypto.Back.Requests;
 using Crypto.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -18,39 +19,39 @@ namespace Crypto.Back.Controllers
         }
 
         [HttpGet("article/{articleId}/{index}/{count}")]
-        public IList<Comment> GetListForArticle(long articleId, int index, int count)
+        public Page<Comment> GetListForArticle(long articleId, int index, int count)
         {
             return _commentService.GetListForArticle(articleId, index, count);
         }
 
         [HttpGet("comment/{commentId}/{index}/{count}")]
-        public IList<Comment> GetListForComment(long commentId, int index, int count)
+        public Page<Comment> GetListForComment(long commentId, int index, int count)
         {
             return _commentService.GetListForComment(commentId, index, count);
         }
 
         [HttpGet("{id}/versions")]
-        public IList<Comment> GetAllVersions(long id)
+        public Page<Comment> GetAllVersions(long id)
         {
             return _commentService.GetAllVersions(id);
         }
 
         [HttpPost("article/{articleId}")]
-        public Comment CreateForArticle(long articleId, string text)
+        public Comment CreateForArticle(long articleId, [FromBody] Request<string> text)
         {
-            return ForLoggedUser(user => _commentService.CreateForArticle(user.Id, articleId, text));
+            return ForLoggedUser(user => _commentService.CreateForArticle(user.Id, articleId, text.Value));
         }
 
         [HttpPost("comment/{parentId}")]
-        public Comment CreateForComment(long parentId, [FromBody] string text)
+        public Comment CreateForComment(long parentId, [FromBody] Request<string> text)
         {
-            return ForLoggedUser(user => _commentService.CreateForComment(user.Id, parentId, text));
+            return ForLoggedUser(user => _commentService.CreateForComment(user.Id, parentId, text.Value));
         }
 
         [HttpPut("{id}")]
-        public Comment Edit(long id, [FromBody] string text)
+        public Comment Edit(long id, [FromBody] Request<string> text)
         {
-            return ForLoggedUser(user => _commentService.Edit(user.Id, id, text));
+            return ForLoggedUser(user => _commentService.Edit(user.Id, id, text.Value));
         }
     }
 }
