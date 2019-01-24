@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { Duration } from 'moment';
 import { hash, encrypt } from '../crypto/crypto.module';
+import { AuthResult } from 'src/app/models/auth-result';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class AuthService extends BaseAuthService {
     super(http, "auth");
   }
 
-  public signup(name: string, password: string, location: string, sessionLifetime: Duration): Observable<string> {
-    return this.post("signup",
+  public signup(name: string, password: string, location: string, sessionLifetime: Duration): Observable<AuthResult> {
+    return this.post<AuthResult>("signup",
       {
         name: name,
         password: hash(password),
@@ -28,12 +29,15 @@ export class AuthService extends BaseAuthService {
           subscriber.error(Error("Please provide a name and a password."));
         }
       },
-      (result) => { BaseAuthService.token = result; }
+      (result) => {
+        BaseAuthService.token = result.token;
+        BaseAuthService._userId = result.userId;
+      }
     );
   }
 
-  public login(name: string, password: string, location: string, sessionLifetime: Duration): Observable<string> {
-    return this.post("login",
+  public login(name: string, password: string, location: string, sessionLifetime: Duration): Observable<AuthResult> {
+    return this.post<AuthResult>("login",
       {
         name: name,
         password: hash(password),
@@ -45,12 +49,22 @@ export class AuthService extends BaseAuthService {
           subscriber.error(Error("Please provide a name and a password."));
         }
       },
-      (result) => { BaseAuthService.token = result; }
+      (result) => {
+        BaseAuthService.token = result.token;
+        BaseAuthService._userId = result.userId;
+      }
     );
   }
 
   public logout(): Observable<User> {
-    return this.post("logout", null);
+
+    return this.post("logout", null,
+      subscriber => { },
+      result => {
+        BaseAuthService._userId = null;
+        BaseAuthService.token = null;
+      }
+    );
   }
 
   private getDurationString(duration: Duration): string {

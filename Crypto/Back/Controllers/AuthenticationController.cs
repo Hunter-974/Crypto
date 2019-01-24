@@ -1,5 +1,6 @@
 using Crypto.Back.Controllers.Abstract;
 using Crypto.Back.Requests;
+using Crypto.Back.Results;
 using Crypto.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,13 +20,13 @@ namespace Crypto.Back.Controllers
     }
 
     [HttpPost("signup")]
-    public Guid SignUp([FromBody] LogInRequest request)
+    public LogInResponse SignUp([FromBody] LogInRequest request)
     {
       return _userService.SignUp(request.Name, request.Password, request.Location, request.SessionLifetime);
     }
 
     [HttpPost("login")]
-    public Guid LogIn([FromBody] LogInRequest request)
+    public LogInResponse LogIn([FromBody] LogInRequest request)
     {
       return _userService.LogIn(request.Name, request.Password, request.Location, request.SessionLifetime);
     }

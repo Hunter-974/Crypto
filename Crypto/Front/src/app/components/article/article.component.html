@@ -2,7 +2,7 @@
   <div class="card-header">
     <h4 *ngIf="!isEditing && article" [innerHTML]="article.title | decrypt"></h4>
     <div>
-      <span class="text-primary">{{ article.user.name }} (#{{ article.user.id }})</span>&nbsp;
+      <span class="text-danger">{{ article.user.name }} (#{{ article.user.id }})</span>&nbsp;
       <span class="text-info">{{ article.versionDate | date:"dd/MM/yyyy hh:mm" }}</span>
     </div>
     <input class="form-control" type="text" [(ngModel)]="newTitle" *ngIf="isEditing || isCreating" />
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-auto" *ngIf="!isEditing && !isCreating">
+      <div class="col-auto" *ngIf="!isEditing && !isCreating && isOwner">
           <button class="form-control btn btn-warning" (click)="edit()">Edit</button>
       </div>
       <div class="col-auto" *ngIf="isEditing && !isCreating">

@@ -4,8 +4,7 @@
       <a href="javascript:void(0)" class="text-primary" (click)="getForArticle(50, 1)">Show previous comments</a>
     </div>
   </div>
-  <div class="list-group-item mt-1 p-0 pt-1 pb-2"
-       *ngFor="let comment of comments.items">
+  <div class="row mb-4" *ngFor="let comment of comments.items">
     <div class="col-12">
       <div class="row">
         <div class="col-12">
@@ -20,13 +19,12 @@
                 <a href="javascript:void(0)" class="text-primary" (click)="getForComment(comment, 50)">Show previous replies</a>
               </div>
             </div>
-            <div class="list-group-item mt-1 p-0 pt-1 pb-2"
-               *ngFor="let subComment of comment.children.items">
+            <div class="row mt-2 pl-5" *ngFor="let subComment of comment.children.items">
               <div class="col-12">
                 <app-comment [comment]="subComment"></app-comment>
               </div>
             </div>
-            <div class="row mt-2" *ngIf="comment.isWriting">
+            <div class="row mt-2 pl-5" *ngIf="comment.isWriting">
               <div class="col-12">
                 <div class="form-group">
                   <textarea class="form-control" rows="3" [(ngModel)]="comment.newCommentText"></textarea>
@@ -47,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div class="row mt-4" *ngIf="isWriting">
+  <div class="row" *ngIf="isWriting">
     <div class="col-12">
       <div class="form-group">
         <textarea class="form-control" rows="3" [(ngModel)]="newCommentText"></textarea>
@@ -63,7 +61,7 @@
     </div>
     <app-error-message class="col-auto" [error]="error"></app-error-message>
   </div>
-  <div class="row mt-4" *ngIf="!isWriting">
+  <div class="row" *ngIf="!isWriting">
     <div class="col-auto">
       <a href="javascript:void(0)" class="text-primary" (click)="isWriting = true">Comment</a>
     </div>

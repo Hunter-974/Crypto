@@ -71,7 +71,7 @@ namespace Crypto
             StartInfo = new ProcessStartInfo
             {
               FileName = "cmd.exe",
-              Arguments = "/C npm start --prefix ./Front",
+              Arguments = "/C npm start --host=0.0.0.0 --port=4200 --prefix=./Front",
               UseShellExecute = false
             }
           };

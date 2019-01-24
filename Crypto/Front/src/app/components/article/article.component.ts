@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Article } from 'src/app/models/article';
 import { ArticleService } from 'src/app/services/article/article.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BaseAuthService } from 'src/app/services/base-auth-service';
 
 @Component({
   selector: 'app-article',
@@ -76,6 +77,10 @@ export class ArticleComponent implements OnInit {
     this.article = result;
     this.newText = result.text;
     this.newTitle = result.title;
+  }
+
+  get isOwner(): boolean {
+    return this.article && this.article.user.id == BaseAuthService.userId;
   }
 
 }

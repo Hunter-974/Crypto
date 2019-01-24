@@ -6,7 +6,12 @@ export class BaseAuthService {
 
   private baseUrl: string;
 
-  protected static token: string;
+  protected static token: string = null;
+  protected static _userId: number = null;
+
+  public static get userId(): number {
+    return BaseAuthService._userId;
+  }
 
   constructor(private http: HttpClient, private path: string) {
     this.baseUrl = `${environment.settings.apiBaseUrl}/${path}`;
