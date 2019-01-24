@@ -3,9 +3,9 @@
     <div class="col-12">
       <span class="text-danger">{{ comment.user.name }} (#{{ comment.user.id }})</span>&nbsp;
       <span class="text-info">{{ comment.versionDate | date:"dd/MM/yyyy hh:mm" }}</span>&nbsp;
-      <a href="javascript:void(0)" class="text-primary" (click)="reply.emit()" *ngIf="comment.parentId == null || comment.parentId == undefined">Reply</a>
+      <a href="javascript:void(0)" class="text-primary" (click)="reply.emit()"
+         *ngIf="(comment.parentId == null || comment.parentId == undefined) && auth.isLoggedIn">Reply</a>
     </div>
-
     <div class="row mt-2">
       <div class="col-auto">
         

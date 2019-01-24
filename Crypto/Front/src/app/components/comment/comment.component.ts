@@ -1,5 +1,6 @@
 import { OnInit, Input, Component, EventEmitter, Output } from '@angular/core';
 import { Comment } from '../../models/comment';
+import { BaseAuthService } from 'src/app/services/base-auth-service';
 
 @Component({
   selector: 'app-comment',
