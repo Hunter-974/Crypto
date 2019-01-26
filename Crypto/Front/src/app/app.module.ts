@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -19,16 +19,11 @@ import { ArticleComponent } from './components/article/article.component';
 import { ArticleListModule } from './components/article-list/article-list.module';
 import { ArticleModule } from './components/article/article.module';
 import { ArticleListComponent } from './components/article-list/article-list.component';
-import { ReactionListComponent } from './components/reaction-list/reaction-list.component';
-import { ReactionComponent } from './components/reaction/reaction.component';
 import { BaseAuthService } from './services/base-auth-service';
 import { CryptoService } from './services/crypto/crypto.service';
 import { PipesModule } from './pipes/pipes/pipes.module';
-import { IfIsLoggedInDirective } from './directives/if-is-logged-in/if-is-logged-in.directive';
-import { IfIsOwnerDirective } from './directives/if-is-owner/if-is-owner.directive';
-import { IfHasKeyDirective } from './directives/if-has-key/if-has-key.directive';
-import { DecryptDirective } from './directives/decrypt/decrypt.directive';
 import { DirectivesModule } from './directives/directives/directives.module';
+import { _sanitizeHtml } from '@angular/core/src/sanitization/html_sanitizer';
 
 const routes: Route[] = [
   { path: "", component: HomeComponent },
@@ -65,6 +60,7 @@ const routes: Route[] = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  
 }
 
 export let crypt = {

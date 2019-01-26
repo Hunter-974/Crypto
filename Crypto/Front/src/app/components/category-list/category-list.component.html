@@ -21,7 +21,7 @@
                   <div class="col-12">
                     <ul>
                       <li *ngFor="let subCategory of category.children">
-                        <a href="javascript:void(0)" class="text-primary font-weight-bold" [appDecrypt] (click)="openChild(subCategory.id)"></a>
+                        <a href="javascript:void(0)" class="text-primary font-weight-bold" [appDecrypt]="subCategory.name" (click)="openChild(subCategory.id)"></a>
                       </li>
                     </ul>
                   </div>

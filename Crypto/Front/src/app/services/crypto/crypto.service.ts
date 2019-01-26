@@ -1,19 +1,11 @@
 import { AES, enc, SHA256 } from 'crypto-js'
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { InjectionToken } from '@angular/core';
-import { StaticInjector } from '@angular/core/src/di/injector';
+import { SafeHtml } from '@angular/platform-browser';
 
 export class CryptoService {
 
   private static key: string;
-  private static _encryptedTemplate: SafeHtml;
-
-  public static get encryptedTemplate(): SafeHtml {
-    if (!CryptoService._encryptedTemplate) {
-      CryptoService._encryptedTemplate = CryptoService.createEncryptedTemplate();
-    }
-    return this._encryptedTemplate;
-  }
+  public static readonly encryptedTemplate: string
+  = "<span class=\"bg-dark px-1 my-2\" style=\"font-family: 'Lucida Console'; color: #00FF00; border-radius: 5px \">Encrypted text</span>";
 
   public static setKey(key: string) {
     CryptoService.key = key;
@@ -55,13 +47,4 @@ export class CryptoService {
     CryptoService.checkSha();
     return SHA256(data).toString();
   }
-
-  private static createEncryptedTemplate(): SafeHtml {
-    var injector = new StaticInjector([]);
-    var sanitizer = injector.get<DomSanitizer>(new InjectionToken("sanitizer"));
-    var html = sanitizer.bypassSecurityTrustHtml(
-      "<span class=\"bg-dark px-1 my-2\" style=\"font-family: 'Lucida Console'; color: #00FF00; border-radius: 5px \">Encrypted text</span>"
-    );
-    return html;
-   }
 }

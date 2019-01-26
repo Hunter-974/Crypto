@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { CryptoService } from '../../services/crypto/crypto.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Pipe({
   name: 'decrypt',
@@ -7,10 +8,10 @@ import { CryptoService } from '../../services/crypto/crypto.service';
 })
 export class DecryptPipe implements PipeTransform {
 
-  constructor() { }
+  constructor(private domSanitizer: DomSanitizer) { }
 
   transform(value: any, args?: any): any {
-    let result = CryptoService.encryptedTemplate;
+    let result = this.domSanitizer.bypassSecurityTrustHtml(CryptoService.encryptedTemplate);
       
     try {
       var decrypted = CryptoService.decrypt(value);
