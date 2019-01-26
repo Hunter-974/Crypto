@@ -7,10 +7,10 @@ import { CryptoService } from 'src/app/services/crypto/crypto.service';
 })
 export class EncryptPipe implements PipeTransform {
 
-  constructor(private cryptoService: CryptoService) { }
+  constructor() { }
 
   transform(value: any, args?: any): any {
-    return this.cryptoService.encrypt(value);
+    return CryptoService.encrypt(value);
   }
 
 }

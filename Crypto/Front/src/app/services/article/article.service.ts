@@ -4,7 +4,7 @@ import { BaseAuthService } from '../base-auth-service';
 import { Observable } from 'rxjs';
 import { Article } from 'src/app/models/article';
 import { Page } from 'src/app/models/page';
-import { encrypt } from '../crypto/crypto.module';
+import { crypt } from '../../app.module';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,8 @@ export class ArticleService extends BaseAuthService {
     return this.post<Article>("",
       {
         categoryId: categoryId,
-        title: encrypt(title),
-        text: encrypt(text)
+        title: crypt.encrypt(title),
+        text: crypt.encrypt(text)
       },
       (subscriber) => {
         if (!title || !title.length) {
@@ -50,8 +50,8 @@ export class ArticleService extends BaseAuthService {
   edit(id: number, title: string, text: string): Observable<Article> {
     return this.put<Article>(`${id}`,
       {
-        title: encrypt(title),
-        text: encrypt(text)
+        title: crypt.encrypt(title),
+        text: crypt.encrypt(text)
       },
       (subscriber) => {
         if (!title || !title.length) {

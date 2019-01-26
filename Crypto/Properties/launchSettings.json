@@ -10,7 +10,6 @@
   "profiles": {
     "Crypto": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "http://localhost:4200",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

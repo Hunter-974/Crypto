@@ -2,7 +2,6 @@
   <div class="col-auto input-group" *ngIf="!isLoggedIn">
     <input class="form-control" type="text" [(ngModel)]="name" placeholder="name" />
     <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
-    <input class="form-control" type="text" [(ngModel)]="location" placeholder="location" />
     <input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />
     <div class="input-group-append" *ngIf="!isSigningUp">
       <button class="form-control btn btn-success" (click)="login()">Login</button>
@@ -16,7 +15,7 @@
 
   <div class="col justify-content-end input-group" *ngIf="isLoggedIn">
     <div class="input-group-prepend">
-      <span class="input-group-text">{{ name }} ({{ location }})</span>
+      <span class="input-group-text">{{ name }}</span>
     </div>
     <div class="input-group-append">
       <button class="form-control btn btn-danger" value="Logout" (click)="logout()">Logout</button>

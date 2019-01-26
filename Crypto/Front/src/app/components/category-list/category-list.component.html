@@ -15,27 +15,38 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="openedParentId == category.id">
-              <div class="col-12 font-weight-bold">Subcategories</div>
-
-              <div class="col-12">
-                <ul>
-                  <li *ngFor="let subCategory of category.children">
-                    <a href="javascript:void(0)" class="text-primary" (click)="openChild(subCategory.id)" [innerHTML]="subCategory.name | decrypt"></a>
-                  </li>
-                </ul>
+            <div class="row" *ngIf="category.isOpened">
+              <div class="col-12 pl-4">
+                <div class="row">
+                  <div class="col-12">
+                    <ul>
+                      <li *ngFor="let subCategory of category.children">
+                        <a href="javascript:void(0)" class="text-primary font-weight-bold" [appDecrypt] (click)="openChild(subCategory.id)"></a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-auto" *ngIf="!category.isOpened">
+                  <a href="javascript:void(0)" class="text-primary" (click)="openChild(subCategory.id)">New category</a>
+                </div>
+                <div class="col-auto mt-1" *ngIf="category.isOpened">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">New subcategory</span>
+                    </div>
+                    <input type="text" class="form-control" [(ngModel)]="category.newText" />
+                    <div class="input-group-append">
+                      <button class="form-control btn btn-success" (click)="createChild(category)">Create</button>
+                    </div>
+                  </div>
+                  
+                </div>
+                <app-error-message class="col-12" [error]="category.error"></app-error-message>
               </div>
               
-              <div class="col-12 input-group mt-1">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">New subcategory</span>
-                </div>
-                <input type="text" class="form-control" [(ngModel)]="newSubCategoryName" />
-                <div class="input-group-append">
-                  <button class="form-control btn btn-success" (click)="createChild(category)">Create</button>
-                </div>
-              </div>
-              <app-error-message class="col-12" [error]="subCategoryError"></app-error-message>
+
+
+              
             </div>
 
           </li>

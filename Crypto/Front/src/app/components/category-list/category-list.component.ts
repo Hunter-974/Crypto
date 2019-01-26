@@ -39,11 +39,11 @@ export class CategoryListComponent implements OnInit {
     this.categoryService.getChildren(parent.id).subscribe(
       result => {
         parent.children = result;
-        this.openedParentId = parent.id;
+        parent.isOpened = true;
       },
       error => {
-        this.subCategoryError = error.toString();
-        this.openedParentId = parent.id;
+        parent.error = error.toString();
+        parent.isOpened = true;
       }
     );
   }
@@ -60,13 +60,13 @@ export class CategoryListComponent implements OnInit {
   }
 
   createChild(parent: Category) {
-    this.subCategoryError = null;
-    this.categoryService.createChild(parent.id, this.newSubCategoryName).subscribe(
+    parent.error = null;
+    this.categoryService.createChild(parent.id, parent.newText).subscribe(
       result => {
-        this.newSubCategoryName = null;
+        parent.newText = null;
         this.getChildrenList(parent)
       },
-      error => { this.subCategoryError = error.toString(); }
+      error => { parent.error = error.toString(); }
     );
   }
 

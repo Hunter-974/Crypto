@@ -1,7 +1,0 @@
-{
-  "name": "prod",
-  "settings": {
-    "production": true,
-    "apiBaseUrl": "/api"
-  }
-}

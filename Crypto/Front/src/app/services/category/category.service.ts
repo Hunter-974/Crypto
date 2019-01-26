@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseAuthService } from '../base-auth-service';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
-import { encrypt } from '../crypto/crypto.module';
+import { crypt } from '../../app.module';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class CategoryService extends BaseAuthService {
   }
 
   createParent(name: string): Observable<Category> {
-    return this.post<Category>("", { value: encrypt(name) },
+    return this.post<Category>("", { value: crypt.encrypt(name) },
       (subscriber) => {
         if (!name || !name.length) {
           subscriber.error(Error("Please specify a category name."));
@@ -33,7 +33,7 @@ export class CategoryService extends BaseAuthService {
   }
 
   createChild(parentId: number, name: string): Observable<Category> {
-    return this.post<Category>(`${parentId}`, { value: encrypt(name) },
+    return this.post<Category>(`${parentId}`, { value: crypt.encrypt(name) },
       (subscriber) => {
         if (!name || !name.length) {
           subscriber.error(Error("Please specify a category name."));

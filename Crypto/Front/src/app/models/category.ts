@@ -7,4 +7,7 @@ export class Category {
   public articles: Article[];
 
   public isOpened: boolean;
+  public isWriting: boolean;
+  public newText: string;
+  public error: string;
 }

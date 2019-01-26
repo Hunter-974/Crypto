@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseAuthService } from '../base-auth-service';
 import { Page } from 'src/app/models/page';
 import { Observable } from 'rxjs';
-import { encrypt } from '../crypto/crypto.module';
+import { crypt } from '../../app.module';
 import { Comment } from '../../models/comment';
 
 @Injectable({
@@ -29,7 +29,7 @@ export class CommentService extends BaseAuthService {
 
   createForArticle(articleId: number, text: string): Observable<Comment> {
     return this.post<Comment>(`article/${articleId}`,
-      { value: encrypt(text) },
+      { value: crypt.encrypt(text) },
       (subscriber) => {
         if (!text || !text.length) {
           subscriber.error(Error("Please provide a text."));
@@ -40,7 +40,7 @@ export class CommentService extends BaseAuthService {
 
   createForComment(parentId: number, text: string): Observable<Comment> {
     return this.post<Comment>(`comment/${parentId}`,
-      { value: encrypt(text) },
+      { value: crypt.encrypt(text) },
       (subscriber) => {
         if (!text || !text.length) {
           subscriber.error(Error("Please provide a text."));
@@ -51,7 +51,7 @@ export class CommentService extends BaseAuthService {
 
   edit(id: number, text: string): Observable<Comment> {
     return this.put<Comment>(`${id}`,
-      { value: encrypt(text) },
+      { value: crypt.encrypt(text) },
       (subscriber) => {
         if (!text || !text.length) {
           subscriber.error(Error("Please provide a text."));

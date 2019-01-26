@@ -62,7 +62,8 @@ namespace Crypto
       app.UseDefaultFiles();
       app.UseStaticFiles();
 
-      if (env.IsDevelopment())
+#if false
+            if (env.IsDevelopment())
       {
         try
         {
@@ -82,6 +83,7 @@ namespace Crypto
           Console.WriteLine(ex);
         }
       }
+#endif
 
       var applicationLifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
       applicationLifetime.ApplicationStopping.Register(OnShutDown);

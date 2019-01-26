@@ -4,7 +4,7 @@ import { BaseAuthService } from '../base-auth-service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { Duration } from 'moment';
-import { hash, encrypt } from '../crypto/crypto.module';
+import { crypt } from '../../app.module';
 import { AuthResult } from 'src/app/models/auth-result';
 
 @Injectable({
@@ -16,12 +16,11 @@ export class AuthService extends BaseAuthService {
     super(http, "auth");
   }
 
-  public signup(name: string, password: string, location: string, sessionLifetime: Duration): Observable<AuthResult> {
+  public signup(name: string, password: string, sessionLifetime: Duration): Observable<AuthResult> {
     return this.post<AuthResult>("signup",
       {
         name: name,
-        password: hash(password),
-        location: encrypt(location),
+        password: crypt.hash(password),
         sessionLifetime: this.getDurationString(sessionLifetime)
       },
       (subscriber) => {
@@ -36,12 +35,11 @@ export class AuthService extends BaseAuthService {
     );
   }
 
-  public login(name: string, password: string, location: string, sessionLifetime: Duration): Observable<AuthResult> {
+  public login(name: string, password: string, sessionLifetime: Duration): Observable<AuthResult> {
     return this.post<AuthResult>("login",
       {
         name: name,
-        password: hash(password),
-        location: encrypt(location),
+        password: crypt.hash(password),
         sessionLifetime: this.getDurationString(sessionLifetime)
       },
       (subscriber) => {
