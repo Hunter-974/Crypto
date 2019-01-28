@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { CommentComponent } from './comment.component';
 import { FormsModule } from '@angular/forms';
 import { PipesModule } from 'src/app/pipes/pipes/pipes.module';
+import { AuthorDateModule } from '../author-date/author-date.module';
+import { ErrorMessageModule } from '../error-message/error-message.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    PipesModule
+    PipesModule,
+    AuthorDateModule,
+    ErrorMessageModule
   ],
   declarations: [CommentComponent],
   exports: [CommentComponent]

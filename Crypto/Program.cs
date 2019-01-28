@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Crypto
 {
@@ -10,8 +12,26 @@ namespace Crypto
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var builder = WebHost.CreateDefaultBuilder(args);
+            builder.UseStartup<Startup>();
+
+            if (args.Any())
+            {
+                var portRegex = new Regex(@"^--port=(\d+)");
+                foreach (var arg in args)
+                {
+                    var match = portRegex.Match(arg);
+                    if (match.Success)
+                    {
+                        var port = int.Parse(match.Groups[1].Value);
+                        builder.UseUrls($"http://*:{port}");
+                    }
+                }
+            }
+
+            return builder;
+        }
     }
 }

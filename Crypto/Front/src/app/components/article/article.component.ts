@@ -3,13 +3,17 @@ import { Article } from 'src/app/models/article';
 import { ArticleService } from 'src/app/services/article/article.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseAuthService } from 'src/app/services/base-auth-service';
+import { BaseComponent } from '../base-component';
+import { decrypt } from 'src/app/services/crypto/crypto.service';
+import { Comment } from 'src/app/models/comment';
+import { Page } from 'src/app/models/page';
 
 @Component({
   selector: 'app-article',
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.css']
 })
-export class ArticleComponent implements OnInit {
+export class ArticleComponent extends BaseComponent implements OnInit {
 
   isCreating: boolean;
   isEditing: boolean;
@@ -25,6 +29,7 @@ export class ArticleComponent implements OnInit {
     private router: Router,
     activatedRoute: ActivatedRoute
   ) {
+    super();
     let snapshot = activatedRoute.snapshot;
     if (snapshot.url.some(u => u.path == "new")) {
       this.isCreating = true;
@@ -42,25 +47,7 @@ export class ArticleComponent implements OnInit {
 
   getArticle() {
     this.articleService.getArticle(this.articleId).subscribe(
-      result => this.copyResult(result),
-      error => this.error = error.toString()
-    );
-  }
-
-  edit() {
-    this.isEditing = true;
-    this.error = null;
-  }
-
-  cancel() {
-    this.isEditing = false;
-    this.error = null;
-  }
-
-  save() {
-    this.error = null;
-    this.articleService.edit(this.article.id, this.newTitle, this.newText).subscribe(
-      result => this.copyResult(result),
+      result => { this.article = result; },
       error => this.error = error.toString()
     );
   }
@@ -73,14 +60,51 @@ export class ArticleComponent implements OnInit {
     );
   }
 
+  startEdit() {
+    this.isEditing = true;
+    this.copyResult(this.article);
+    this.error = null;
+  }
+
+  edit() {
+    this.error = null;
+    this.articleService.edit(this.article.id, this.newTitle, this.newText).subscribe(
+      result => {
+        result.reactionCounts = this.article.reactionCounts;
+        result.comments = this.article.comments;
+        this.article = result;
+        this.isEditing = false;
+      },
+      error => this.error = error.toString()
+    );
+  }
+
+  delete() {
+    if (confirm("Are you sure you want to delete this article ?")) {
+      this.error = null;
+      this.articleService.remove(this.article.id).subscribe(
+        () => this.router.navigate(["/categories"]),
+        error => this.error = error.toString()
+      );
+    }
+  }
+
+  cancel() {
+    this.isEditing = false;
+    this.error = null;
+  }
+
   copyResult(result: Article) {
-    this.article = result;
-    this.newText = result.text;
-    this.newTitle = result.title;
+    this.newText = decrypt(result.text);
+    this.newTitle = decrypt(result.title);
   }
 
-  get isOwner(): boolean {
-    return this.article && this.article.user.id == BaseAuthService.userId;
+  clearResult() {
+    this.newText = null;
+    this.newTitle = null;
   }
 
+  refreshComments(comments: Page<Comment>) {
+    this.article.comments = comments;
+  }
 }

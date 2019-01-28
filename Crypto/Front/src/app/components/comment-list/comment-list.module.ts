@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommentListComponent } from './comment-list.component';
 import { CommentModule } from '../comment/comment.module';
@@ -15,4 +15,5 @@ import { ErrorMessageModule } from '../error-message/error-message.module';
   declarations: [CommentListComponent],
   exports: [CommentListComponent]
 })
-export class CommentListModule { }
+export class CommentListModule {
+}

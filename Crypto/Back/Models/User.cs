@@ -13,8 +13,6 @@ namespace Crypto.Back.Models
         [Required, JsonIgnore]
         public string Password { get; set; }
 
-        public string Location { get; set; }
-
         [JsonIgnore]
         public DateTime SignUpDate { get; set; }
 

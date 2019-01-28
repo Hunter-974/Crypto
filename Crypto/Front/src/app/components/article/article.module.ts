@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PipesModule } from 'src/app/pipes/pipes/pipes.module';
 import { ErrorMessageModule } from '../error-message/error-message.module';
 import { CommentListModule } from '../comment-list/comment-list.module';
+import { AuthorDateModule } from '../author-date/author-date.module';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { CommentListModule } from '../comment-list/comment-list.module';
     FormsModule,
     PipesModule,
     ErrorMessageModule,
-    CommentListModule
+    CommentListModule,
+    AuthorDateModule
   ],
   declarations: [ArticleComponent],
   exports: [ArticleComponent]

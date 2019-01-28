@@ -4,7 +4,7 @@ import { BaseAuthService } from '../base-auth-service';
 import { Observable } from 'rxjs';
 import { Article } from 'src/app/models/article';
 import { Page } from 'src/app/models/page';
-import { crypt } from '../../app.module';
+import { encrypt } from '../crypto/crypto.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,34 +33,38 @@ export class ArticleService extends BaseAuthService {
     return this.post<Article>("",
       {
         categoryId: categoryId,
-        title: crypt.encrypt(title),
-        text: crypt.encrypt(text)
+        title: encrypt(title),
+        text: encrypt(text)
       },
-      (subscriber) => {
+      () => {
         if (!title || !title.length) {
-          subscriber.error(Error("Please provide a title."));
+          throw Error("Please provide a title.");
         }
         if (!text || !text.length) {
-          subscriber.error(Error("Please provide a text."));
+          throw Error("Please provide a text.");
         }
       }
     );
   }
 
   edit(id: number, title: string, text: string): Observable<Article> {
-    return this.put<Article>(`${id}`,
+    return this.put<Article>(id.toString(),
       {
-        title: crypt.encrypt(title),
-        text: crypt.encrypt(text)
+        title: encrypt(title),
+        text: encrypt(text)
       },
-      (subscriber) => {
+      () => {
         if (!title || !title.length) {
-          subscriber.error(Error("Please provide a title."));
+          throw Error("Please provide a title.");
         }
         if (!text || !text.length) {
-          subscriber.error(Error("Please provide a text."));
+          throw Error("Please provide a text.");
         }
       }
     );
+  }
+  
+  remove(id: number): Observable<any> {
+    return this.delete(`${id}`);
   }
 }

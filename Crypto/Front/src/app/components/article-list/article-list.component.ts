@@ -4,13 +4,14 @@ import { Article } from 'src/app/models/article';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/models/page';
 import { Observable } from 'rxjs';
+import { BaseComponent } from '../base-component';
 
 @Component({
   selector: 'app-article-list',
   templateUrl: './article-list.component.html',
   styleUrls: ['./article-list.component.css']
 })
-export class ArticleListComponent implements OnInit {
+export class ArticleListComponent extends BaseComponent implements OnInit {
 
   categoryId: number;
   error: string;
@@ -22,6 +23,7 @@ export class ArticleListComponent implements OnInit {
     private router: Router,
     activatedRoute: ActivatedRoute
   ) {
+    super();
     this.categoryId = parseInt(activatedRoute.snapshot.paramMap.get("categoryId"));
   }
 

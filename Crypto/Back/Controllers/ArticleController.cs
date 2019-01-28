@@ -47,5 +47,11 @@ namespace Crypto.Back.Controllers
         {
             return ForLoggedUser(user => _articleService.Edit(user.Id, id, request.Title, request.Text));
         }
+
+        [HttpDelete("{id}")]
+        public void Delete(long id)
+        { 
+            ForLoggedUser(user => _articleService.Delete(user.Id, id));
+        }
     }
 }

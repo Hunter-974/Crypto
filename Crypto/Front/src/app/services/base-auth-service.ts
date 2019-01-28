@@ -13,6 +13,17 @@ export class BaseAuthService {
     return BaseAuthService._userId;
   }
 
+  public static get isLoggedIn(): boolean {
+    return BaseAuthService.userId != undefined && BaseAuthService.userId != null;
+  };
+
+  public static isOwner(model: any): boolean {
+    return model
+      && model.user
+      && model.user.id
+      && model.user.id === BaseAuthService.userId;
+  }
+
   constructor(private http: HttpClient, private path: string) {
     this.baseUrl = `${environment.settings.apiBaseUrl}/${path}`;
   }
@@ -26,11 +37,12 @@ export class BaseAuthService {
         );  
       } catch (ex) {
         subscriber.error(ex);
+        subscriber.complete();
       }
     });
   }
 
-  protected post<T>(path: string, body?: any, before?: (subscriber: Subscriber<T>) => void, success?: (result: T) => void): Observable<T> {
+  protected post<T>(path: string, body?: any, before?: () => void, success?: (result: T) => void): Observable<T> {
     return new Observable<T>(subscriber => {
       try {
         this.execute(subscriber, before);
@@ -40,11 +52,12 @@ export class BaseAuthService {
         );
       } catch (ex) {
         subscriber.error(ex);
+        subscriber.complete();
       }
     });
   }
 
-  protected put<T>(path: string, body?: any, before?: (subscriber: Subscriber<T>) => void, success?: (result: T) => void): Observable<T> {
+  protected put<T>(path: string, body?: any, before?: () => void, success?: (result: T) => void): Observable<T> {
     return new Observable<T>(subscriber => {
       try {
         this.execute(subscriber, before);
@@ -54,6 +67,7 @@ export class BaseAuthService {
         );
       } catch (ex) {
         subscriber.error(ex);
+        subscriber.complete();
       }
     });
   }
@@ -67,6 +81,7 @@ export class BaseAuthService {
         );
       } catch (ex) {
         subscriber.error(ex);
+        subscriber.complete();
       }
     });
   }

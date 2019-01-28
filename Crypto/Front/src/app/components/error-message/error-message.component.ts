@@ -1,16 +1,19 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { BaseComponent } from '../base-component';
 
 @Component({
   selector: 'app-error-message',
   templateUrl: './error-message.component.html',
   styleUrls: ['./error-message.component.css']
 })
-export class ErrorMessageComponent implements OnInit {
+export class ErrorMessageComponent extends BaseComponent implements OnInit {
 
   @Input() error: string;
   @Input() addclass: string;
 
-  constructor() { }
+  constructor() {
+    super();
+   }
 
   ngOnInit() {
   }

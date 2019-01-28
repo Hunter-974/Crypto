@@ -1,5 +1,5 @@
 import { Directive, ElementRef, TemplateRef, ViewContainerRef, Input, OnInit } from '@angular/core';
-import {  auth } from 'src/app/app.module';
+import { BaseAuthService } from 'src/app/services/base-auth-service';
 
 @Directive({
   selector: '[appIfIsLoggedIn]'
@@ -14,7 +14,7 @@ export class IfIsLoggedInDirective implements OnInit {
   }
 
   ngOnInit() {
-    if (auth.isLoggedIn) {
+    if (BaseAuthService.isLoggedIn) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

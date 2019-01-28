@@ -8,7 +8,7 @@ namespace Crypto.Back.Models
     public class Article : VersionedEntity
     {
         [ForeignKey("User.Id")]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         [ForeignKey("Category.Id")]
         public long CategoryId { get; set; }

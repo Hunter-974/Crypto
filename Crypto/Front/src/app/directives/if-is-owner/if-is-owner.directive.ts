@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
-import { auth } from 'src/app/app.module';
+import { BaseAuthService } from 'src/app/services/base-auth-service';
 
 @Directive({
   selector: '[appIfIsOwner]'
@@ -16,7 +16,7 @@ export class IfIsOwnerDirective implements OnInit {
     }
 
     ngOnInit() {
-      if (auth.isOwner(this.model)) {
+      if (BaseAuthService.isOwner(this.model)) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       } else {
         this.viewContainer.clear();

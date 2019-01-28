@@ -1,20 +1,103 @@
 import { OnInit, Input, Component, EventEmitter, Output } from '@angular/core';
 import { Comment } from '../../models/comment';
-import { BaseAuthService } from 'src/app/services/base-auth-service';
+import { BaseComponent } from '../base-component';
+import { CommentService } from 'src/app/services/comment/comment.service';
+import { decrypt } from 'src/app/services/crypto/crypto.service';
+import { Page } from 'src/app/models/page';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent extends BaseComponent implements OnInit {
 
+  @Input() articleId: number;
+  @Input() parentId: number;
   @Input() comment: Comment;
-  @Output() reply: EventEmitter<any> = new EventEmitter<any>();
+  @Input() isCreating: boolean;
+  @Input() isEditing: boolean;
+  @Input() isParentDecrypted: boolean;
 
-  constructor() { }
+  @Output() replying: EventEmitter<Comment> = new EventEmitter<Comment>();
+  @Output() created: EventEmitter<Comment> = new EventEmitter<Comment>();
+  @Output() edited: EventEmitter<Comment> = new EventEmitter<Comment>();
+  @Output() deleted: EventEmitter<Comment> = new EventEmitter<Comment>();
+  @Output() canceled: EventEmitter<Comment> = new EventEmitter<Comment>();
+
+  newText: string;
+
+  constructor(private commentService: CommentService) {
+    super();
+   }
 
   ngOnInit() {
+    if (this.isCreating 
+      && (this.parentId && this.articleId 
+        || !this.parentId && !this.articleId)) {
+      throw Error("Set parentId OR articleId property.");
+    }
+    if (this.isCreating && !this.comment) {
+      this.comment = new Comment();
+    }
   }
 
+  reply() {
+    this.replying.emit(this.comment);
+  }
+
+  create() {
+    var createSubscriber = this.articleId 
+      ? this.commentService.createForArticle(this.articleId, this.newText)
+      : this.commentService.createForComment(this.parentId, this.newText);
+
+    createSubscriber.subscribe(
+      result => {
+        result.reactionCounts = [];
+        result.children = new Page<Comment>();
+        this.created.emit(result);
+        this.newText = null;
+      },
+      error => this.comment.error = error.toString()
+    );
+  }
+
+  startEdit() {
+    this.isEditing = true;
+    try
+    {
+      this.newText = decrypt(this.comment.text);
+    } catch (ex) {
+      this.comment.error = ex.toString();
+    }
+  }
+
+  edit() {
+    this.commentService.edit(this.comment.id, this.newText).subscribe(
+      result => {
+        result.children = this.comment.children;
+        result.reactionCounts = this.comment.reactionCounts;
+        this.comment = result;
+        this.isEditing = false;
+        this.newText = null;
+        this.edited.emit(result);
+      },
+      error => this.comment.error = error.toString()
+    );
+  }
+
+  delete() {
+    if (confirm("Are you sure you want to delete this comment ?")) {
+      this.commentService.remove(this.comment.id).subscribe(
+        () => this.deleted.emit(this.comment),
+        error => this.comment.error = error.toString()
+      );
+    }
+  }
+
+  cancel() {
+    this.isEditing = false;
+    this.newText = null;
+    this.canceled.emit(this.comment);
+  }
 }

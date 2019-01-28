@@ -3,71 +3,72 @@
     <h4>Category list</h4>
   </div>
   <div class="card-body">
+    <ul>
+      
+      <li *ngFor="let category of categoryList">
 
-    <div class="row">
-      <div class="col-12">
-        <ul>
-          <li *ngFor="let category of categoryList">
+        <div class="row">
+          <app-category class="col-12" [category]="category" (categoryClick)="openParent(category)"></app-category>
+        </div>
 
-            <div class="row">
-              <div class="col-12">
-                <a href="javascript:void(0)" class="text-primary" (click)="openParent(category)" [innerHTML]="category.name | decrypt"></a>
-              </div>
-            </div>
+        <div class="row" *ngIf="category.isOpened">
+          <div class="col-12">
+            <ul>
 
-            <div class="row" *ngIf="category.isOpened">
-              <div class="col-12 pl-4">
-                <div class="row">
-                  <div class="col-12">
-                    <ul>
-                      <li *ngFor="let subCategory of category.children">
-                        <a href="javascript:void(0)" class="text-primary font-weight-bold" [appDecrypt]="subCategory.name" (click)="openChild(subCategory.id)"></a>
-                      </li>
-                    </ul>
+              <li *ngFor="let subCategory of category.children">
+                <app-category [category]="subCategory" (categoryClick)="openChild(subCategory.id)"></app-category>
+              </li>
+
+              <li *ngIf="isLoggedIn && isDecrypted(category.name)" style="list-style-type: none">
+
+                <div class="row" *ngIf="!category.isWriting">
+                  <div class="col-auto">
+                    <a href="javascript:void(0)" class="text-primary font-weight-bold" (click)="category.isWriting = true">Create</a>
                   </div>
                 </div>
-                <div class="col-auto" *ngIf="!category.isOpened">
-                  <a href="javascript:void(0)" class="text-primary" (click)="openChild(subCategory.id)">New category</a>
-                </div>
-                <div class="col-auto mt-1" *ngIf="category.isOpened">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">New subcategory</span>
-                    </div>
+
+                <div class="form-row align-items-middle" *ngIf="category.isWriting">
+                  <div class="col-auto">
                     <input type="text" class="form-control" [(ngModel)]="category.newText" />
-                    <div class="input-group-append">
-                      <button class="form-control btn btn-success" (click)="createChild(category)">Create</button>
-                    </div>
                   </div>
-                  
+                  <div class="col-auto">
+                    <button class="btn btn-success form-control" (click)="createChild(category)">Create</button>
+                  </div>
+                  <div class="col-auto">
+                    <button class="btn btn-danger form-control" (click)="category.isWriting = false">Cancel</button>
+                  </div>
+                  <app-error-message class="col-auto" [error]="category.error"></app-error-message>
                 </div>
-                <app-error-message class="col-12" [error]="category.error"></app-error-message>
-              </div>
-              
 
-
-              
-            </div>
-
-          </li>
-        </ul>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-12 input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">New category</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <input type="text" class="form-control" [(ngModel)]="newCategoryName" />
-        <div class="input-group-append">
-          <button class="form-control btn btn-success" (click)="createParent()">Create</button>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <app-error-message class="col-12" [error]="categoryError"></app-error-message>
-    </div>
 
+      </li>
+
+      <li *ngIf="isLoggedIn && hasKey" style="list-style-type: none">
+
+        <div class="row" *ngIf="!isWriting">
+          <div class="col-auto">
+            <a href="javascript:void(0)" class="text-primary font-weight-bold" (click)="isWriting = true">Create</a>
+          </div>
+        </div>
+
+        <div class="form-row align-items-middle" *ngIf="isWriting">
+          <div class="col-auto">
+            <input type="text" class="form-control" [(ngModel)]="newCategoryName" />
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-success form-control" (click)="createParent()">Create</button>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-danger form-control" (click)="isWriting = false">Cancel</button>
+          </div>
+          <app-error-message class="col-auto" [error]="categoryError"></app-error-message>
+        </div>
+      </li>
+
+    </ul>
   </div>
 </div>

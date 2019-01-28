@@ -7,7 +7,7 @@ namespace Crypto.Back.Models
     public class Comment : VersionedEntity, IComposite<Comment>
     {
         [ForeignKey("User.Id")]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         [ForeignKey("Article.Id")]
         public long? ArticleId { get; set; }

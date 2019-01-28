@@ -2,14 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Category } from 'src/app/models/category';
 import { Router } from '@angular/router';
+import { BaseComponent } from '../base-component';
 
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })
-export class CategoryListComponent implements OnInit {
+export class CategoryListComponent extends BaseComponent implements OnInit {
 
+  isWriting: boolean = false;
   categoryList: Category[];
   newCategoryName: string;
   newSubCategoryName: string;
@@ -20,7 +22,9 @@ export class CategoryListComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private router: Router
-  ) { }
+  ) { 
+    super();
+  }
 
   ngOnInit() {
     this.getParentList();
@@ -53,7 +57,8 @@ export class CategoryListComponent implements OnInit {
     this.categoryService.createParent(this.newCategoryName).subscribe(
       result => {
         this.newCategoryName = null;
-        this.getParentList()
+        this.categoryList.push(result);
+        this.isWriting = false;
       },
       error => { this.categoryError = error.toString(); }
     );
@@ -64,16 +69,18 @@ export class CategoryListComponent implements OnInit {
     this.categoryService.createChild(parent.id, parent.newText).subscribe(
       result => {
         parent.newText = null;
-        this.getChildrenList(parent)
+        parent.children.push(result);
+        parent.isWriting = false;
       },
       error => { parent.error = error.toString(); }
     );
   }
 
   openParent(parent: Category) {
-    if (this.openedParentId == parent.id) {
-      this.openedParentId = null;
+    if (parent.isOpened) {
+      parent.isOpened = false;
     } else {
+      parent.isOpened = true;
       this.getChildrenList(parent);
     }
   }

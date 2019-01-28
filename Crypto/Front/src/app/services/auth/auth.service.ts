@@ -4,8 +4,8 @@ import { BaseAuthService } from '../base-auth-service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { Duration } from 'moment';
-import { crypt } from '../../app.module';
 import { AuthResult } from 'src/app/models/auth-result';
+import { hash } from '../crypto/crypto.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +20,12 @@ export class AuthService extends BaseAuthService {
     return this.post<AuthResult>("signup",
       {
         name: name,
-        password: crypt.hash(password),
+        password: hash(password),
         sessionLifetime: this.getDurationString(sessionLifetime)
       },
-      (subscriber) => {
+      () => {
         if (!name || !name.length || !password || !password.length) {
-          subscriber.error(Error("Please provide a name and a password."));
+          throw Error("Please provide a name and a password.");
         }
       },
       (result) => {
@@ -39,12 +39,12 @@ export class AuthService extends BaseAuthService {
     return this.post<AuthResult>("login",
       {
         name: name,
-        password: crypt.hash(password),
+        password: hash(password),
         sessionLifetime: this.getDurationString(sessionLifetime)
       },
-      (subscriber) => {
+      () => {
         if (!name || !name.length || !password || !password.length) {
-          subscriber.error(Error("Please provide a name and a password."));
+          throw Error("Please provide a name and a password.");
         }
       },
       (result) => {
@@ -57,7 +57,7 @@ export class AuthService extends BaseAuthService {
   public logout(): Observable<User> {
 
     return this.post("logout", null,
-      subscriber => { },
+      null,
       result => {
         BaseAuthService._userId = null;
         BaseAuthService.token = null;

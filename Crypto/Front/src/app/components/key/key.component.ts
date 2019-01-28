@@ -1,22 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { crypt } from 'src/app/app.module';
+import { BaseComponent } from '../base-component';
+import { CryptoService } from 'src/app/services/crypto/crypto.service';
 
 @Component({
   selector: 'app-key',
   templateUrl: './key.component.html',
   styleUrls: ['./key.component.css']
 })
-export class KeyComponent implements OnInit {
+export class KeyComponent extends BaseComponent implements OnInit {
 
-  hasKey = false;
   edit: boolean = true;
   key: string;
   error: string;
 
-  constructor() { }
+  constructor() {
+    super();
+   }
 
   ngOnInit() {
-    this.hasKey = crypt.hasKey;
     this.edit = !this.hasKey;
   }
 
@@ -30,8 +31,7 @@ export class KeyComponent implements OnInit {
       if (!this.key || !this.key.length) {
         throw Error("Please provide a key.");
       }
-      crypt.key = this.key;
-      this.hasKey = true;
+      CryptoService.setKey(this.key);
       this.key = null;
       this.edit = false;
     } catch (ex) {
@@ -40,9 +40,8 @@ export class KeyComponent implements OnInit {
   }
 
   clear() {
-    crypt.key = null;
+    CryptoService.setKey(null);
     this.key = null;
-    this.hasKey = false;
     this.edit = false;
   }
 

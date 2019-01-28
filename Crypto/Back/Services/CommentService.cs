@@ -17,6 +17,7 @@ namespace Crypto.Back.Services
         Comment CreateForArticle(long userId, long articleId, string text);
         Comment CreateForComment(long userId, long commentId, string text);
         Comment Edit(long userId, long id, string text);
+        void Delete(long userId, long id);
     }
 
     public class CommentService : BaseService, ICommentService
@@ -105,42 +106,60 @@ namespace Crypto.Back.Services
 
             if (oldComment.UserId != userId)
             {
-                throw new Exception("User not allowed.");
+                throw new Exception("Unauthorized.");
             }
 
-            var newComment = oldComment;
-
-            if (oldComment.Text != text)
+            var newComment = new Comment
             {
-                newComment = new Comment
-                {
-                    UserId = oldComment.UserId,
-                    ArticleId = oldComment.ArticleId,
-                    ParentId = oldComment.ParentId,
-                    Text = text,
-                    CorrelationUid = oldComment.CorrelationUid,
-                    VersionDate = DateTime.Now
-                };
-                Context.Comments.Add(newComment);
+                UserId = oldComment.UserId,
+                ArticleId = oldComment.ArticleId,
+                ParentId = oldComment.ParentId,
+                Text = text,
+                CorrelationUid = oldComment.CorrelationUid,
+                VersionDate = DateTime.Now
+            };
 
-                foreach (var child in oldComment.Children)
-                {
-                    child.ParentId = newComment.Id;
-                    Context.Comments.Update(child);
-                }
+            Context.Comments.Add(newComment);
+            Context.SaveChanges();
 
-                foreach (var reaction in oldComment.Reactions)
-                {
-                    reaction.CommentId = newComment.Id;
-                    Context.Reactions.Update(reaction);
-                }
-
-                Context.SaveChanges();
+            foreach (var child in oldComment.Children)
+            {
+                child.ParentId = newComment.Id;
+                Context.Comments.Update(child);
             }
+
+            foreach (var reaction in oldComment.Reactions)
+            {
+                reaction.CommentId = newComment.Id;
+                Context.Reactions.Update(reaction);
+            }
+
+            Context.SaveChanges();
+            
 
             SetReactionCounts(newComment);
 
             return newComment;
+        }
+
+        public void Delete(long userId, long id)
+        {
+            var existing = Context.Comments.FirstOrDefault(c => c.Id == id);
+
+            if (existing == null)
+            {
+                throw new Exception("Comment does not exist.");
+            }
+
+            if (existing.UserId != userId)
+            {
+                throw new Exception("Unauthorized.");
+            }
+
+            var allVersions = Context.Comments.Where(c => c.CorrelationUid == existing.CorrelationUid);
+            Context.Comments.RemoveRange(allVersions);
+            
+            Context.SaveChanges();
         }
 
         private void SetReactionCounts(Comment comment)

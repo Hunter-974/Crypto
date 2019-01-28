@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
-import { duration, Duration } from 'moment';
+import { duration } from 'moment';
+import { BaseComponent } from '../base-component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
 
   isLoggedIn: boolean;
   isSigningUp: boolean;
@@ -20,7 +21,9 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService
-  ) { }
+  ) {
+    super();
+   }
 
   ngOnInit() {
   }
@@ -30,7 +33,6 @@ export class LoginComponent implements OnInit {
     this.authService.signup(this.name, this.password, duration("00:05:00")).subscribe(
       result => {
         this.isSigningUp = false;
-        this.isLoggedIn = true;
       },
       error => { this.error = error; }
     );
@@ -40,9 +42,7 @@ export class LoginComponent implements OnInit {
     this.error = null;
     var sessionLifetimeDuration = duration(this.sessionLifetime);
     this.authService.login(this.name, this.password, sessionLifetimeDuration).subscribe(
-      result => {
-        this.isLoggedIn = true;
-      },
+      result => { },
       error => { this.error = error.toString(); }
     )
   }
@@ -50,11 +50,8 @@ export class LoginComponent implements OnInit {
   logout() {
     this.error = null;
     this.authService.logout().subscribe(
-      result => {
-        this.error = null;
-        this.isLoggedIn = false;
-      },
-      error => { this.error = error; }
+      result => this.error = null,
+      error => this.error = error
     );
   }
 

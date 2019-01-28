@@ -1,0 +1,7 @@
+<div class="row" *ngIf="category">
+  <div class="col-12">
+    <a href="javascript:void(0)" class="text-primary" (click)="onclick()"
+      [innerHTML]="category.name | decrypt"></a>&nbsp;
+    <span class="text-primary">(#{{ category.id }})</span>
+  </div>
+</div>

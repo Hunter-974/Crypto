@@ -35,6 +35,14 @@ export class Page<T> {
     this.addItem();
   }
 
+  public remove(oldItem: T) {
+    var index = this.items.indexOf(oldItem);
+    if (index > -1) {
+      this.items.splice(index, 1);
+      this.totalCount--;
+    }
+  }
+
   private addPage(newPage: Page<T>) {
     this.totalCount = newPage.totalCount;
   }

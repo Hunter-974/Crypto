@@ -1,5 +1,4 @@
 import { AES, enc, SHA256 } from 'crypto-js'
-import { SafeHtml } from '@angular/platform-browser';
 
 export class CryptoService {
 
@@ -11,7 +10,7 @@ export class CryptoService {
     CryptoService.key = key;
   }
 
-  public static hasKey(): boolean {
+  public static get hasKey(): boolean {
     if (CryptoService.key && CryptoService.key.length) {
       return true;
     }
@@ -48,3 +47,15 @@ export class CryptoService {
     return SHA256(data).toString();
   }
 }
+
+export let encrypt = (value: string) => {
+  return CryptoService.encrypt(value);
+};
+
+export let decrypt = (value: string) => {
+  return CryptoService.decrypt(value);
+};
+
+export let hash = (value: string) => {
+  return CryptoService.hash(value);
+};

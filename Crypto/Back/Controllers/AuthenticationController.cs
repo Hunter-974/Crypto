@@ -22,13 +22,13 @@ namespace Crypto.Back.Controllers
     [HttpPost("signup")]
     public LogInResponse SignUp([FromBody] LogInRequest request)
     {
-      return _userService.SignUp(request.Name, request.Password, request.Location, request.SessionLifetime);
+      return _userService.SignUp(request.Name, request.Password, request.SessionLifetime);
     }
 
     [HttpPost("login")]
     public LogInResponse LogIn([FromBody] LogInRequest request)
     {
-      return _userService.LogIn(request.Name, request.Password, request.Location, request.SessionLifetime);
+      return _userService.LogIn(request.Name, request.Password, request.SessionLifetime);
     }
 
     [HttpPost("logout")]

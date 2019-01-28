@@ -12,15 +12,12 @@ export class DecryptPipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
     let result = this.domSanitizer.bypassSecurityTrustHtml(CryptoService.encryptedTemplate);
-      
     try {
       var decrypted = CryptoService.decrypt(value);
       if (decrypted && decrypted.length) {
         result = decrypted;
       }
-    } catch (ex) {
-      window.console.log(ex.message);
-    }
+    } catch { }
     return result;
   }
 

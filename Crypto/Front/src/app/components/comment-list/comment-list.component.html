@@ -1,69 +1,56 @@
 <div *ngIf="comments && comments.items">
-  <div class="row" *ngIf="comments && comments.totalCount > comments.count">
+  
+  <div class="row mb-4" *ngIf="comments && comments.totalCount > comments.count">
     <div class="col-12">
-      <a href="javascript:void(0)" class="text-primary" (click)="getForArticle(50, 1)">Show previous comments</a>
+      <a href="javascript:void(0)" class="text-primary font-weight-bold" (click)="getForArticle(20, 5)">Show previous comments</a>
     </div>
   </div>
-  <div class="row mb-4" *ngFor="let comment of comments.items">
+
+  <div class="row mb-4" *ngFor="let parent of comments.items">
     <div class="col-12">
+
       <div class="row">
-        <div class="col-12">
-          <app-comment [comment]="comment" (reply)="comment.isWriting = true"></app-comment>
-        </div>
+        <app-comment class="col-12" [comment]="parent" 
+          (replying)="replying($event)"
+          (deleted)="parentDeleted($event)"></app-comment>
       </div>
-      <div>
-        <div class="row justify-content-end" *ngIf="comment.children">
-          <div class="col-12">
-            <div class="row" *ngIf="comment.children.totalCount > comment.children.count">
-              <div class="col-12">
-                <a href="javascript:void(0)" class="text-primary" (click)="getForComment(comment, 50)">Show previous replies</a>
-              </div>
-            </div>
-            <div class="row mt-2 pl-5" *ngFor="let subComment of comment.children.items">
-              <div class="col-12">
-                <app-comment [comment]="subComment"></app-comment>
-              </div>
-            </div>
-            <div class="row mt-2 pl-5" *ngIf="comment.isWriting">
-              <div class="col-12">
-                <div class="form-group">
-                  <textarea class="form-control" rows="3" [(ngModel)]="comment.newCommentText"></textarea>
-                </div>
-              </div>
-              <div class="col-auto">
-                <div class="form-group">
-                  <button class="btn btn-success form-control" (click)="newSubComment(comment)">Post</button>
-                </div>
-              </div>
-              <div class="col-auto">
-                <a href="javascript:void(0)" class="text-primary" (click)="comment.isWriting = false">Close</a>
-              </div>
-              <app-error-message class="col-auto" [error]="comment.error"></app-error-message>
+
+      <div class="row" *ngIf="parent.children">
+        <div class="col-12 pl-5">
+
+          <div class="row" *ngIf="parent.children.totalCount > parent.children.count">
+            <div class="col-12">
+              <a href="javascript:void(0)" class="text-primary" (click)="getForComment(parent, 50)">Show previous replies</a>
             </div>
           </div>
+
+          <div class="row mt-2" *ngFor="let child of parent.children.items">
+            <app-comment class="col-12" [comment]="child"
+              (deleted)="childDeleted($event, parent)"></app-comment>
+          </div>
+
+          <div class="row mt-2" *ngIf="parent.isWriting">
+            <app-comment class="col-12" [isCreating]="true" [parentId]="parent.id"
+              [isParentDecrypted]="isDecrypted(parent.text)"
+              (created)="childCreated($event, parent)"
+              (canceled)="createChildCanceled($event, parent)"></app-comment>
+          </div>
+
         </div>
       </div>
+
     </div>
   </div>
-  <div class="row" *ngIf="isWriting">
-    <div class="col-12">
-      <div class="form-group">
-        <textarea class="form-control" rows="3" [(ngModel)]="newCommentText"></textarea>
-      </div>
-    </div>
+
+  <div class="row" *ngIf="!isWriting && isLoggedIn && isParentDecrypted">
     <div class="col-auto">
-      <div class="form-group">
-        <button class="btn btn-success form-control" (click)="newComment()">Post</button>
-      </div>
+      <a href="javascript:void(0)" class="text-success font-weight-bold" (click)="isWriting = true">Comment</a>
     </div>
-    <div class="col-auto">
-      <a href="javascript:void(0)" class="text-primary" (click)="isWriting = false">Close</a>
-    </div>
-    <app-error-message class="col-auto" [error]="error"></app-error-message>
   </div>
-  <div class="row" *ngIf="!isWriting">
-    <div class="col-auto">
-      <a href="javascript:void(0)" class="text-primary" (click)="isWriting = true">Comment</a>
-    </div>
+  
+  <div class="row align-items-middle" *ngIf="isWriting">
+    <app-comment class="col-12" [isCreating]="true" [articleId]="articleId" [isParentDecrypted]="isParentDecrypted"
+      (created)="parentCreated($event)"
+      (canceled)="createParentCanceled()"></app-comment>
   </div>
 </div>

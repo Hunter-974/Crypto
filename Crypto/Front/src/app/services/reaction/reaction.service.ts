@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseAuthService } from '../base-auth-service';
 import { Reaction } from 'src/app/models/reaction';
-import { crypt } from '../../app.module';
+import { encrypt } from '../crypto/crypto.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +24,10 @@ export class ReactionService extends BaseAuthService {
 
   setForArticle(articleId: number, reactionType: string): Observable<Reaction> {
     return this.post<Reaction>(`article/${articleId}`,
-      { value: crypt.encrypt(reactionType) },
-      (subscriber) => {
+      { value: encrypt(reactionType) },
+      () => {
         if (!reactionType || !reactionType.length) {
-          subscriber.error(Error("Please provide a reaction type."));
+          throw Error("Please provide a reaction type.");
         }
       }
     );
@@ -35,10 +35,10 @@ export class ReactionService extends BaseAuthService {
 
   setForComment(commentId: number, reactionType: string): Observable<Reaction> {
     return this.post<Reaction>(`comment/${commentId}`,
-      { value: crypt.encrypt(reactionType) },
-      (subscriber) => {
+      { value: encrypt(reactionType) },
+      () => {
         if (!reactionType || !reactionType.length) {
-          subscriber.error(Error("Please provide a reaction type."));
+          throw Error("Please provide a reaction type.");
         }
       }
     );

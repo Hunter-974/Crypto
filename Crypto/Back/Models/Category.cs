@@ -11,7 +11,7 @@ namespace Crypto.Back.Models
         public long? ParentId { get; set; }
 
         [ForeignKey("User.Id")]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
 
         public virtual User User { get; set; }

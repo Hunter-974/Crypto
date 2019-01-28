@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PipesModule } from 'src/app/pipes/pipes/pipes.module';
 import { ErrorMessageModule } from '../error-message/error-message.module';
 import { DirectivesModule } from 'src/app/directives/directives/directives.module';
+import { CategoryModule } from '../category/category.module';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { DirectivesModule } from 'src/app/directives/directives/directives.modul
     FormsModule,
     PipesModule,
     ErrorMessageModule,
-    DirectivesModule
+    DirectivesModule,
+    CategoryModule
   ],
   declarations: [CategoryListComponent],
   exports: [CategoryListComponent]

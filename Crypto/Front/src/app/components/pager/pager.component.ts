@@ -1,13 +1,14 @@
 import { Component, OnInit, ContentChild, TemplateRef, Input, Output, EventEmitter } from '@angular/core';
 import { Page } from 'src/app/models/page';
 import { Observable } from 'rxjs';
+import { BaseComponent } from '../base-component';
 
 @Component({
   selector: 'app-pager',
   templateUrl: './pager.component.html',
   styleUrls: ['./pager.component.css']
 })
-export class PagerComponent implements OnInit {
+export class PagerComponent extends BaseComponent implements OnInit {
   page: Page<any>
   pageCount: number;
   displayedPageIndex: number;
@@ -22,7 +23,9 @@ export class PagerComponent implements OnInit {
   @Output() error: EventEmitter<any> = new EventEmitter<any>();
   @Output() pageChanged: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {
+    super();
+   }
 
   ngOnInit() {
     this.get(0);

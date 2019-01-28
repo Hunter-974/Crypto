@@ -16,6 +16,7 @@ namespace Crypto.Back.Services
         Page<Article> GetAllVersions(long id);
         Article Create(long userId, long categoryId, string title, string text);
         Article Edit(long userId, long id, string newTitle, string newText);
+        void Delete(long userId, long id);
     }
 
     public class ArticleService : BaseService, IArticleService
@@ -89,48 +90,65 @@ namespace Crypto.Back.Services
                 .Include(a => a.Reactions)
                 .FirstOrDefault(a => a.Id == id);
 
-            if (existing != null)
+            if (existing == null)
             {
                 throw new Exception("Article does not exist.");
             }
 
-            var article = existing;
-
-            if (existing.Title == newTitle || existing.Text == newText)
+            if (existing.UserId != userId)
             {
-                article = new Article()
-                {
-                    UserId = userId,
-                    CategoryId = existing.CategoryId,
-                    CorrelationUid = existing.CorrelationUid,
-                    Title = newTitle,
-                    Text = newText,
-                    VersionDate = DateTime.Now
-                };
-                Context.Articles.Add(article);
-
-                foreach (var comment in existing.Comments)
-                {
-                    comment.ArticleId = article.Id;
-                    Context.Comments.Update(comment);
-                }
-
-                foreach (var reaction in existing.Reactions)
-                {
-                    reaction.ArticleId = article.Id;
-                    Context.Reactions.Update(reaction);
-                }
-
-                Context.SaveChanges();
+                throw new Exception("Unauthorized.");
             }
-            else
+
+            var article = new Article()
             {
-                article = existing;
+                UserId = userId,
+                CategoryId = existing.CategoryId,
+                CorrelationUid = existing.CorrelationUid,
+                Title = newTitle,
+                Text = newText,
+                VersionDate = DateTime.Now
+            };
+            Context.Articles.Add(article);
+
+            Context.SaveChanges();
+
+            foreach (var comment in existing.Comments)
+            {
+                comment.ArticleId = article.Id;
+                Context.Comments.Update(comment);
             }
+
+            foreach (var reaction in existing.Reactions)
+            {
+                reaction.ArticleId = article.Id;
+                Context.Reactions.Update(reaction);
+            }
+
+            Context.SaveChanges();
 
             SetReactionCounts(article);
             
             return article;
+        }
+
+        public void Delete(long userId, long id)
+        {
+            var existing = Context.Articles.FirstOrDefault(a => a.Id == id);
+
+            if (existing == null)
+            {
+                throw new Exception("Article does not exist.");
+            }
+
+            if (existing.UserId != userId)
+            {
+                throw new Exception("Unauthorized.");
+            }
+
+            var allVersions = Context.Articles.Where(a => a.CorrelationUid == existing.CorrelationUid);
+            Context.Articles.RemoveRange(allVersions);
+            Context.SaveChanges();
         }
 
         private void SetReactionCounts(Article article)

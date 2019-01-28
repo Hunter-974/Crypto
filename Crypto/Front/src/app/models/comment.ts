@@ -5,6 +5,7 @@ import { Page } from "./page";
 
 export class Comment {
   public id: number;
+  public articleId: number;
   public parentId: number;
   public user: User;
   public children: Page<Comment>;
@@ -13,7 +14,6 @@ export class Comment {
   public text: string;
   public versionDate: Date;
 
-  public newCommentText: string;
   public error: string;
   public isWriting: boolean;
 }

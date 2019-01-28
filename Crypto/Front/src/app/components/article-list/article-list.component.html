@@ -8,16 +8,17 @@
         <app-pager [pageSize]="10" [containerClass]="list-group"
                    [getMethod]="getListMethod">
           <ng-template let-item="item">
-            <a class="list-group-item list-group-item-action list-group-item-secondary mb-1" href="javascript:void()" (click)="open(item.id)">
+            <a href="javascript:void(0)" class="list-group-item list-group-item-action list-group-item-secondary mb-1" (click)="open(item.id)">
               <div class="row">
-                <div class="col">
+                <div class="col-12">
                   <h5 [innerHTML]="item.title | decrypt"></h5>
                 </div>
               </div>
               <div class="row">
-                <p class="col-12 text-secondary">
-                  Todo...
-                </p>
+                <app-author-date class="col-12" [model]="item"></app-author-date>
+              </div>
+              <div class="row">
+                <!-- app-reaction-list -->
               </div>
             </a>
           </ng-template>

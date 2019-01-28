@@ -1,26 +1,57 @@
-<div *ngIf="comment">
+<div *ngIf="comment && !isCreating && !isEditing">
   <div class="row">
-    <div class="col-12">
-      <span class="text-danger">{{ comment.user.name }} (#{{ comment.user.id }})</span>&nbsp;
-      <span class="text-info">{{ comment.versionDate | date:"dd/MM/yyyy hh:mm" }}</span>&nbsp;
-      <a href="javascript:void(0)" class="text-primary" (click)="reply.emit()"
-         *ngIf="(comment.parentId == null || comment.parentId == undefined) && auth.isLoggedIn">Reply</a>
+    <div class="col-auto">
+      <app-author-date [model]="comment"></app-author-date>
     </div>
-    <div class="row mt-2">
-      <div class="col-auto">
-        
-      </div>
+    <div class="col-auto">
+      <a href="javascript:void(0)" class="text-success font-weight-bold" (click)="reply()"
+        *ngIf="!comment.parentId && isLoggedIn && isDecrypted(comment.text)">Reply</a>
+    </div>
+    <div class="col-auto">
+      <a href="javascript:void(0)" class="text-warning font-weight-bold" (click)="startEdit()"
+        *ngIf="isOwner(comment) && isDecrypted(comment.text)">Edit</a>
+    </div>
+    <div class="col-auto">
+      <a href="javascript:void(0)" class="text-danger font-weight-bold" (click)="delete()"
+        *ngIf="isOwner(comment) && isDecrypted(comment.text)">Delete</a>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
-      <div class="text-secondary" [innerHTML]="comment.text | decrypt">
-      </div>
+      <div class="text-justify" [innerHTML]="comment.text | decrypt"></div>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
       <!-- app-reaction-list -->
     </div>
+  </div>
+</div>
+
+<div *ngIf="isCreating || isEditing" class="form-group">
+  <div class="row">
+    <div class="col-12 form-group">
+      <textarea class="form-control" rows="3" [(ngModel)]="newText"></textarea>
+    </div>
+  </div>
+  <div class="form-row align-items-middle">
+    <div class="col-auto" *ngIf="isCreating && isLoggedIn && isParentDecrypted">
+      <button class="btn btn-success form-control" (click)="create()">Create</button>
+    </div>
+    <div class="col-auto" *ngIf="isEditing && isLoggedIn && comment && isDecrypted(comment.text)">
+      <button class="btn btn-success form-control" (click)="edit()">Edit</button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-danger form-control" (click)="cancel()">Cancel</button>
+    </div>
+    <app-error-message class="col-auto" [error]="comment.error"></app-error-message>
+    <app-error-message class="col-auto" [error]="'Please log in'"
+      *ngIf="!isLoggedIn"></app-error-message>
+    <app-error-message class="col-auto" [error]="'You cannot edit this comment'"
+      *ngIf="isLogged && !isOwner(comment)"></app-error-message>
+    <app-error-message class="col-auto" [error]="'Please provide a key'"
+      *ngIf="!hasKey"></app-error-message>
+    <app-error-message class="col-auto" [error]="'Please provide the right key.'"
+      *ngIf="isEditing && !isDecrypted(comment.text)"></app-error-message>
   </div>
 </div>

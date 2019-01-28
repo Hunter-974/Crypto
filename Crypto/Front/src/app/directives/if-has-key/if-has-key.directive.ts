@@ -1,5 +1,5 @@
 import { Directive, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
-import { crypt } from 'src/app/app.module';
+import { CryptoService } from 'src/app/services/crypto/crypto.service';
 
 @Directive({
   selector: '[appIfHasKey]'
@@ -13,7 +13,7 @@ export class IfHasKeyDirective {
   ) { }
 
   ngOnInit() {
-    if (crypt.hasKey) {
+    if (CryptoService.hasKey) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();
