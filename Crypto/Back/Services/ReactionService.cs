@@ -9,10 +9,12 @@ namespace Crypto.Back.Services
 {
     public interface IReactionService
     {
-        IList<Reaction> GetAllForArticle(long articleId);
-        IList<Reaction> GetAllForComment(long commentId);
-        Reaction SetForArticle(long userId, long articleId, string reactionType);
-        Reaction SetForComment(long userId, long commentId, string reactionType);
+        IList<Reaction> GetListForArticle(long articleId);
+        IList<Reaction> GetListForComment(long commentId);
+        ReactionType CreateForArticle(long userId, long articleId, string reactionTypeName);
+        ReactionType CreateForComment(long userId, long commentId, string reactionTypeName);
+        void Add(long userId, long reactionTypeId);
+        void Remove(long userId, long reactionTypeId);
     }
 
     public class ReactionService : BaseService, IReactionService
@@ -22,74 +24,86 @@ namespace Crypto.Back.Services
 
         }
 
-        public IList<Reaction> GetAllForArticle(long articleId)
+        public IList<Reaction> GetListForArticle(long articleId)
         {
-            return Get(articleId, null);
+            return GetList(articleId, null);
         }
 
-        public IList<Reaction> GetAllForComment(long commentId)
+        public IList<Reaction> GetListForComment(long commentId)
         {
-            return Get(null, commentId);
+            return GetList(null, commentId);
         }
 
-        public IList<Reaction> Get(long? articleId, long? commentId)
+        private IList<Reaction> GetList(long? articleId, long? commentId)
         {
-            return Context.Reactions
+            var allReactions = Context.ReactionTypes
                 .Where(r => r.ArticleId == articleId && r.CommentId == commentId)
-                .Include(r => r.User)
+                .Include(r => r.Reactions).ThenInclude(r => r.User)
+                .SelectMany(rt => rt.Reactions)
                 .ToList();
+
+            return allReactions;
         }
 
-        public Reaction SetForArticle(long userId, long articleId, string reactionType)
+        public ReactionType CreateForArticle(long userId, long articleId, string reactionTypeName)
         {
-            return Set(userId, null, articleId, reactionType);
+            return Create(userId, null, articleId, reactionTypeName);
         }
 
-        public Reaction SetForComment(long userId, long commentId, string reactionType)
+        public ReactionType CreateForComment(long userId, long commentId, string reactionTypeName)
         {
-            return Set(userId, commentId, null, reactionType);
+            return Create(userId, commentId, null, reactionTypeName);
         }
 
-        private Reaction Set(long userId, long? commentId, long? articleId, string reactionType)
+        private ReactionType Create(long userId, long? commentId, long? articleId, string reactionTypeName)
+        {
+
+            ReactionType reactionType = new ReactionType()
+            {
+                ArticleId = articleId,
+                CommentId = commentId, 
+                Name = reactionTypeName,
+                Reactions = new []
+                {
+                    new Reaction { UserId = userId }
+                }
+            };
+
+            Context.ReactionTypes.Add(reactionType);
+            Context.SaveChanges();
+
+            return reactionType;
+        }
+
+        public void Add(long userId, long reactionTypeId)
+        {
+            var exists = Context.Reactions
+                .Any(r => r.UserId == userId && r.ReactionTypeId == reactionTypeId);
+
+            if (!exists)
+            {
+                var reaction = new Reaction()
+                {
+                    UserId = userId,
+                    ReactionTypeId = reactionTypeId
+                };
+
+                Context.Reactions.Add(reaction);
+                Context.SaveChanges();
+            }
+        }
+
+        public void Remove(long userId, long reactionTypeId)
         {
             var existing = Context.Reactions
-                .Where(r => r.UserId == userId && r.CommentId == commentId && r.ArticleId == articleId)
+                .Where(r => r.UserId == userId && r.ReactionTypeId == reactionTypeId)
                 .FirstOrDefault();
 
-            Reaction reaction = null;
-
-            if (existing == null)
+            if (existing != null)
             {
-                if (reactionType != null)
-                {
-                    reaction = new Reaction
-                    {
-                        UserId = userId,
-                        CommentId = commentId,
-                        ArticleId = articleId,
-                        ReactionType = reactionType
-                    };
-                    Context.Reactions.Add(reaction);
-                    Context.SaveChanges();
-                }
+                Context.Reactions.Remove(existing);
+                Context.SaveChanges();
             }
-            else
-            {
-                if (reactionType == null)
-                {
-                    Context.Reactions.Remove(existing);
-                    Context.SaveChanges();
-                }
-                else
-                {
-                    existing.ReactionType = reactionType;
-                    Context.Reactions.Update(existing);
-                    Context.SaveChanges();
-                    reaction = existing;
-                }
-            }
-
-            return reaction;
         }
     }
 }

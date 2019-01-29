@@ -17,6 +17,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Front\angular.json" />
+    <Content Remove="Front\e2e\tsconfig.e2e.json" />
+    <Content Remove="Front\package-lock.json" />
+    <Content Remove="Front\package.json" />
+    <Content Remove="Front\proxy.conf.json" />
+    <Content Remove="Front\src\tsconfig.app.json" />
+    <Content Remove="Front\src\tsconfig.spec.json" />
+    <Content Remove="Front\src\tslint.json" />
+    <Content Remove="Front\tsconfig.json" />
+    <Content Remove="Front\tslint.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -29,6 +42,19 @@
     <Folder Include="Front\dist\" />
     <Folder Include="Front\src\app\code\" />
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Front\angular.json" />
+    <None Include="Front\e2e\tsconfig.e2e.json" />
+    <None Include="Front\package-lock.json" />
+    <None Include="Front\package.json" />
+    <None Include="Front\proxy.conf.json" />
+    <None Include="Front\src\tsconfig.app.json" />
+    <None Include="Front\src\tsconfig.spec.json" />
+    <None Include="Front\src\tslint.json" />
+    <None Include="Front\tsconfig.json" />
+    <None Include="Front\tslint.json" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties Front_4package_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>

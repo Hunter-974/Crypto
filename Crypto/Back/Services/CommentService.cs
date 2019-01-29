@@ -43,11 +43,8 @@ namespace Crypto.Back.Services
                 .Include(c => c.User)
                 .GetLastVersions()
                 .ToPage(index, count, c => c.VersionDate, OrderBy.Desc);
-
-            foreach (var comment in page.Items)
-            {
-                SetReactionCounts(comment);
-            }
+            
+            Context.SetReactionTypes<Comment>(page.Items);
 
             return page;
         }
@@ -96,7 +93,7 @@ namespace Crypto.Back.Services
         {
             var oldComment = Context.Comments
                 .Include(c => c.Children)
-                .Include(c => c.Reactions)
+                .Include(c => c.ReactionTypes)
                 .FirstOrDefault(c => c.Id == id);
 
             if (oldComment == null)
@@ -128,16 +125,15 @@ namespace Crypto.Back.Services
                 Context.Comments.Update(child);
             }
 
-            foreach (var reaction in oldComment.Reactions)
+            foreach (var reactionType in oldComment.ReactionTypes)
             {
-                reaction.CommentId = newComment.Id;
-                Context.Reactions.Update(reaction);
+                reactionType.CommentId = newComment.Id;
+                Context.ReactionTypes.Update(reactionType);
             }
 
             Context.SaveChanges();
-            
 
-            SetReactionCounts(newComment);
+            Context.SetReactionTypes(newComment);
 
             return newComment;
         }
@@ -162,14 +158,6 @@ namespace Crypto.Back.Services
             Context.SaveChanges();
         }
 
-        private void SetReactionCounts(Comment comment)
-        {
-            var reactionCounts = Context.Reactions
-                .Where(r => r.CommentId == comment.Id)
-                .GroupBy(r => r.ReactionType)
-                .Select(g => new ReactionCount() { ReactionType = g.Key, Count = g.Count() })
-                .ToList();
-            comment.ReactionCounts = reactionCounts;
-        }
+        
     }
 }

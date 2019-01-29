@@ -33,11 +33,7 @@ namespace Crypto.Back.Services
 
             var totalCount = Context.Articles.Count(a => a.CategoryId == categoryId);
 
-            foreach (var article in page.Items)
-            {
-                article.Text = null;
-                SetReactionCounts(article);
-            }
+            Context.SetReactionTypes<Article>(page.Items);
 
             return page;
         }
@@ -46,7 +42,7 @@ namespace Crypto.Back.Services
         {
             var article = Context.Articles.Include(a => a.User).FirstOrDefault(a => a.Id == id);
 
-            SetReactionCounts(article);
+            Context.SetReactionTypes(article);
 
             return article;
         }
@@ -87,7 +83,7 @@ namespace Crypto.Back.Services
         {
             var existing = Context.Articles
                 .Include(a => a.Comments)
-                .Include(a => a.Reactions)
+                .Include(a => a.ReactionTypes)
                 .FirstOrDefault(a => a.Id == id);
 
             if (existing == null)
@@ -119,15 +115,15 @@ namespace Crypto.Back.Services
                 Context.Comments.Update(comment);
             }
 
-            foreach (var reaction in existing.Reactions)
+            foreach (var reactionType in existing.ReactionTypes)
             {
-                reaction.ArticleId = article.Id;
-                Context.Reactions.Update(reaction);
+                reactionType.ArticleId = article.Id;
+                Context.ReactionTypes.Update(reactionType);
             }
 
             Context.SaveChanges();
 
-            SetReactionCounts(article);
+            Context.SetReactionTypes(article);
             
             return article;
         }
@@ -149,16 +145,6 @@ namespace Crypto.Back.Services
             var allVersions = Context.Articles.Where(a => a.CorrelationUid == existing.CorrelationUid);
             Context.Articles.RemoveRange(allVersions);
             Context.SaveChanges();
-        }
-
-        private void SetReactionCounts(Article article)
-        {
-            var reactionCounts = Context.Reactions
-                .Where(r => r.ArticleId == article.Id)
-                .GroupBy(r => r.ReactionType)
-                .Select(g => new ReactionCount() {ReactionType = g.Key, Count = g.Count()})
-                .ToList();
-            article.ReactionCounts = reactionCounts;
         }
     }
 }

@@ -8,20 +8,12 @@ namespace Crypto.Back.Models
         [ForeignKey("User.Id")]
         public long UserId { get; set; }
 
-        [ForeignKey("Article.Id")]
-        public long? ArticleId { get; set; }
-
-        [ForeignKey("Comment.Id")]
-        public long? CommentId { get; set; }
+        [ForeignKey("ReactionType.Id")]
+        public long ReactionTypeId { get; set; }
 
 
         public virtual User User { get; set; }
 
-        public virtual Article Article { get; set; }
-
-        public virtual Comment Comment { get; set; }
-
-
-        public string ReactionType { get; set; }
+        public virtual ReactionType ReactionType { get; set; }
     }
 }

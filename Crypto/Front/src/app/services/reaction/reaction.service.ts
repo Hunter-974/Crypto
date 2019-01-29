@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseAuthService } from '../base-auth-service';
 import { Reaction } from 'src/app/models/reaction';
+import { ReactionType } from 'src/app/models/reaction-type';
 import { encrypt } from '../crypto/crypto.service';
 
 @Injectable({
@@ -14,33 +15,41 @@ export class ReactionService extends BaseAuthService {
     super(http, "reaction");
   }
 
-  getForArticle(articleId: number): Observable<Reaction[]> {
-    return this.get<Reaction[]>(`article/${articleId}`);
+  getForArticle(articleId: number): Observable<ReactionType[]> {
+    return this.get<ReactionType[]>(`article/${articleId}`);
   }
 
   getForComment(commentId: number): Observable<Reaction[]> {
     return this.get<Reaction[]>(`comment/${commentId}`);
   }
 
-  setForArticle(articleId: number, reactionType: string): Observable<Reaction> {
-    return this.post<Reaction>(`article/${articleId}`,
-      { value: encrypt(reactionType) },
+  createForArticle(articleId: number, name: string): Observable<ReactionType> {
+    return this.post<ReactionType>(`article/${articleId}`,
+      { value: encrypt(name) },
       () => {
-        if (!reactionType || !reactionType.length) {
+        if (!name || !name.length) {
           throw Error("Please provide a reaction type.");
         }
       }
     );
   }
 
-  setForComment(commentId: number, reactionType: string): Observable<Reaction> {
-    return this.post<Reaction>(`comment/${commentId}`,
-      { value: encrypt(reactionType) },
+  createForComment(commentId: number, name: string): Observable<ReactionType> {
+    return this.post<ReactionType>(`comment/${commentId}`,
+      { value: encrypt(name) },
       () => {
-        if (!reactionType || !reactionType.length) {
+        if (!name || !name.length) {
           throw Error("Please provide a reaction type.");
         }
       }
     );
+  }
+
+  add(reactionTypeId: number): Observable<any> {
+    return this.post(reactionTypeId.toString(), null);
+  }
+
+  remove(reactionTypeId: number): Observable<any> {
+    return this.delete(reactionTypeId.toString());
   }
 }

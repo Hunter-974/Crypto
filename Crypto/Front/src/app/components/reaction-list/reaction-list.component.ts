@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BaseComponent } from '../base-component';
+import { ReactionService } from 'src/app/services/reaction/reaction.service';
 
 @Component({
   selector: 'app-reaction-list',
@@ -8,7 +9,9 @@ import { BaseComponent } from '../base-component';
 })
 export class ReactionListComponent extends BaseComponent implements OnInit {
 
-  constructor() {
+  @Input() model: any;
+
+  constructor(private reactionService: ReactionService) {
     super();
    }
 

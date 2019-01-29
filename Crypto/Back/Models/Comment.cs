@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Crypto.Back.Models
 {
-    public class Comment : VersionedEntity, IComposite<Comment>
+    public class Comment : VersionedEntity, IComposite<Comment>, IReactionTypes
     {
         [ForeignKey("User.Id")]
         public long? UserId { get; set; }
@@ -24,13 +24,9 @@ namespace Crypto.Back.Models
 
         public virtual IList<Comment> Children { get; set; }
 
-        public virtual IList<Reaction> Reactions { get; set; }
+        public virtual IList<ReactionType> ReactionTypes { get; set; }
 
 
         public string Text { get; set; }
-
-
-        [NotMapped]
-        public IList<ReactionCount> ReactionCounts { get; set; }
     }
 }
