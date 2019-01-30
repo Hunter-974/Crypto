@@ -21,13 +21,15 @@ namespace Crypto.Back.Controllers
         [HttpGet("list/{categoryId}/{index}/{count}")]
         public Page<Article> GetList(long categoryId, int index, int count)
         {
-            return _articleService.GetList(categoryId, index, count);
+            var userId = GetLoggedUser()?.Id;
+            return _articleService.GetList(userId, categoryId, index, count);
         }
 
         [HttpGet("{id}")]
         public Article Get(long id)
         {
-            return _articleService.Get(id);
+            var userId = GetLoggedUser()?.Id;
+            return _articleService.Get(userId, id);
         }
 
         [HttpGet("{id}/versions")]

@@ -11,8 +11,8 @@ namespace Crypto.Back.Services
 {
     public interface ICommentService
     {
-        Page<Comment> GetListForArticle(long articleId, int index, int count);
-        Page<Comment> GetListForComment(long commentId, int index, int count);
+        Page<Comment> GetListForArticle(long? userId, long articleId, int index, int count);
+        Page<Comment> GetListForComment(long? userId, long commentId, int index, int count);
         Page<Comment> GetAllVersions(long id);
         Comment CreateForArticle(long userId, long articleId, string text);
         Comment CreateForComment(long userId, long commentId, string text);
@@ -26,17 +26,17 @@ namespace Crypto.Back.Services
         {
         }
 
-        public Page<Comment> GetListForArticle(long articleId, int index, int count)
+        public Page<Comment> GetListForArticle(long? userId, long articleId, int index, int count)
         {
-            return GetList(articleId, null, index, count);
+            return GetList(userId, articleId, null, index, count);
         }
 
-        public Page<Comment> GetListForComment(long commentId, int index, int count)
+        public Page<Comment> GetListForComment(long? userId, long commentId, int index, int count)
         {
-            return GetList(null, commentId, index, count);
+            return GetList(userId, null, commentId, index, count);
         }
 
-        private Page<Comment> GetList(long? articleId, long? commentId, int index, int count)
+        private Page<Comment> GetList(long? userId, long? articleId, long? commentId, int index, int count)
         {
             var page = Context.Comments
                 .Where(c => c.ArticleId == articleId && c.ParentId == commentId)
@@ -44,7 +44,7 @@ namespace Crypto.Back.Services
                 .GetLastVersions()
                 .ToPage(index, count, c => c.VersionDate, OrderBy.Desc);
             
-            Context.SetReactionTypes<Comment>(page.Items);
+            Context.SetReactionTypes<Comment>(page.Items, userId, rt => rt.CommentId);
 
             return page;
         }
@@ -133,7 +133,7 @@ namespace Crypto.Back.Services
 
             Context.SaveChanges();
 
-            Context.SetReactionTypes(newComment);
+            Context.SetReactionTypes(newComment, userId, rt => rt.CommentId);
 
             return newComment;
         }

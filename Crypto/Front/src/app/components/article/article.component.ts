@@ -70,7 +70,7 @@ export class ArticleComponent extends BaseComponent implements OnInit {
     this.error = null;
     this.articleService.edit(this.article.id, this.newTitle, this.newText).subscribe(
       result => {
-        result.reactionCounts = this.article.reactionCounts;
+        result.reactionTypes = this.article.reactionTypes;
         result.comments = this.article.comments;
         this.article = result;
         this.isEditing = false;

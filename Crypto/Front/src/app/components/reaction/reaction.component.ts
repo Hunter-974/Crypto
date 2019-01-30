@@ -1,18 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { BaseComponent } from '../base-component';
+import { ReactionType } from 'src/app/models/reaction-type';
 
 @Component({
   selector: 'app-reaction',
   templateUrl: './reaction.component.html',
   styleUrls: ['./reaction.component.css']
 })
-export class ReactionComponent extends BaseComponent implements OnInit {
+export class ReactionComponent extends BaseComponent {
+
+  @Input() reactionType: ReactionType;
+  @Input() isParentDecrypted: boolean;
+
+  @Output() add: EventEmitter<ReactionType> = new EventEmitter<ReactionType>();
+  @Output() remove: EventEmitter<ReactionType> = new EventEmitter<ReactionType>();
+
+  isWriting: boolean;
 
   constructor() {
     super();
    }
 
-  ngOnInit() {
+  clicked() {
+    if (this.reactionType.hasUserReacted) {
+      this.remove.emit(this.reactionType);
+    } else {
+      this.add.emit(this.reactionType);
+    }
   }
-
 }

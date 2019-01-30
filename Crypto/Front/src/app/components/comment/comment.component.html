@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="row">
-    <app-reaction-list class="col-12" [model]="comment"></app-reaction-list>
+    <app-reaction-list class="col-12" [comment]="comment" [isParentDecrypted]="isDecrypted(comment.text)"></app-reaction-list>
   </div>
 </div>
 

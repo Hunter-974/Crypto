@@ -11,8 +11,8 @@ namespace Crypto.Back.Services
 {
     public interface IArticleService
     {
-        Page<Article> GetList(long categoryId, int index, int count);
-        Article Get(long id);
+        Page<Article> GetList(long? userId, long categoryId, int index, int count);
+        Article Get(long? userId, long id);
         Page<Article> GetAllVersions(long id);
         Article Create(long userId, long categoryId, string title, string text);
         Article Edit(long userId, long id, string newTitle, string newText);
@@ -26,30 +26,35 @@ namespace Crypto.Back.Services
 
         }
 
-        public Page<Article> GetList(long categoryId, int index, int count)
+        public Page<Article> GetList(long? userId, long categoryId, int index, int count)
         {
-            var page = Context.Articles.Where(a => a.CategoryId == categoryId).Include(a => a.User)
-                .GetLastVersions().ToPage(index, count, a => a.VersionDate, OrderBy.Desc);
+            var page = Context.Articles
+                .Where(a => a.CategoryId == categoryId)
+                .Include(a => a.User)
+                .GetLastVersions()
+                .ToPage(index, count, a => a.VersionDate, OrderBy.Desc);
 
             var totalCount = Context.Articles.Count(a => a.CategoryId == categoryId);
 
-            Context.SetReactionTypes<Article>(page.Items);
+            Context.SetReactionTypes<Article>(page.Items, userId, rt => rt.ArticleId);
 
             return page;
         }
 
-        public Article Get(long id)
+        public Article Get(long? userId, long id)
         {
             var article = Context.Articles.Include(a => a.User).FirstOrDefault(a => a.Id == id);
 
-            Context.SetReactionTypes(article);
+            Context.SetReactionTypes(article, userId, rt => rt.ArticleId);
 
             return article;
         }
 
         public Page<Article> GetAllVersions(long id)
         {
-            var article = Get(id);
+            var article = Context.Articles
+                .FirstOrDefault(a => a.Id == id);
+
             var related = Context.Articles
                 .Where(a => a.CorrelationUid == article.CorrelationUid)
                 .ToPage(0, int.MaxValue, a => a.VersionDate, OrderBy.Asc);
@@ -123,7 +128,7 @@ namespace Crypto.Back.Services
 
             Context.SaveChanges();
 
-            Context.SetReactionTypes(article);
+            Context.SetReactionTypes(article, userId, rt => rt.ArticleId);
             
             return article;
         }

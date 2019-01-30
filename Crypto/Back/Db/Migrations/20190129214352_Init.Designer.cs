@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Crypto.Back.Db.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20190126124609_Init")]
+    [Migration("20190129214352_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace Crypto.Back.Db.Migrations
 
                     b.Property<string>("Title");
 
-                    b.Property<long>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.Property<DateTime>("VersionDate");
 
@@ -77,7 +77,7 @@ namespace Crypto.Back.Db.Migrations
                     b.Property<long?>("ParentId")
                         .HasColumnName("CategoryId");
 
-                    b.Property<long>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
@@ -102,7 +102,7 @@ namespace Crypto.Back.Db.Migrations
 
                     b.Property<string>("Text");
 
-                    b.Property<long>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.Property<DateTime>("VersionDate");
 
@@ -122,13 +122,29 @@ namespace Crypto.Back.Db.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<long>("ReactionTypeId");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReactionTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reactions");
+                });
+
+            modelBuilder.Entity("Crypto.Back.Models.ReactionType", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<long?>("ArticleId");
 
                     b.Property<long?>("CommentId");
 
-                    b.Property<string>("ReactionType");
-
-                    b.Property<long>("UserId");
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
@@ -136,9 +152,7 @@ namespace Crypto.Back.Db.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reactions");
+                    b.ToTable("ReactionTypes");
                 });
 
             modelBuilder.Entity("Crypto.Back.Models.User", b =>
@@ -174,8 +188,7 @@ namespace Crypto.Back.Db.Migrations
 
                     b.HasOne("Crypto.Back.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Crypto.Back.Models.Attachment", b =>
@@ -197,8 +210,7 @@ namespace Crypto.Back.Db.Migrations
 
                     b.HasOne("Crypto.Back.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Crypto.Back.Models.Comment", b =>
@@ -213,24 +225,31 @@ namespace Crypto.Back.Db.Migrations
 
                     b.HasOne("Crypto.Back.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Crypto.Back.Models.Reaction", b =>
                 {
-                    b.HasOne("Crypto.Back.Models.Article", "Article")
+                    b.HasOne("Crypto.Back.Models.ReactionType", "ReactionType")
                         .WithMany("Reactions")
-                        .HasForeignKey("ArticleId");
-
-                    b.HasOne("Crypto.Back.Models.Comment", "Comment")
-                        .WithMany("Reactions")
-                        .HasForeignKey("CommentId");
+                        .HasForeignKey("ReactionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Crypto.Back.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Crypto.Back.Models.ReactionType", b =>
+                {
+                    b.HasOne("Crypto.Back.Models.Article", "Article")
+                        .WithMany("ReactionTypes")
+                        .HasForeignKey("ArticleId");
+
+                    b.HasOne("Crypto.Back.Models.Comment", "Comment")
+                        .WithMany("ReactionTypes")
+                        .HasForeignKey("CommentId");
                 });
 #pragma warning restore 612, 618
         }

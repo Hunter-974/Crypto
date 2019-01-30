@@ -21,13 +21,15 @@ namespace Crypto.Back.Controllers
         [HttpGet("article/{articleId}/{index}/{count}")]
         public Page<Comment> GetListForArticle(long articleId, int index, int count)
         {
-            return _commentService.GetListForArticle(articleId, index, count);
+            var userId = GetLoggedUser()?.Id;
+            return _commentService.GetListForArticle(userId, articleId, index, count);
         }
 
         [HttpGet("comment/{commentId}/{index}/{count}")]
         public Page<Comment> GetListForComment(long commentId, int index, int count)
         {
-            return _commentService.GetListForComment(commentId, index, count);
+            var userId = GetLoggedUser()?.Id;
+            return _commentService.GetListForComment(userId, commentId, index, count);
         }
 
         [HttpGet("{id}/versions")]

@@ -26,5 +26,8 @@ namespace Crypto.Back.Models
 
         [NotMapped]
         public int ReactionCount { get; set; }
+
+        [NotMapped]
+        public bool HasUserReacted { get; set; }
     }
 }

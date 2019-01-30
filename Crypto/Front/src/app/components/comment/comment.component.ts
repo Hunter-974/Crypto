@@ -53,7 +53,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
 
     createSubscriber.subscribe(
       result => {
-        result.reactionCounts = [];
+        result.reactionTypes = [];
         result.children = new Page<Comment>();
         this.created.emit(result);
         this.newText = null;
@@ -76,7 +76,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
     this.commentService.edit(this.comment.id, this.newText).subscribe(
       result => {
         result.children = this.comment.children;
-        result.reactionCounts = this.comment.reactionCounts;
+        result.reactionTypes = this.comment.reactionTypes;
         this.comment = result;
         this.isEditing = false;
         this.newText = null;

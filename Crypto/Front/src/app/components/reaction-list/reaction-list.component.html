@@ -1,5 +1,16 @@
-<div class="list-group" *ngIf="model && model.reactionTypes">
-  <a href="javascript:void();" *ngFor="let "
-    class="list-group-item list-group-item-action list-group-item-success">
-  </a>
+<div class="row" *ngIf="model && model.reactionTypes">
+  <div class="col-auto" *ngFor="let reactionType of model.reactionTypes">
+    <app-reaction [reactionType]="reactionType" [isParentDecrypted]="isParentDecrypted"
+      (add)="add($event)" (remove)="remove($event)"></app-reaction>
+  </div>
+  <div class="col-auto" *ngIf="isParentDecrypted && isLoggedIn">
+    <a href="javascript:void(0)" class="text-success font-weight-bold"
+      (click)="startCreate()">React</a>
+  </div>
+</div>
+<div class="position-absolute" *ngIf="isCreating">
+  <app-emoji-list (emojiClick)="create($event)"></app-emoji-list>
+</div>
+<div class="row">
+  <app-error-message class="col-12" [error]="error"></app-error-message>
 </div>

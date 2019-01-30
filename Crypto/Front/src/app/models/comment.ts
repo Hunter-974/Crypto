@@ -1,7 +1,7 @@
-import { ReactionCount } from "./reaction-count";
 import { Reaction } from "src/app/models/reaction";
 import { User } from "src/app/models/user";
 import { Page } from "./page";
+import { ReactionType } from "./reaction-type";
 
 export class Comment {
   public id: number;
@@ -10,7 +10,7 @@ export class Comment {
   public user: User;
   public children: Page<Comment>;
   public reactions: Reaction[];
-  public reactionCounts: ReactionCount[];
+  public reactionTypes: ReactionType[];
   public text: string;
   public versionDate: Date;
 

@@ -32,7 +32,7 @@ namespace Crypto.Back.Db.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CategoryId = table.Column<long>(nullable: true),
-                    UserId = table.Column<long>(nullable: false),
+                    UserId = table.Column<long>(nullable: true),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -43,13 +43,13 @@ namespace Crypto.Back.Db.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Categories_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,7 +60,7 @@ namespace Crypto.Back.Db.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CorrelationUid = table.Column<Guid>(nullable: false),
                     VersionDate = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<long>(nullable: false),
+                    UserId = table.Column<long>(nullable: true),
                     CategoryId = table.Column<long>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true)
@@ -79,7 +79,7 @@ namespace Crypto.Back.Db.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -90,7 +90,7 @@ namespace Crypto.Back.Db.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CorrelationUid = table.Column<Guid>(nullable: false),
                     VersionDate = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<long>(nullable: false),
+                    UserId = table.Column<long>(nullable: true),
                     ArticleId = table.Column<long>(nullable: true),
                     CommentId = table.Column<long>(nullable: true),
                     Text = table.Column<string>(nullable: true)
@@ -103,19 +103,19 @@ namespace Crypto.Back.Db.Migrations
                         column: x => x.ArticleId,
                         principalTable: "Articles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_Comments_CommentId",
                         column: x => x.CommentId,
                         principalTable: "Comments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -137,13 +137,40 @@ namespace Crypto.Back.Db.Migrations
                         column: x => x.ArticleId,
                         principalTable: "Articles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Attachments_Comments_CommentId",
                         column: x => x.CommentId,
                         principalTable: "Comments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReactionTypes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ArticleId = table.Column<long>(nullable: true),
+                    CommentId = table.Column<long>(nullable: true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReactionTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReactionTypes_Articles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "Articles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReactionTypes_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,23 +180,15 @@ namespace Crypto.Back.Db.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<long>(nullable: false),
-                    ArticleId = table.Column<long>(nullable: true),
-                    CommentId = table.Column<long>(nullable: true),
-                    ReactionType = table.Column<string>(nullable: true)
+                    ReactionTypeId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reactions_Articles_ArticleId",
-                        column: x => x.ArticleId,
-                        principalTable: "Articles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reactions_Comments_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comments",
+                        name: "FK_Reactions_ReactionTypes_ReactionTypeId",
+                        column: x => x.ReactionTypeId,
+                        principalTable: "ReactionTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -226,19 +245,24 @@ namespace Crypto.Back.Db.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reactions_ArticleId",
+                name: "IX_Reactions_ReactionTypeId",
                 table: "Reactions",
-                column: "ArticleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reactions_CommentId",
-                table: "Reactions",
-                column: "CommentId");
+                column: "ReactionTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reactions_UserId",
                 table: "Reactions",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReactionTypes_ArticleId",
+                table: "ReactionTypes",
+                column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReactionTypes_CommentId",
+                table: "ReactionTypes",
+                column: "CommentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -248,6 +272,9 @@ namespace Crypto.Back.Db.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reactions");
+
+            migrationBuilder.DropTable(
+                name: "ReactionTypes");
 
             migrationBuilder.DropTable(
                 name: "Comments");

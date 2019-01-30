@@ -28,6 +28,10 @@
       </div>
     </div>
 
+    <div class="row" *ngIf="article">
+      <app-reaction-list class="col-12" [article]="article" [isParentDecrypted]="isDecrypted(article.title)"></app-reaction-list>
+    </div>
+
     <div class="form-row align-items-center">
       <div class="col-auto" *ngIf="isEditing && !isCreating">
         <div class="form-inline">
