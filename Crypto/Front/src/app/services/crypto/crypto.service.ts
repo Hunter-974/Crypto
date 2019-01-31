@@ -4,7 +4,7 @@ export class CryptoService {
 
   private static key: string;
   public static readonly encryptedTemplate: string
-  = "<span class=\"bg-dark px-1 my-2\" style=\"font-family: 'Lucida Console'; color: #00FF00; border-radius: 5px \">Encrypted text</span>";
+  = "<span class=\"bg-dark px-1 my-2 encrypted\">Encrypted text</span>";
 
   public static setKey(key: string) {
     CryptoService.key = key;

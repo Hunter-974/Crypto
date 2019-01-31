@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Crypto.Back.Models.Abstract
 {
@@ -14,22 +15,23 @@ namespace Crypto.Back.Models.Abstract
     public static class IReactionTypesExtensions
     {
         public static void SetReactionTypes<TEntity>(this DbContext context, TEntity entity,
-            long? userId, Func<ReactionType, long?> entityIdSelector)
+            long? userId, Expression<Func<ReactionType, long?>> entityIdSelector)
             where TEntity : Entity, IReactionTypes
         {
             context.SetReactionTypes<TEntity>(new[] { entity }, userId, entityIdSelector);
         }
 
         public static void SetReactionTypes<TEntity>(this DbContext context, IEnumerable<TEntity> entityList,
-            long? userId, Func<ReactionType, long?> entityIdSelector)
+            long? userId, Expression<Func<ReactionType, long?>> entityIdSelector)
             where TEntity : Entity, IReactionTypes
         {
-            var ids = entityList.Select(e => e.Id).ToArray();
-            var reactionTypeDicts = context.Set<ReactionType>()
-                .Where(rt => ids.Contains(rt.Id))
-                .Include(rt => rt.Reactions)
-                .GroupBy(rt => entityIdSelector(rt))
-                .ToDictionary(gr => gr.Key, gr => gr.ToList());
+            var compiledEntitySelector = entityIdSelector.Compile();
+            var entityIds = entityList.Select(e => e.Id).ToArray();
+            var e1 = context.Set<ReactionType>();
+            var e2 = e1.Where(rt => compiledEntitySelector(rt).HasValue && entityIds.Contains(compiledEntitySelector(rt).Value));
+            var e3 = e2.Include(rt => rt.Reactions);
+            var e4 = e3.GroupBy(entityIdSelector);
+            var reactionTypeDicts = e4.ToDictionary(gr => gr?.Key.Value, gr => gr?.ToList());
 
             foreach (var entity in entityList)
             {

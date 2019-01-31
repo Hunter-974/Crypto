@@ -2,7 +2,7 @@
   
   <div class="row mb-4" *ngIf="comments && comments.totalCount > comments.count">
     <div class="col-12">
-      <a href="javascript:void(0)" class="text-primary font-weight-bold" (click)="getForArticle(20, 5)">Show previous comments</a>
+      <a class="text-primary font-weight-bold" (click)="getForArticle(20, 5)">Show previous comments</a>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
 
           <div class="row" *ngIf="parent.children.totalCount > parent.children.count">
             <div class="col-12">
-              <a href="javascript:void(0)" class="text-primary" (click)="getForComment(parent, 50)">Show previous replies</a>
+              <a class="text-primary" (click)="getForComment(parent, 50)">Show previous replies</a>
             </div>
           </div>
 
@@ -44,11 +44,11 @@
 
   <div class="row" *ngIf="!isWriting && isLoggedIn && isParentDecrypted">
     <div class="col-auto">
-      <a href="javascript:void(0)" class="text-success font-weight-bold" (click)="isWriting = true">Comment</a>
+      <a class="text-success font-weight-bold" (click)="isWriting = true">Comment</a>
     </div>
   </div>
   
-  <div class="row align-items-middle" *ngIf="isWriting">
+  <div class="row align-items-center" *ngIf="isWriting">
     <app-comment class="col-12" [isCreating]="true" [articleId]="articleId" [isParentDecrypted]="isParentDecrypted"
       (created)="parentCreated($event)"
       (canceled)="createParentCanceled()"></app-comment>

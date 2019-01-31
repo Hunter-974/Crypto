@@ -5,10 +5,9 @@
   <div class="card-body">
     <div class="row">
       <div class="col-12">
-        <app-pager [pageSize]="10" [containerClass]="list-group"
-                   [getMethod]="getListMethod">
+        <app-pager [pageSize]="10" [containerClass]="list-group" [getMethodAsync]="getListMethod">
           <ng-template let-item="item">
-            <a href="javascript:void(0)" class="list-group-item list-group-item-action list-group-item-secondary mb-1" (click)="open(item.id)">
+            <a class="list-group-item list-group-item-action list-group-item-secondary mb-1" (click)="open(item.id)">
               <div class="row">
                 <div class="col-12">
                   <h5 [innerHTML]="item.title | decrypt"></h5>

@@ -8,10 +8,10 @@
       <div class="row">
         <app-author-date class="col-auto" [model]="article"></app-author-date>
         <div class="col-auto" *ngIf="!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)">
-          <a href="javascript:void(0)" class="text-warning font-weight-bold" (click)="startEdit()">Edit</a>
+          <a class="text-warning font-weight-bold" (click)="startEdit()">Edit</a>
         </div>
         <div class="col-auto" *ngIf="!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)">
-          <a href="javascript:void(0)" class="text-danger font-weight-bold" (click)="delete()">Delete</a>
+          <a class="text-danger font-weight-bold" (click)="delete()">Delete</a>
         </div>
       </div>
     </div>

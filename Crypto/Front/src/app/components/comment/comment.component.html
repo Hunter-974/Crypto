@@ -4,15 +4,15 @@
       <app-author-date [model]="comment"></app-author-date>
     </div>
     <div class="col-auto">
-      <a href="javascript:void(0)" class="text-success font-weight-bold" (click)="reply()"
+      <a class="text-success font-weight-bold" (click)="reply()"
         *ngIf="!comment.parentId && isLoggedIn && isDecrypted(comment.text)">Reply</a>
     </div>
     <div class="col-auto">
-      <a href="javascript:void(0)" class="text-warning font-weight-bold" (click)="startEdit()"
+      <a class="text-warning font-weight-bold" (click)="startEdit()"
         *ngIf="isOwner(comment) && isDecrypted(comment.text)">Edit</a>
     </div>
     <div class="col-auto">
-      <a href="javascript:void(0)" class="text-danger font-weight-bold" (click)="delete()"
+      <a class="text-danger font-weight-bold" (click)="delete()"
         *ngIf="isOwner(comment) && isDecrypted(comment.text)">Delete</a>
     </div>
   </div>
@@ -32,7 +32,7 @@
       <textarea class="form-control" rows="3" [(ngModel)]="newText"></textarea>
     </div>
   </div>
-  <div class="form-row align-items-middle">
+  <div class="form-row align-items-center">
     <div class="col-auto" *ngIf="isCreating && isLoggedIn && isParentDecrypted">
       <button class="btn btn-success form-control" (click)="create()">Create</button>
     </div>

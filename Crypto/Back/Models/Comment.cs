@@ -1,4 +1,5 @@
 using Crypto.Back.Models.Abstract;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,10 +19,13 @@ namespace Crypto.Back.Models
 
         public virtual User User { get; set; }
 
+        [JsonIgnore]
         public virtual Article Article { get; set; }
 
+        [JsonIgnore]
         public virtual Comment Parent { get; set; }
 
+        [JsonIgnore]
         public virtual IList<Comment> Children { get; set; }
 
         public virtual IList<ReactionType> ReactionTypes { get; set; }

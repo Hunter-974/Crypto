@@ -1,4 +1,5 @@
 using Crypto.Back.Models.Abstract;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,8 +18,10 @@ namespace Crypto.Back.Models
 
         public virtual IList<ReactionType> ReactionTypes { get; set; }
 
+        [JsonIgnore]
         public virtual IList<Comment> Comments { get; set; }
 
+        [JsonIgnore]
         public virtual IList<Attachment> Attachments { get; set; }
 
 

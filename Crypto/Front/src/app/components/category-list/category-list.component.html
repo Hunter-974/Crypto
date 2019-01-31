@@ -5,7 +5,7 @@
   <div class="card-body">
     <ul>
       
-      <li *ngFor="let category of categoryList">
+      <li *ngFor="let category of categoryList" class="no-bullet">
 
         <div class="row">
           <app-category class="col-12" [category]="category" (categoryClick)="openParent(category)"></app-category>
@@ -15,19 +15,19 @@
           <div class="col-12">
             <ul>
 
-              <li *ngFor="let subCategory of category.children">
+              <li *ngFor="let subCategory of category.children" class="no-bullet">
                 <app-category [category]="subCategory" (categoryClick)="openChild(subCategory.id)"></app-category>
               </li>
 
-              <li *ngIf="isLoggedIn && isDecrypted(category.name)" style="list-style-type: none">
+              <li *ngIf="isLoggedIn && isDecrypted(category.name)" class="no-bullet">
 
                 <div class="row" *ngIf="!category.isWriting">
                   <div class="col-auto">
-                    <a href="javascript:void(0)" class="text-primary font-weight-bold" (click)="category.isWriting = true">Create</a>
+                    <a class="text-success font-weight-bold" (click)="category.isWriting = true">Create</a>
                   </div>
                 </div>
 
-                <div class="form-row align-items-middle" *ngIf="category.isWriting">
+                <div class="form-row align-items-center" *ngIf="category.isWriting">
                   <div class="col-auto">
                     <input type="text" class="form-control" [(ngModel)]="category.newText" />
                   </div>
@@ -47,15 +47,15 @@
 
       </li>
 
-      <li *ngIf="isLoggedIn && hasKey" style="list-style-type: none">
+      <li *ngIf="isLoggedIn && hasKey" class="no-bullet">
 
         <div class="row" *ngIf="!isWriting">
           <div class="col-auto">
-            <a href="javascript:void(0)" class="text-primary font-weight-bold" (click)="isWriting = true">Create</a>
+            <a class="text-success font-weight-bold" (click)="isWriting = true">Create</a>
           </div>
         </div>
 
-        <div class="form-row align-items-middle" *ngIf="isWriting">
+        <div class="form-row align-items-center" *ngIf="isWriting">
           <div class="col-auto">
             <input type="text" class="form-control" [(ngModel)]="newCategoryName" />
           </div>

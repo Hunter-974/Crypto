@@ -2,31 +2,32 @@
   <div>{{item.id}}</div>
 </ng-template>
 
-<div [class]="containerClass" *ngIf="page">
+<div [class]="containerClass || ''" *ngIf="page">
   <template *ngFor="let item of page.items; let i = index"
             [ngTemplateOutlet]="itemTemplate || defaultTemplate"
             [ngTemplateOutletContext]="{item: item}">
   </template>
 </div>
 
-<div class="row justify-content-center">
+<div class="form-row justify-content-center align-items-center">
   <div class="col-auto">
     <div class="input-group">
       <div class="input-group-prepend">
-        <button class="btn btn-secondary form-control" (click)="next()">&lt;&lt;</button>
+        <button class="btn btn-secondary form-control" (click)="previous()">&lt;&lt;</button>
       </div>
-      <div class="input-group-append input-group-prepend" *ngIf="!isEditing" style="cursor: pointer;" (click)="isEditing = true">
+      <a class="input-group-append input-group-prepend" *ngIf="!isEditing" (click)="isEditing = true">
         <span class="input-group-text">{{ displayedPageIndex }}&nbsp;/&nbsp;{{ pageCount }}</span>
-      </div>
-      <input type="number" class="form-control" style="width: 70px;" *ngIf="isEditing"
+      </a>
+      <input type="number" class="form-control page-index" *ngIf="isEditing"
               min="1" [attr.max]="pageCount" [(ngModel)]="displayedPageIndex" />
       <span class="input-group-text" *ngIf="isEditing">
         &nbsp;/&nbsp;{{ pageCount }}&nbsp;
-        <a href="javascript:void(0)" (click)="setPageIndex()" *ngIf="isEditing">Go</a>
+        <a class="text-primary font-weight-bold" (click)="setPageIndex()" *ngIf="isEditing">Go</a>
       </span>
       <div class="input-group-append">
         <button class="btn btn-secondary form-control" (click)="next()">&gt;&gt;</button>
       </div>
     </div>
   </div>
+  <a class="col-auto text-danger font-weight-bold" (click)="cancel()" *ngIf="cancelButton">Cancel</a>
 </div>

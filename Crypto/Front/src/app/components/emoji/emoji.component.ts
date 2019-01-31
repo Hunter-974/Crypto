@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { emojione } from 'emojione';
+import * as emojione from 'emojione';
 
 @Component({
   selector: 'app-emoji',
@@ -13,7 +13,7 @@ export class EmojiComponent implements OnInit {
   html: string;
 
   ngOnInit() {
-    this.html = emojione.shortnameToImage(name);
+    this.html = emojione.shortnameToImage(this.name);
   }
 
 }

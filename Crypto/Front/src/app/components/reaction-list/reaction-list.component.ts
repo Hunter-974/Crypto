@@ -39,14 +39,20 @@ export class ReactionListComponent extends BaseComponent implements OnInit {
 
   add(reactionType: ReactionType) {
     this.reactionService.add(reactionType.id).subscribe(
-      result => reactionType.hasUserReacted = true,
+      result => {
+        reactionType.hasUserReacted = true;
+        reactionType.reactionCount++;
+      },
       error => this.error = error.toString()
     );
   }
 
   remove(reactionType: ReactionType) {
     this.reactionService.remove(reactionType.id).subscribe(
-      result => reactionType.hasUserReacted = false,
+      result => {
+        reactionType.hasUserReacted = false;
+        reactionType.reactionCount--;
+      },
       error => this.error = error.toString()
     );
   }

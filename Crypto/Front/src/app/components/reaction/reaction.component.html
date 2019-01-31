@@ -1,6 +1,7 @@
-<a href="javascript:void();" (click)="clicked()" *ngIf="reactionType && isParentDecrypted">
-  <div class="row" [ngClass]="{ 'font-weight-bold': reactionType.hasUserReacted }">
+<a (click)="clicked()" *ngIf="reactionType && isParentDecrypted">
+  <div class="form-row justify-content-center align-items-center" [ngClass]="{ 'font-weight-bold': reactionType.hasUserReacted }">
     <app-emoji class="col-auto" [name]="reactionType.name | decrypt"></app-emoji>
-    <div class="col-auto">{{ reactionCount }}</div>
+    <div class="col-auto" 
+      [ngClass]="reactionType.hasUserReacted ? 'font-weight-bold' : ''">{{ reactionType.reactionCount }}</div>
   </div>
 </a>

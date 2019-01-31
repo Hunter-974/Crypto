@@ -14,8 +14,10 @@ namespace Crypto.Back.Models
         public long? CommentId { get; set; }
 
 
+        [JsonIgnore]
         public virtual Article Article { get; set; }
 
+        [JsonIgnore]
         public virtual Comment Comment { get; set; }
 
         [JsonIgnore]
