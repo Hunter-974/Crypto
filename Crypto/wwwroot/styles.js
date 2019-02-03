@@ -48,7 +48,7 @@ module.exports = "/*!\n * Bootstrap v4.2.1 (https://getbootstrap.com/)\n * Copyr
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* You can add global styles to this file, and also import other style files */\r\n"
+module.exports = "a {\r\n    cursor: pointer !important;\r\n}\r\n\r\nspan.encrypted {\r\n    font-family: 'Lucida Console';\r\n    color: #00FF00;\r\n    border-radius: 5px;\r\n}\r\n\r\nimg.emojione {\r\n    height: 24px;\r\n    width: 24px;\r\n    margin: 3px;\r\n}\r\n\r\nspan.emoji-container::slotted {\r\n    display: none;\r\n}\r\n\r\nspan.emoji-container > img {\r\n    display: block;\r\n}"
 
 /***/ }),
 

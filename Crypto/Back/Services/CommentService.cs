@@ -22,7 +22,7 @@ namespace Crypto.Back.Services
 
     public class CommentService : BaseService, ICommentService
     {
-        public CommentService(Context context) : base(context)
+        public CommentService(CryptoDbContext context) : base(context)
         {
         }
 
@@ -38,23 +38,22 @@ namespace Crypto.Back.Services
 
         private Page<Comment> GetList(long? userId, long? articleId, long? commentId, int index, int count)
         {
-            var page = Context.Comments
+            var page = CryptoDbContext.Comments
                 .Where(c => c.ArticleId == articleId && c.ParentId == commentId)
                 .Include(c => c.User)
                 .GetLastVersions()
                 .ToPage(index, count, c => c.VersionDate, OrderBy.Desc);
             
-            Context.SetReactionTypes<Comment>(page.Items, userId, rt => rt.CommentId);
+            CryptoDbContext.SetReactionTypes<Comment>(page.Items, userId, rt => rt.CommentId);
 
             return page;
         }
 
         public Page<Comment> GetAllVersions(long id)
         {
-            var comment = Context.Comments
-                .FirstOrDefault(c => c.Id == id);
+            var comment = CryptoDbContext.Comments.ForId(id);
 
-            var related = Context.Comments
+            var related = CryptoDbContext.Comments
                 .Where(c => c.CorrelationUid == comment.CorrelationUid && c.Id != id)
                 .ToPage(0, int.MaxValue, c => c.VersionDate, OrderBy.Asc);
 
@@ -83,18 +82,18 @@ namespace Crypto.Back.Services
                 VersionDate = DateTime.Now
             };
 
-            Context.Comments.Add(comment);
-            Context.SaveChanges();
+            CryptoDbContext.Comments.Add(comment);
+            CryptoDbContext.SaveChanges();
 
             return comment;
         }
 
         public Comment Edit(long userId, long id, string text)
         {
-            var oldComment = Context.Comments
+            var oldComment = CryptoDbContext.Comments
                 .Include(c => c.Children)
                 .Include(c => c.ReactionTypes)
-                .FirstOrDefault(c => c.Id == id);
+                .ForId(id);
 
             if (oldComment == null)
             {
@@ -116,31 +115,31 @@ namespace Crypto.Back.Services
                 VersionDate = DateTime.Now
             };
 
-            Context.Comments.Add(newComment);
-            Context.SaveChanges();
+            CryptoDbContext.Comments.Add(newComment);
+            CryptoDbContext.SaveChanges();
 
             foreach (var child in oldComment.Children)
             {
                 child.ParentId = newComment.Id;
-                Context.Comments.Update(child);
+                CryptoDbContext.Comments.Update(child);
             }
 
             foreach (var reactionType in oldComment.ReactionTypes)
             {
                 reactionType.CommentId = newComment.Id;
-                Context.ReactionTypes.Update(reactionType);
+                CryptoDbContext.ReactionTypes.Update(reactionType);
             }
 
-            Context.SaveChanges();
+            CryptoDbContext.SaveChanges();
 
-            Context.SetReactionTypes(newComment, userId, rt => rt.CommentId);
+            CryptoDbContext.SetReactionTypes(newComment, userId, rt => rt.CommentId);
 
             return newComment;
         }
 
         public void Delete(long userId, long id)
         {
-            var existing = Context.Comments.FirstOrDefault(c => c.Id == id);
+            var existing = CryptoDbContext.Comments.ForId(id);
 
             if (existing == null)
             {
@@ -152,10 +151,10 @@ namespace Crypto.Back.Services
                 throw new Exception("Unauthorized.");
             }
 
-            var allVersions = Context.Comments.Where(c => c.CorrelationUid == existing.CorrelationUid);
-            Context.Comments.RemoveRange(allVersions);
+            var allVersions = CryptoDbContext.Comments.Where(c => c.CorrelationUid == existing.CorrelationUid);
+            CryptoDbContext.Comments.RemoveRange(allVersions);
             
-            Context.SaveChanges();
+            CryptoDbContext.SaveChanges();
         }
 
         

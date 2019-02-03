@@ -4,11 +4,11 @@ namespace Crypto.Back.Services.Abstract
 {
     public abstract class BaseService
     {
-        protected Context Context { get; set; }
+        protected CryptoDbContext CryptoDbContext { get; set; }
 
-        protected BaseService(Context context)
+        protected BaseService(CryptoDbContext cryptoDbContext)
         {
-            Context = context;
+            CryptoDbContext = cryptoDbContext;
         }
     }
 }

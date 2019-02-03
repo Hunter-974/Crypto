@@ -8,7 +8,6 @@ export class Article {
   public id: number;
   public user: User;
   public comments: Page<Comment>;
-  public reactions: Reaction[];
   public reactionTypes: ReactionType[];
   public text: string;
   public title: string;

@@ -17,13 +17,13 @@ namespace Crypto.Back.Services
 
     public class UserService : BaseService, IUserService
     {
-        public UserService(Context context) : base(context)
+        public UserService(CryptoDbContext context) : base(context)
         {
         }
 
         public LogInResponse SignUp(string name, string password, TimeSpan sessionLifetime)
         {
-            if (Context.Users.Any(u => u.Name == name))
+            if (CryptoDbContext.Users.Any(u => u.Name == name))
             {
                 throw new Exception("Username already exists.");
             }
@@ -37,15 +37,15 @@ namespace Crypto.Back.Services
                 LogInDate = DateTime.Now,
                 Token = Guid.NewGuid()
             };
-            Context.Users.Add(user);
-            Context.SaveChanges();
+            CryptoDbContext.Users.Add(user);
+            CryptoDbContext.SaveChanges();
 
             return new LogInResponse(user);
         }
 
         public LogInResponse LogIn(string name, string password, TimeSpan sessionLifetime)
         {
-            var user = Context.Users.FirstOrDefault(u => u.Name == name && u.Password == password);
+            var user = CryptoDbContext.Users.FirstOrDefault(u => u.Name == name && u.Password == password);
             if (user == null)
             {
                 throw new Exception("Authentication failed.");
@@ -53,8 +53,8 @@ namespace Crypto.Back.Services
             
             user.SessionLifetime = sessionLifetime;
             user.SetLoggedIn();
-            Context.Users.Update(user);
-            Context.SaveChanges();
+            CryptoDbContext.Users.Update(user);
+            CryptoDbContext.SaveChanges();
 
             return new LogInResponse(user);
         }
@@ -70,7 +70,7 @@ namespace Crypto.Back.Services
 
         public User GetAuthenticatedUser(Guid token)
         {
-            var user = Context.Users.FirstOrDefault(u => u.Token == token);
+            var user = CryptoDbContext.Users.FirstOrDefault(u => u.Token == token);
             if (user != null && !user.HasAliveSession())
             {
                 SaveLoggedOut(user);
@@ -82,8 +82,8 @@ namespace Crypto.Back.Services
         private void SaveLoggedOut(User user)
         {
             user.SetLoggedOut();
-            Context.Users.Update(user);
-            Context.SaveChanges();
+            CryptoDbContext.Users.Update(user);
+            CryptoDbContext.SaveChanges();
         }
     }
 }

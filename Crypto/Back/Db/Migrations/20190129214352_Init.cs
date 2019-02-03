@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Crypto.Back.Db.Migrations
@@ -12,7 +13,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
                     SignUpDate = table.Column<DateTime>(nullable: false),
@@ -30,7 +32,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CategoryId = table.Column<long>(nullable: true),
                     UserId = table.Column<long>(nullable: true),
                     Name = table.Column<string>(nullable: false)
@@ -57,7 +60,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CorrelationUid = table.Column<Guid>(nullable: false),
                     VersionDate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<long>(nullable: true),
@@ -87,7 +91,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CorrelationUid = table.Column<Guid>(nullable: false),
                     VersionDate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<long>(nullable: true),
@@ -123,7 +128,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ArticleId = table.Column<long>(nullable: true),
                     CommentId = table.Column<long>(nullable: true),
                     Title = table.Column<string>(nullable: true),
@@ -151,7 +157,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ArticleId = table.Column<long>(nullable: true),
                     CommentId = table.Column<long>(nullable: true),
                     Name = table.Column<string>(nullable: true)
@@ -178,7 +185,8 @@ namespace Crypto.Back.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<long>(nullable: false),
                     ReactionTypeId = table.Column<long>(nullable: false)
                 },

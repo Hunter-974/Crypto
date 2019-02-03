@@ -1,5 +1,6 @@
 using Crypto.Back.Models;
 using Crypto.Back.Services;
+using Crypto.Back.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -20,26 +21,12 @@ namespace Crypto.Back.Controllers.Abstract
         {
             User user = null;
 
-            var token = GetToken();
-            if (token.HasValue)
+            if (HttpContext.TryGetUserToken(out var token))
             {
-                user = _userService.GetAuthenticatedUser(token.Value);
+                user = _userService.GetAuthenticatedUser(token);
             }
 
             return user;
-        }
-
-        protected Guid? GetToken()
-        {
-            Guid? token = null;
-
-            var tokenString = Request.Headers["Token"].FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(tokenString) && Guid.TryParse(tokenString, out Guid parsedToken))
-            {
-                token = parsedToken;
-            }
-
-            return token;
         }
 
         protected T ForLoggedUser<T>(Func<User, T> execute) where T : class, new()

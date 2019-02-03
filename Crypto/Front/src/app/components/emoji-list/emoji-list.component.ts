@@ -1,8 +1,5 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import * as emojis from "emojione/emoji.json";
-import { EmojiComponent } from '../emoji/emoji.component';
-import { KeyRegistry } from '@angular/core/src/di/reflective_key';
-import { Observable } from 'rxjs';
 import { Page } from 'src/app/models/page';
 
 @Component({
@@ -20,7 +17,7 @@ export class EmojiListComponent {
   getMethod: (i: number, s: number) => Page<any>
     = (i, s) => this._getMethod(i, s);
 
-  clicked(name: string) {
+  emojiClicked(name: string) {
     this.emojiClick.emit(name);
   }
 

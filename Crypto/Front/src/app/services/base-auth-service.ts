@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Observable, Subscriber } from "rxjs";
+import { BaseHub } from "./base-hub";
 
 export class BaseAuthService {
 
@@ -97,7 +98,10 @@ export class BaseAuthService {
   private getOptions(): { headers: HttpHeaders } {
     var headers = new HttpHeaders();
     if (BaseAuthService.token) {
-      headers = headers.append("Token", BaseAuthService.token);
+      headers = headers.append("UserToken", BaseAuthService.token);
+    }
+    if (BaseHub.token) {
+      headers = headers.append("HubsToken", BaseHub.token);
     }
     return { headers: headers };
   }

@@ -1,6 +1,9 @@
 using Crypto.Back.Db;
+using Crypto.Back.Hubs;
 using Crypto.Back.Models;
+using Crypto.Back.Models.Abstract;
 using Crypto.Back.Services.Abstract;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +22,13 @@ namespace Crypto.Back.Services
 
     public class ReactionService : BaseService, IReactionService
     {
-        public ReactionService(Context context) : base(context)
-        {
+        private readonly IHubContext<ReactionHub, IReactionHubClient> _reactionHubContext;
 
+
+        public ReactionService(CryptoDbContext context, IHubContext<ReactionHub, IReactionHubClient> reactionHubContext) 
+            : base(context)
+        {
+            _reactionHubContext = reactionHubContext;
         }
 
         public IList<Reaction> GetListForArticle(long articleId)
@@ -36,7 +43,7 @@ namespace Crypto.Back.Services
 
         private IList<Reaction> GetList(long? articleId, long? commentId)
         {
-            var allReactions = Context.ReactionTypes
+            var allReactions = CryptoDbContext.ReactionTypes
                 .Where(r => r.ArticleId == articleId && r.CommentId == commentId)
                 .Include(r => r.Reactions).ThenInclude(r => r.User)
                 .SelectMany(rt => rt.Reactions)
@@ -57,7 +64,6 @@ namespace Crypto.Back.Services
 
         private ReactionType Create(long userId, long? commentId, long? articleId, string reactionTypeName)
         {
-
             ReactionType reactionType = new ReactionType()
             {
                 ArticleId = articleId,
@@ -66,18 +72,22 @@ namespace Crypto.Back.Services
                 Reactions = new []
                 {
                     new Reaction { UserId = userId }
-                }
+                },
+                HasUserReacted = true,
+                ReactionCount = 1
             };
 
-            Context.ReactionTypes.Add(reactionType);
-            Context.SaveChanges();
+            CryptoDbContext.ReactionTypes.Add(reactionType);
+            CryptoDbContext.SaveChanges();
+
+            _reactionHubContext.Clients.Others().Changed(reactionType).Wait();
 
             return reactionType;
         }
 
         public void Add(long userId, long reactionTypeId)
         {
-            var exists = Context.Reactions
+            var exists = CryptoDbContext.Reactions
                 .Any(r => r.UserId == userId && r.ReactionTypeId == reactionTypeId);
 
             if (!exists)
@@ -88,21 +98,27 @@ namespace Crypto.Back.Services
                     ReactionTypeId = reactionTypeId
                 };
 
-                Context.Reactions.Add(reaction);
-                Context.SaveChanges();
+                CryptoDbContext.Reactions.Add(reaction);
+                CryptoDbContext.SaveChanges();
+
+                var reactionType = CryptoDbContext.ReactionTypes.ForId(reactionTypeId);
+                _reactionHubContext.Clients.Others().Changed(reactionType).Wait();
             }
         }
 
         public void Remove(long userId, long reactionTypeId)
         {
-            var existing = Context.Reactions
+            var existing = CryptoDbContext.Reactions
                 .Where(r => r.UserId == userId && r.ReactionTypeId == reactionTypeId)
                 .FirstOrDefault();
 
             if (existing != null)
             {
-                Context.Reactions.Remove(existing);
-                Context.SaveChanges();
+                CryptoDbContext.Reactions.Remove(existing);
+                CryptoDbContext.SaveChanges();
+
+                var reactionType = CryptoDbContext.ReactionTypes.ForId(reactionTypeId);
+                _reactionHubContext.Clients.Others().Changed(reactionType).Wait();
             }
         }
     }

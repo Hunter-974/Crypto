@@ -21,41 +21,40 @@ namespace Crypto.Back.Services
 
     public class ArticleService : BaseService, IArticleService
     {
-        public ArticleService(Context context) : base(context)
+        public ArticleService(CryptoDbContext context) : base(context)
         {
 
         }
 
         public Page<Article> GetList(long? userId, long categoryId, int index, int count)
         {
-            var page = Context.Articles
+            var page = CryptoDbContext.Articles
                 .Where(a => a.CategoryId == categoryId)
                 .Include(a => a.User)
                 .GetLastVersions()
                 .ToPage(index, count, a => a.VersionDate, OrderBy.Desc);
 
-            var totalCount = Context.Articles.Count(a => a.CategoryId == categoryId);
+            var totalCount = CryptoDbContext.Articles.Count(a => a.CategoryId == categoryId);
 
-            Context.SetReactionTypes<Article>(page.Items, userId, rt => rt.ArticleId);
+            CryptoDbContext.SetReactionTypes<Article>(page.Items, userId, rt => rt.ArticleId);
 
             return page;
         }
 
         public Article Get(long? userId, long id)
         {
-            var article = Context.Articles.Include(a => a.User).FirstOrDefault(a => a.Id == id);
+            var article = CryptoDbContext.Articles.Include(a => a.User).ForId(id);
 
-            Context.SetReactionTypes(article, userId, rt => rt.ArticleId);
+            CryptoDbContext.SetReactionTypes(article, userId, rt => rt.ArticleId);
 
             return article;
         }
 
         public Page<Article> GetAllVersions(long id)
         {
-            var article = Context.Articles
-                .FirstOrDefault(a => a.Id == id);
+            var article = CryptoDbContext.Articles.ForId(id);
 
-            var related = Context.Articles
+            var related = CryptoDbContext.Articles
                 .Where(a => a.CorrelationUid == article.CorrelationUid)
                 .ToPage(0, int.MaxValue, a => a.VersionDate, OrderBy.Asc);
             return related;
@@ -63,7 +62,7 @@ namespace Crypto.Back.Services
 
         public Article Create(long userId, long categoryId, string title, string text)
         {
-            var existing = Context.Articles.FirstOrDefault(a => a.CategoryId == categoryId && a.Title == title);
+            var existing = CryptoDbContext.Articles.FirstOrDefault(a => a.CategoryId == categoryId && a.Title == title);
             if (existing != null)
             {
                 throw new Exception("Article title already exists.");
@@ -78,15 +77,15 @@ namespace Crypto.Back.Services
                 CorrelationUid = Guid.NewGuid(),
                 VersionDate = DateTime.Now
             };
-            Context.Articles.Add(article);
-            Context.SaveChanges();
+            CryptoDbContext.Articles.Add(article);
+            CryptoDbContext.SaveChanges();
 
             return article;
         }
 
         public Article Edit(long userId, long id, string newTitle, string newText)
         {
-            var existing = Context.Articles
+            var existing = CryptoDbContext.Articles
                 .Include(a => a.Comments)
                 .Include(a => a.ReactionTypes)
                 .FirstOrDefault(a => a.Id == id);
@@ -110,32 +109,32 @@ namespace Crypto.Back.Services
                 Text = newText,
                 VersionDate = DateTime.Now
             };
-            Context.Articles.Add(article);
+            CryptoDbContext.Articles.Add(article);
 
-            Context.SaveChanges();
+            CryptoDbContext.SaveChanges();
 
             foreach (var comment in existing.Comments)
             {
                 comment.ArticleId = article.Id;
-                Context.Comments.Update(comment);
+                CryptoDbContext.Comments.Update(comment);
             }
 
             foreach (var reactionType in existing.ReactionTypes)
             {
                 reactionType.ArticleId = article.Id;
-                Context.ReactionTypes.Update(reactionType);
+                CryptoDbContext.ReactionTypes.Update(reactionType);
             }
 
-            Context.SaveChanges();
+            CryptoDbContext.SaveChanges();
 
-            Context.SetReactionTypes(article, userId, rt => rt.ArticleId);
+            CryptoDbContext.SetReactionTypes(article, userId, rt => rt.ArticleId);
             
             return article;
         }
 
         public void Delete(long userId, long id)
         {
-            var existing = Context.Articles.FirstOrDefault(a => a.Id == id);
+            var existing = CryptoDbContext.Articles.ForId(id);
 
             if (existing == null)
             {
@@ -147,9 +146,9 @@ namespace Crypto.Back.Services
                 throw new Exception("Unauthorized.");
             }
 
-            var allVersions = Context.Articles.Where(a => a.CorrelationUid == existing.CorrelationUid);
-            Context.Articles.RemoveRange(allVersions);
-            Context.SaveChanges();
+            var allVersions = CryptoDbContext.Articles.Where(a => a.CorrelationUid == existing.CorrelationUid);
+            CryptoDbContext.Articles.RemoveRange(allVersions);
+            CryptoDbContext.SaveChanges();
         }
     }
 }

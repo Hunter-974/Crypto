@@ -2,13 +2,17 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://crypto.a2hosted.com:80",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:51032",
       "sslPort": 0
     }
   },
   "profiles": {
-    "Crypto": {
+    "Debug": {
       "commandName": "Project",
       "launchUrl": "http://localhost:4200",
       "environmentVariables": {
@@ -16,10 +20,11 @@
       },
       "applicationUrl": "http://localhost:5000"
     },
-    "Staging": {
-      "commandName": "Executable",
+    "Release": {
+      "commandName": "IIS",
+      "launchUrl": "http://crypto.a2hosted.com:80",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
   }

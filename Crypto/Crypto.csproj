@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
@@ -30,10 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
+    <Content Include=".well-known\acme-challenge\example" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
   </ItemGroup>
 
@@ -55,6 +57,13 @@
     <None Include="Front\src\tslint.json" />
     <None Include="Front\tsconfig.json" />
     <None Include="Front\tslint.json" />
+    <None Include="web.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties Front_4package_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>

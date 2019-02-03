@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as emojione from 'emojione';
 
 @Component({
@@ -9,11 +9,17 @@ import * as emojione from 'emojione';
 export class EmojiComponent implements OnInit {
 
   @Input() name: string;
+  
+  @Output() emojiClick: EventEmitter<string> = new EventEmitter<string>();
 
   html: string;
 
   ngOnInit() {
     this.html = emojione.shortnameToImage(this.name);
+  }
+
+  emojiClicked() {
+    this.emojiClick.emit(this.name);
   }
 
 }

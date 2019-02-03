@@ -6,10 +6,10 @@
   <div class="col-auto" *ngIf="isParentDecrypted && isLoggedIn">
     <a class="text-success font-weight-bold"
       (click)="startCreate()">React</a>
+    <app-emoji-list class="position-absolute emoji-list" *ngIf="isCreating" 
+      (emojiClick)="create($event)" (canceled)="cancelCreate()"></app-emoji-list>
   </div>
 </div>
-<app-emoji-list class="position-absolute emoji-list" *ngIf="isCreating" 
-  (emojiClick)="create($event)" (canceled)="cancelCreate()"></app-emoji-list>
 <div class="row">
   <app-error-message class="col-12" [error]="error"></app-error-message>
 </div>

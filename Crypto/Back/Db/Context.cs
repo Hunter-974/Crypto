@@ -1,12 +1,11 @@
 using Crypto.Back.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Crypto.Back.Db
 {
-  public class Context : DbContext
+  public class CryptoDbContext : DbContext
   {
-    public Context(DbContextOptions<Context> options) : base(options)
+    public CryptoDbContext(DbContextOptions<CryptoDbContext> options) : base(options)
     {
     }
 

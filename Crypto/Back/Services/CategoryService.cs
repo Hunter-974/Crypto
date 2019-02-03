@@ -16,19 +16,19 @@ namespace Crypto.Back.Services
 
     public class CategoryService : BaseService, ICategoryService
     {
-        public CategoryService(Context context) : base(context)
+        public CategoryService(CryptoDbContext context) : base(context)
         {
 
         }
 
         public IList<Category> GetParents()
         {
-            return Context.Categories.Where(c => c.ParentId == null).ToList();
+            return CryptoDbContext.Categories.Where(c => c.ParentId == null).ToList();
         }
 
         public IList<Category> GetChildren(long parentId)
         {
-            return Context.Categories.Where(c => c.ParentId == parentId).ToList();
+            return CryptoDbContext.Categories.Where(c => c.ParentId == parentId).ToList();
         }
 
         public Category Create(long userId, string name, long? parentId)
@@ -39,8 +39,8 @@ namespace Crypto.Back.Services
                 ParentId = parentId,
                 UserId = userId
             };
-            Context.Categories.Add(category);
-            Context.SaveChanges();
+            CryptoDbContext.Categories.Add(category);
+            CryptoDbContext.SaveChanges();
 
             return category;
         }

@@ -60,6 +60,8 @@ var map = {
 	"./dv.js": "./node_modules/moment/locale/dv.js",
 	"./el": "./node_modules/moment/locale/el.js",
 	"./el.js": "./node_modules/moment/locale/el.js",
+	"./en-SG": "./node_modules/moment/locale/en-SG.js",
+	"./en-SG.js": "./node_modules/moment/locale/en-SG.js",
 	"./en-au": "./node_modules/moment/locale/en-au.js",
 	"./en-au.js": "./node_modules/moment/locale/en-au.js",
 	"./en-ca": "./node_modules/moment/locale/en-ca.js",
@@ -98,6 +100,8 @@ var map = {
 	"./fr.js": "./node_modules/moment/locale/fr.js",
 	"./fy": "./node_modules/moment/locale/fy.js",
 	"./fy.js": "./node_modules/moment/locale/fy.js",
+	"./ga": "./node_modules/moment/locale/ga.js",
+	"./ga.js": "./node_modules/moment/locale/ga.js",
 	"./gd": "./node_modules/moment/locale/gd.js",
 	"./gd.js": "./node_modules/moment/locale/gd.js",
 	"./gl": "./node_modules/moment/locale/gl.js",
@@ -121,6 +125,8 @@ var map = {
 	"./is": "./node_modules/moment/locale/is.js",
 	"./is.js": "./node_modules/moment/locale/is.js",
 	"./it": "./node_modules/moment/locale/it.js",
+	"./it-ch": "./node_modules/moment/locale/it-ch.js",
+	"./it-ch.js": "./node_modules/moment/locale/it-ch.js",
 	"./it.js": "./node_modules/moment/locale/it.js",
 	"./ja": "./node_modules/moment/locale/ja.js",
 	"./ja.js": "./node_modules/moment/locale/ja.js",
@@ -312,7 +318,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n"
+module.exports = "div.app-container {\r\n    margin-top: 130px;\r\n    margin-bottom: 50px;\r\n}"
 
 /***/ }),
 
@@ -323,7 +329,7 @@ module.exports = "\r\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"fixed-top w-100\">\r\n  <app-header></app-header>\r\n</div>\r\n<div class=\"row w-100 justify-content-center\">\r\n  <div class=\"col-xl-8 col-lg-10 col-11\" style=\"margin-top: 130px; margin-bottom: 50px;\">\r\n    <router-outlet></router-outlet>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"fixed-top w-100\">\r\n  <app-header></app-header>\r\n</div>\r\n<div class=\"row w-100 justify-content-center\">\r\n  <div class=\"col-xl-8 col-lg-10 col-11 app-container\">\r\n    <router-outlet></router-outlet>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -486,7 +492,7 @@ module.exports = "\r\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\r\n  <div class=\"card-header\">\r\n    <h4>Articles</h4>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    <div class=\"row\">\r\n      <div class=\"col-12\">\r\n        <app-pager [pageSize]=\"10\" [containerClass]=\"list-group\"\r\n                   [getMethod]=\"getListMethod\">\r\n          <ng-template let-item=\"item\">\r\n            <a href=\"javascript:void(0)\" class=\"list-group-item list-group-item-action list-group-item-secondary mb-1\" (click)=\"open(item.id)\">\r\n              <div class=\"row\">\r\n                <div class=\"col-12\">\r\n                  <h5 [innerHTML]=\"item.title | decrypt\"></h5>\r\n                </div>\r\n              </div>\r\n              <div class=\"row\">\r\n                <app-author-date class=\"col-12\" [model]=\"item\"></app-author-date>\r\n              </div>\r\n              <div class=\"row\">\r\n                <!-- app-reaction-list -->\r\n              </div>\r\n            </a>\r\n          </ng-template>\r\n        </app-pager>\r\n      </div>\r\n      \r\n    </div>\r\n    <div class=\"row\">\r\n      <div class=\"col-auto\">\r\n        <button class=\"form-control btn btn-success\" (click)=\"create()\">Create</button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"card\">\r\n  <div class=\"card-header\">\r\n    <h4>Articles</h4>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    <div class=\"row\">\r\n      <div class=\"col-12\">\r\n        <app-pager [pageSize]=\"10\" [containerClass]=\"list-group\" [getMethodAsync]=\"getListMethod\">\r\n          <ng-template let-item=\"item\">\r\n            <a class=\"list-group-item list-group-item-action list-group-item-secondary mb-1\" (click)=\"open(item.id)\">\r\n              <div class=\"row\">\r\n                <div class=\"col-12\">\r\n                  <h5 [innerHTML]=\"item.title | decrypt\"></h5>\r\n                </div>\r\n              </div>\r\n              <div class=\"row\">\r\n                <app-author-date class=\"col-12\" [model]=\"item\"></app-author-date>\r\n              </div>\r\n              <div class=\"row\">\r\n                <app-reaction-list class=\"col-12\" [article]=\"item\"></app-reaction-list>\r\n              </div>\r\n            </a>\r\n          </ng-template>\r\n        </app-pager>\r\n      </div>\r\n      \r\n    </div>\r\n    <div class=\"row\">\r\n      <div class=\"col-auto\">\r\n        <button class=\"form-control btn btn-success\" (click)=\"create()\">Create</button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -505,9 +511,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -642,7 +651,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\r\n\r\n  <div class=\"card-header\">\r\n    <div *ngIf=\"!isEditing && article\">\r\n      <div class=\"row\">\r\n        <h5 class=\"col-12\" [innerHTML]=\"article.title | decrypt\"></h5>\r\n      </div>\r\n      <div class=\"row\">\r\n        <app-author-date class=\"col-auto\" [model]=\"article\"></app-author-date>\r\n        <div class=\"col-auto\" *ngIf=\"!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)\">\r\n          <a href=\"javascript:void(0)\" class=\"text-warning font-weight-bold\" (click)=\"startEdit()\">Edit</a>\r\n        </div>\r\n        <div class=\"col-auto\" *ngIf=\"!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)\">\r\n          <a href=\"javascript:void(0)\" class=\"text-danger font-weight-bold\" (click)=\"delete()\">Delete</a>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    \r\n    <input class=\"form-control\" type=\"text\" [(ngModel)]=\"newTitle\" *ngIf=\"isEditing || isCreating\" />\r\n  </div>\r\n\r\n  <div class=\"card-body\">\r\n    \r\n    <div class=\"row\">\r\n      <p class=\"col-12 text-justify\" *ngIf=\"!isEditing && !isCreating && article\" [innerHTML]=\"article.text | decrypt\"></p>\r\n      <div class=\"col-12 form-group\" *ngIf=\"isEditing || isCreating\">\r\n        <textarea class=\"form-control\" type=\"text\" [(ngModel)]=\"newText\" rows=\"20\"></textarea>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"form-row align-items-center\">\r\n      <div class=\"col-auto\" *ngIf=\"isEditing && !isCreating\">\r\n        <div class=\"form-inline\">\r\n          <button class=\"form-control btn btn-success\" (click)=\"edit()\" *ngIf=\"isOwner(article) && isDecrypted(article.title)\">Edit</button>\r\n          <button class=\"form-control btn btn-danger ml-2\" (click)=\"cancel()\">Cancel</button>\r\n        </div>\r\n      </div>\r\n      <div class=\"col-auto\" *ngIf=\"!isEditing && isCreating && hasKey && isLoggedIn\">\r\n        <button class=\"form-control btn btn-success\" (click)=\"create()\" *ngIf=\"isCreating\">Create</button>\r\n      </div>\r\n      <div class=\"col-auto\" *ngIf=\"(isCreating || isEditing)\">\r\n        <app-error-message [error]=\"'Please log in'\"\r\n          *ngIf=\"!isLoggedIn\"></app-error-message>\r\n        <app-error-message [error]=\"'Please provide a key'\"\r\n          *ngIf=\"!hasKey\"></app-error-message>\r\n        <app-error-message [error]=\"'Please provide the key that has been used to write this article'\"\r\n          *ngIf=\"isEditing && hasKey && article && !isDecrypted(article.title)\"></app-error-message>\r\n        <app-error-message [error]=\"'You cannot edit this article'\"\r\n          *ngIf=\"isEditing && isLoggedIn && !isOwner(article)\"></app-error-message>\r\n        <app-error-message [error]=\"error\"></app-error-message>\r\n      </div>\r\n    </div>\r\n    \r\n  </div>\r\n  \r\n</div>\r\n\r\n<div class=\"card mt-2\">\r\n  <div class=\"card-body\">\r\n    <div class=\"row\">\r\n      <div class=\"col-12\">\r\n        <app-comment-list *ngIf=\"article\" [articleId]=\"article.id\"\r\n          [isParentDecrypted]=\"isDecrypted(article.title)\"\r\n          (changed)=\"refreshComments($event)\"></app-comment-list>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"card\">\r\n\r\n  <div class=\"card-header\">\r\n    <div *ngIf=\"!isEditing && article\">\r\n      <div class=\"row\">\r\n        <h5 class=\"col-12\" [innerHTML]=\"article.title | decrypt\"></h5>\r\n      </div>\r\n      <div class=\"row\">\r\n        <app-author-date class=\"col-auto\" [model]=\"article\"></app-author-date>\r\n        <div class=\"col-auto\" *ngIf=\"!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)\">\r\n          <a class=\"text-warning font-weight-bold\" (click)=\"startEdit()\">Edit</a>\r\n        </div>\r\n        <div class=\"col-auto\" *ngIf=\"!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)\">\r\n          <a class=\"text-danger font-weight-bold\" (click)=\"delete()\">Delete</a>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    \r\n    <input class=\"form-control\" type=\"text\" [(ngModel)]=\"newTitle\" *ngIf=\"isEditing || isCreating\" />\r\n  </div>\r\n\r\n  <div class=\"card-body\">\r\n    \r\n    <div class=\"row\">\r\n      <p class=\"col-12 text-justify\" *ngIf=\"!isEditing && !isCreating && article\" [innerHTML]=\"article.text | decrypt\"></p>\r\n      <div class=\"col-12 form-group\" *ngIf=\"isEditing || isCreating\">\r\n        <textarea class=\"form-control\" type=\"text\" [(ngModel)]=\"newText\" rows=\"20\"></textarea>\r\n      </div>\r\n    </div>\r\n\r\n    <div class=\"row\" *ngIf=\"article\">\r\n      <app-reaction-list class=\"col-12\" [article]=\"article\" [isParentDecrypted]=\"isDecrypted(article.title)\"></app-reaction-list>\r\n    </div>\r\n\r\n    <div class=\"form-row align-items-center\">\r\n      <div class=\"col-auto\" *ngIf=\"isEditing && !isCreating\">\r\n        <div class=\"form-inline\">\r\n          <button class=\"form-control btn btn-success\" (click)=\"edit()\" *ngIf=\"isOwner(article) && isDecrypted(article.title)\">Edit</button>\r\n          <button class=\"form-control btn btn-danger ml-2\" (click)=\"cancel()\">Cancel</button>\r\n        </div>\r\n      </div>\r\n      <div class=\"col-auto\" *ngIf=\"!isEditing && isCreating && hasKey && isLoggedIn\">\r\n        <button class=\"form-control btn btn-success\" (click)=\"create()\" *ngIf=\"isCreating\">Create</button>\r\n      </div>\r\n      <div class=\"col-auto\" *ngIf=\"(isCreating || isEditing)\">\r\n        <app-error-message [error]=\"'Please log in'\"\r\n          *ngIf=\"!isLoggedIn\"></app-error-message>\r\n        <app-error-message [error]=\"'Please provide a key'\"\r\n          *ngIf=\"!hasKey\"></app-error-message>\r\n        <app-error-message [error]=\"'Please provide the key that has been used to write this article'\"\r\n          *ngIf=\"isEditing && hasKey && article && !isDecrypted(article.title)\"></app-error-message>\r\n        <app-error-message [error]=\"'You cannot edit this article'\"\r\n          *ngIf=\"isEditing && isLoggedIn && !isOwner(article)\"></app-error-message>\r\n        <app-error-message [error]=\"error\"></app-error-message>\r\n      </div>\r\n    </div>\r\n    \r\n  </div>\r\n  \r\n</div>\r\n\r\n<div class=\"card mt-2\">\r\n  <div class=\"card-body\">\r\n    <div class=\"row\">\r\n      <div class=\"col-12\">\r\n        <app-comment-list *ngIf=\"article\" [articleId]=\"article.id\"\r\n          [isParentDecrypted]=\"isDecrypted(article.title)\"\r\n          (changed)=\"refreshComments($event)\"></app-comment-list>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -662,9 +671,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 /* harmony import */ var src_app_services_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -724,7 +736,7 @@ var ArticleComponent = /** @class */ (function (_super) {
         var _this = this;
         this.error = null;
         this.articleService.edit(this.article.id, this.newTitle, this.newText).subscribe(function (result) {
-            result.reactionCounts = _this.article.reactionCounts;
+            result.reactionTypes = _this.article.reactionTypes;
             result.comments = _this.article.comments;
             _this.article = result;
             _this.isEditing = false;
@@ -787,12 +799,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../error-message/error-message.module */ "./src/app/components/error-message/error-message.module.ts");
 /* harmony import */ var _comment_list_comment_list_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../comment-list/comment-list.module */ "./src/app/components/comment-list/comment-list.module.ts");
 /* harmony import */ var _author_date_author_date_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../author-date/author-date.module */ "./src/app/components/author-date/author-date.module.ts");
+/* harmony import */ var _reaction_list_reaction_list_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../reaction-list/reaction-list.module */ "./src/app/components/reaction-list/reaction-list.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -812,7 +826,8 @@ var ArticleModule = /** @class */ (function () {
                 src_app_pipes_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_4__["PipesModule"],
                 _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_5__["ErrorMessageModule"],
                 _comment_list_comment_list_module__WEBPACK_IMPORTED_MODULE_6__["CommentListModule"],
-                _author_date_author_date_module__WEBPACK_IMPORTED_MODULE_7__["AuthorDateModule"]
+                _author_date_author_date_module__WEBPACK_IMPORTED_MODULE_7__["AuthorDateModule"],
+                _reaction_list_reaction_list_module__WEBPACK_IMPORTED_MODULE_8__["ReactionListModule"]
             ],
             declarations: [_article_component__WEBPACK_IMPORTED_MODULE_2__["ArticleComponent"]],
             exports: [_article_component__WEBPACK_IMPORTED_MODULE_2__["ArticleComponent"]]
@@ -996,7 +1011,7 @@ var BaseComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "li.no-bullet {\r\n    list-style-type: none;\r\n}"
 
 /***/ }),
 
@@ -1007,7 +1022,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"card\">\r\n  <div class=\"card-header\">\r\n    <h4>Category list</h4>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    <ul>\r\n      \r\n      <li *ngFor=\"let category of categoryList\">\r\n\r\n        <div class=\"row\">\r\n          <app-category class=\"col-12\" [category]=\"category\" (categoryClick)=\"openParent(category)\"></app-category>\r\n        </div>\r\n\r\n        <div class=\"row\" *ngIf=\"category.isOpened\">\r\n          <div class=\"col-12\">\r\n            <ul>\r\n\r\n              <li *ngFor=\"let subCategory of category.children\">\r\n                <app-category [category]=\"subCategory\" (categoryClick)=\"openChild(subCategory.id)\"></app-category>\r\n              </li>\r\n\r\n              <li *ngIf=\"isLoggedIn && isDecrypted(category.name)\" style=\"list-style-type: none\">\r\n\r\n                <div class=\"row\" *ngIf=\"!category.isWriting\">\r\n                  <div class=\"col-auto\">\r\n                    <a href=\"javascript:void(0)\" class=\"text-primary font-weight-bold\" (click)=\"category.isWriting = true\">Create</a>\r\n                  </div>\r\n                </div>\r\n\r\n                <div class=\"form-row align-items-middle\" *ngIf=\"category.isWriting\">\r\n                  <div class=\"col-auto\">\r\n                    <input type=\"text\" class=\"form-control\" [(ngModel)]=\"category.newText\" />\r\n                  </div>\r\n                  <div class=\"col-auto\">\r\n                    <button class=\"btn btn-success form-control\" (click)=\"createChild(category)\">Create</button>\r\n                  </div>\r\n                  <div class=\"col-auto\">\r\n                    <button class=\"btn btn-danger form-control\" (click)=\"category.isWriting = false\">Cancel</button>\r\n                  </div>\r\n                  <app-error-message class=\"col-auto\" [error]=\"category.error\"></app-error-message>\r\n                </div>\r\n\r\n              </li>\r\n            </ul>\r\n          </div>\r\n        </div>\r\n\r\n      </li>\r\n\r\n      <li *ngIf=\"isLoggedIn && hasKey\" style=\"list-style-type: none\">\r\n\r\n        <div class=\"row\" *ngIf=\"!isWriting\">\r\n          <div class=\"col-auto\">\r\n            <a href=\"javascript:void(0)\" class=\"text-primary font-weight-bold\" (click)=\"isWriting = true\">Create</a>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"form-row align-items-middle\" *ngIf=\"isWriting\">\r\n          <div class=\"col-auto\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"newCategoryName\" />\r\n          </div>\r\n          <div class=\"col-auto\">\r\n            <button class=\"btn btn-success form-control\" (click)=\"createParent()\">Create</button>\r\n          </div>\r\n          <div class=\"col-auto\">\r\n            <button class=\"btn btn-danger form-control\" (click)=\"isWriting = false\">Cancel</button>\r\n          </div>\r\n          <app-error-message class=\"col-auto\" [error]=\"categoryError\"></app-error-message>\r\n        </div>\r\n      </li>\r\n\r\n    </ul>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"card\">\r\n  <div class=\"card-header\">\r\n    <h4>Category list</h4>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    <ul>\r\n      \r\n      <li *ngFor=\"let category of categoryList\" class=\"no-bullet\">\r\n\r\n        <div class=\"row\">\r\n          <app-category class=\"col-12\" [category]=\"category\" (categoryClick)=\"openParent(category)\"></app-category>\r\n        </div>\r\n\r\n        <div class=\"row\" *ngIf=\"category.isOpened\">\r\n          <div class=\"col-12\">\r\n            <ul>\r\n\r\n              <li *ngFor=\"let subCategory of category.children\" class=\"no-bullet\">\r\n                <app-category [category]=\"subCategory\" (categoryClick)=\"openChild(subCategory.id)\"></app-category>\r\n              </li>\r\n\r\n              <li *ngIf=\"isLoggedIn && isDecrypted(category.name)\" class=\"no-bullet\">\r\n\r\n                <div class=\"row\" *ngIf=\"!category.isWriting\">\r\n                  <div class=\"col-auto\">\r\n                    <a class=\"text-success font-weight-bold\" (click)=\"category.isWriting = true\">Create</a>\r\n                  </div>\r\n                </div>\r\n\r\n                <div class=\"form-row align-items-center\" *ngIf=\"category.isWriting\">\r\n                  <div class=\"col-auto\">\r\n                    <input type=\"text\" class=\"form-control\" [(ngModel)]=\"category.newText\" />\r\n                  </div>\r\n                  <div class=\"col-auto\">\r\n                    <button class=\"btn btn-success form-control\" (click)=\"createChild(category)\">Create</button>\r\n                  </div>\r\n                  <div class=\"col-auto\">\r\n                    <button class=\"btn btn-danger form-control\" (click)=\"category.isWriting = false\">Cancel</button>\r\n                  </div>\r\n                  <app-error-message class=\"col-auto\" [error]=\"category.error\"></app-error-message>\r\n                </div>\r\n\r\n              </li>\r\n            </ul>\r\n          </div>\r\n        </div>\r\n\r\n      </li>\r\n\r\n      <li *ngIf=\"isLoggedIn && hasKey\" class=\"no-bullet\">\r\n\r\n        <div class=\"row\" *ngIf=\"!isWriting\">\r\n          <div class=\"col-auto\">\r\n            <a class=\"text-success font-weight-bold\" (click)=\"isWriting = true\">Create</a>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"form-row align-items-center\" *ngIf=\"isWriting\">\r\n          <div class=\"col-auto\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"newCategoryName\" />\r\n          </div>\r\n          <div class=\"col-auto\">\r\n            <button class=\"btn btn-success form-control\" (click)=\"createParent()\">Create</button>\r\n          </div>\r\n          <div class=\"col-auto\">\r\n            <button class=\"btn btn-danger form-control\" (click)=\"isWriting = false\">Cancel</button>\r\n          </div>\r\n          <app-error-message class=\"col-auto\" [error]=\"categoryError\"></app-error-message>\r\n        </div>\r\n      </li>\r\n\r\n    </ul>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -1026,9 +1041,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1194,7 +1212,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\" *ngIf=\"category\">\n  <div class=\"col-12\">\n    <a href=\"javascript:void(0)\" class=\"text-primary\" (click)=\"onclick()\"\n      [innerHTML]=\"category.name | decrypt\"></a>&nbsp;\n    <span class=\"text-primary\">(#{{ category.id }})</span>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row\" *ngIf=\"category\">\n  <div class=\"col-12\">\n    <a class=\"text-primary\" (click)=\"onclick()\"\n      [innerHTML]=\"category.name | decrypt\"></a>&nbsp;\n    <span class=\"text-primary\">(#{{ category.id }})</span>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1312,7 +1330,7 @@ module.exports = "\r\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"comments && comments.items\">\r\n  \r\n  <div class=\"row mb-4\" *ngIf=\"comments && comments.totalCount > comments.count\">\r\n    <div class=\"col-12\">\r\n      <a href=\"javascript:void(0)\" class=\"text-primary font-weight-bold\" (click)=\"getForArticle(20, 5)\">Show previous comments</a>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"row mb-4\" *ngFor=\"let parent of comments.items\">\r\n    <div class=\"col-12\">\r\n\r\n      <div class=\"row\">\r\n        <app-comment class=\"col-12\" [comment]=\"parent\" \r\n          (replying)=\"replying($event)\"\r\n          (deleted)=\"parentDeleted($event)\"></app-comment>\r\n      </div>\r\n\r\n      <div class=\"row\" *ngIf=\"parent.children\">\r\n        <div class=\"col-12 pl-5\">\r\n\r\n          <div class=\"row\" *ngIf=\"parent.children.totalCount > parent.children.count\">\r\n            <div class=\"col-12\">\r\n              <a href=\"javascript:void(0)\" class=\"text-primary\" (click)=\"getForComment(parent, 50)\">Show previous replies</a>\r\n            </div>\r\n          </div>\r\n\r\n          <div class=\"row mt-2\" *ngFor=\"let child of parent.children.items\">\r\n            <app-comment class=\"col-12\" [comment]=\"child\"\r\n              (deleted)=\"childDeleted($event, parent)\"></app-comment>\r\n          </div>\r\n\r\n          <div class=\"row mt-2\" *ngIf=\"parent.isWriting\">\r\n            <app-comment class=\"col-12\" [isCreating]=\"true\" [parentId]=\"parent.id\"\r\n              [isParentDecrypted]=\"isDecrypted(parent.text)\"\r\n              (created)=\"childCreated($event, parent)\"\r\n              (canceled)=\"createChildCanceled($event, parent)\"></app-comment>\r\n          </div>\r\n\r\n        </div>\r\n      </div>\r\n\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"row\" *ngIf=\"!isWriting && isLoggedIn && isParentDecrypted\">\r\n    <div class=\"col-auto\">\r\n      <a href=\"javascript:void(0)\" class=\"text-success font-weight-bold\" (click)=\"isWriting = true\">Comment</a>\r\n    </div>\r\n  </div>\r\n  \r\n  <div class=\"row align-items-middle\" *ngIf=\"isWriting\">\r\n    <app-comment class=\"col-12\" [isCreating]=\"true\" [articleId]=\"articleId\" [isParentDecrypted]=\"isParentDecrypted\"\r\n      (created)=\"parentCreated($event)\"\r\n      (canceled)=\"createParentCanceled()\"></app-comment>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div *ngIf=\"comments && comments.items\">\r\n  \r\n  <div class=\"row mb-4\" *ngIf=\"comments && comments.totalCount > comments.count\">\r\n    <div class=\"col-12\">\r\n      <a class=\"text-primary font-weight-bold\" (click)=\"getForArticle(20, 5)\">Show previous comments</a>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"row mb-4\" *ngFor=\"let parent of comments.items\">\r\n    <div class=\"col-12\">\r\n\r\n      <div class=\"row\">\r\n        <app-comment class=\"col-12\" [comment]=\"parent\" \r\n          (replying)=\"replying($event)\"\r\n          (deleted)=\"parentDeleted($event)\"></app-comment>\r\n      </div>\r\n\r\n      <div class=\"row\" *ngIf=\"parent.children\">\r\n        <div class=\"col-12 pl-5\">\r\n\r\n          <div class=\"row\" *ngIf=\"parent.children.totalCount > parent.children.count\">\r\n            <div class=\"col-12\">\r\n              <a class=\"text-primary\" (click)=\"getForComment(parent, 50)\">Show previous replies</a>\r\n            </div>\r\n          </div>\r\n\r\n          <div class=\"row mt-2\" *ngFor=\"let child of parent.children.items\">\r\n            <app-comment class=\"col-12\" [comment]=\"child\"\r\n              (deleted)=\"childDeleted($event, parent)\"></app-comment>\r\n          </div>\r\n\r\n          <div class=\"row mt-2\" *ngIf=\"parent.isWriting\">\r\n            <app-comment class=\"col-12\" [isCreating]=\"true\" [parentId]=\"parent.id\"\r\n              [isParentDecrypted]=\"isDecrypted(parent.text)\"\r\n              (created)=\"childCreated($event, parent)\"\r\n              (canceled)=\"createChildCanceled($event, parent)\"></app-comment>\r\n          </div>\r\n\r\n        </div>\r\n      </div>\r\n\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"row\" *ngIf=\"!isWriting && isLoggedIn && isParentDecrypted\">\r\n    <div class=\"col-auto\">\r\n      <a class=\"text-success font-weight-bold\" (click)=\"isWriting = true\">Comment</a>\r\n    </div>\r\n  </div>\r\n  \r\n  <div class=\"row align-items-center\" *ngIf=\"isWriting\">\r\n    <app-comment class=\"col-12\" [isCreating]=\"true\" [articleId]=\"articleId\" [isParentDecrypted]=\"isParentDecrypted\"\r\n      (created)=\"parentCreated($event)\"\r\n      (canceled)=\"createParentCanceled()\"></app-comment>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -1331,9 +1349,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_models_page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/models/page */ "./src/app/models/page.ts");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1514,7 +1535,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"comment && !isCreating && !isEditing\">\r\n  <div class=\"row\">\r\n    <div class=\"col-auto\">\r\n      <app-author-date [model]=\"comment\"></app-author-date>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <a href=\"javascript:void(0)\" class=\"text-success font-weight-bold\" (click)=\"reply()\"\r\n        *ngIf=\"!comment.parentId && isLoggedIn && isDecrypted(comment.text)\">Reply</a>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <a href=\"javascript:void(0)\" class=\"text-warning font-weight-bold\" (click)=\"startEdit()\"\r\n        *ngIf=\"isOwner(comment) && isDecrypted(comment.text)\">Edit</a>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <a href=\"javascript:void(0)\" class=\"text-danger font-weight-bold\" (click)=\"delete()\"\r\n        *ngIf=\"isOwner(comment) && isDecrypted(comment.text)\">Delete</a>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-12\">\r\n      <div class=\"text-justify\" [innerHTML]=\"comment.text | decrypt\"></div>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-12\">\r\n      <!-- app-reaction-list -->\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<div *ngIf=\"isCreating || isEditing\" class=\"form-group\">\r\n  <div class=\"row\">\r\n    <div class=\"col-12 form-group\">\r\n      <textarea class=\"form-control\" rows=\"3\" [(ngModel)]=\"newText\"></textarea>\r\n    </div>\r\n  </div>\r\n  <div class=\"form-row align-items-middle\">\r\n    <div class=\"col-auto\" *ngIf=\"isCreating && isLoggedIn && isParentDecrypted\">\r\n      <button class=\"btn btn-success form-control\" (click)=\"create()\">Create</button>\r\n    </div>\r\n    <div class=\"col-auto\" *ngIf=\"isEditing && isLoggedIn && comment && isDecrypted(comment.text)\">\r\n      <button class=\"btn btn-success form-control\" (click)=\"edit()\">Edit</button>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <button class=\"btn btn-danger form-control\" (click)=\"cancel()\">Cancel</button>\r\n    </div>\r\n    <app-error-message class=\"col-auto\" [error]=\"comment.error\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'Please log in'\"\r\n      *ngIf=\"!isLoggedIn\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'You cannot edit this comment'\"\r\n      *ngIf=\"isLogged && !isOwner(comment)\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'Please provide a key'\"\r\n      *ngIf=\"!hasKey\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'Please provide the right key.'\"\r\n      *ngIf=\"isEditing && !isDecrypted(comment.text)\"></app-error-message>\r\n  </div>\r\n</div>"
+module.exports = "<div *ngIf=\"comment && !isCreating && !isEditing\">\r\n  <div class=\"row\">\r\n    <div class=\"col-auto\">\r\n      <app-author-date [model]=\"comment\"></app-author-date>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <a class=\"text-success font-weight-bold\" (click)=\"reply()\"\r\n        *ngIf=\"!comment.parentId && isLoggedIn && isDecrypted(comment.text)\">Reply</a>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <a class=\"text-warning font-weight-bold\" (click)=\"startEdit()\"\r\n        *ngIf=\"isOwner(comment) && isDecrypted(comment.text)\">Edit</a>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <a class=\"text-danger font-weight-bold\" (click)=\"delete()\"\r\n        *ngIf=\"isOwner(comment) && isDecrypted(comment.text)\">Delete</a>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-12\">\r\n      <div class=\"text-justify\" [innerHTML]=\"comment.text | decrypt\"></div>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <app-reaction-list class=\"col-12\" [comment]=\"comment\" [isParentDecrypted]=\"isDecrypted(comment.text)\"></app-reaction-list>\r\n  </div>\r\n</div>\r\n\r\n<div *ngIf=\"isCreating || isEditing\" class=\"form-group\">\r\n  <div class=\"row\">\r\n    <div class=\"col-12 form-group\">\r\n      <textarea class=\"form-control\" rows=\"3\" [(ngModel)]=\"newText\"></textarea>\r\n    </div>\r\n  </div>\r\n  <div class=\"form-row align-items-center\">\r\n    <div class=\"col-auto\" *ngIf=\"isCreating && isLoggedIn && isParentDecrypted\">\r\n      <button class=\"btn btn-success form-control\" (click)=\"create()\">Create</button>\r\n    </div>\r\n    <div class=\"col-auto\" *ngIf=\"isEditing && isLoggedIn && comment && isDecrypted(comment.text)\">\r\n      <button class=\"btn btn-success form-control\" (click)=\"edit()\">Edit</button>\r\n    </div>\r\n    <div class=\"col-auto\">\r\n      <button class=\"btn btn-danger form-control\" (click)=\"cancel()\">Cancel</button>\r\n    </div>\r\n    <app-error-message class=\"col-auto\" [error]=\"comment.error\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'Please log in'\"\r\n      *ngIf=\"!isLoggedIn\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'You cannot edit this comment'\"\r\n      *ngIf=\"isLogged && !isOwner(comment)\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'Please provide a key'\"\r\n      *ngIf=\"!hasKey\"></app-error-message>\r\n    <app-error-message class=\"col-auto\" [error]=\"'Please provide the right key.'\"\r\n      *ngIf=\"isEditing && !isDecrypted(comment.text)\"></app-error-message>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -1535,9 +1556,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_services_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 /* harmony import */ var src_app_models_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/models/page */ "./src/app/models/page.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1590,7 +1614,7 @@ var CommentComponent = /** @class */ (function (_super) {
             ? this.commentService.createForArticle(this.articleId, this.newText)
             : this.commentService.createForComment(this.parentId, this.newText);
         createSubscriber.subscribe(function (result) {
-            result.reactionCounts = [];
+            result.reactionTypes = [];
             result.children = new src_app_models_page__WEBPACK_IMPORTED_MODULE_5__["Page"]();
             _this.created.emit(result);
             _this.newText = null;
@@ -1609,7 +1633,7 @@ var CommentComponent = /** @class */ (function (_super) {
         var _this = this;
         this.commentService.edit(this.comment.id, this.newText).subscribe(function (result) {
             result.children = _this.comment.children;
-            result.reactionCounts = _this.comment.reactionCounts;
+            result.reactionTypes = _this.comment.reactionTypes;
             _this.comment = result;
             _this.isEditing = false;
             _this.newText = null;
@@ -1703,12 +1727,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_pipes_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/pipes/pipes/pipes.module */ "./src/app/pipes/pipes/pipes.module.ts");
 /* harmony import */ var _author_date_author_date_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../author-date/author-date.module */ "./src/app/components/author-date/author-date.module.ts");
 /* harmony import */ var _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../error-message/error-message.module */ "./src/app/components/error-message/error-message.module.ts");
+/* harmony import */ var _reaction_list_reaction_list_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../reaction-list/reaction-list.module */ "./src/app/components/reaction-list/reaction-list.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -1726,13 +1752,288 @@ var CommentModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
                 src_app_pipes_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_4__["PipesModule"],
                 _author_date_author_date_module__WEBPACK_IMPORTED_MODULE_5__["AuthorDateModule"],
-                _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_6__["ErrorMessageModule"]
+                _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_6__["ErrorMessageModule"],
+                _reaction_list_reaction_list_module__WEBPACK_IMPORTED_MODULE_7__["ReactionListModule"]
             ],
             declarations: [_comment_component__WEBPACK_IMPORTED_MODULE_2__["CommentComponent"]],
             exports: [_comment_component__WEBPACK_IMPORTED_MODULE_2__["CommentComponent"]]
         })
     ], CommentModule);
     return CommentModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/emoji-list/emoji-list.component.css":
+/*!****************************************************************!*\
+  !*** ./src/app/components/emoji-list/emoji-list.component.css ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/components/emoji-list/emoji-list.component.html":
+/*!*****************************************************************!*\
+  !*** ./src/app/components/emoji-list/emoji-list.component.html ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"card\">\n  <div class=\"card-body p-1\">\n    <app-pager class=\"pager\" [containerClass]=\"'form-row mb-2'\"\n      [pageSize]=\"48\" [getMethod]=\"getMethod\" [cancelButton]=\"true\" (canceled)=\"cancel()\">\n      <ng-template let-item=\"item\">\n        <app-emoji class=\"col-2 emoji\" [name]=\"item\" (emojiClick)=\"emojiClicked($event)\"></app-emoji>\n      </ng-template>\n    </app-pager>\n  </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/components/emoji-list/emoji-list.component.ts":
+/*!***************************************************************!*\
+  !*** ./src/app/components/emoji-list/emoji-list.component.ts ***!
+  \***************************************************************/
+/*! exports provided: EmojiListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EmojiListComponent", function() { return EmojiListComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var emojione_emoji_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! emojione/emoji.json */ "./node_modules/emojione/emoji.json");
+var emojione_emoji_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/Object.assign({}, emojione_emoji_json__WEBPACK_IMPORTED_MODULE_1__, {"default": emojione_emoji_json__WEBPACK_IMPORTED_MODULE_1__});
+/* harmony import */ var src_app_models_page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/models/page */ "./src/app/models/page.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var EmojiListComponent = /** @class */ (function () {
+    function EmojiListComponent() {
+        var _this = this;
+        this.emojiClick = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.canceled = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.getMethod = function (i, s) { return _this._getMethod(i, s); };
+    }
+    EmojiListComponent_1 = EmojiListComponent;
+    EmojiListComponent.prototype.emojiClicked = function (name) {
+        this.emojiClick.emit(name);
+    };
+    Object.defineProperty(EmojiListComponent.prototype, "emojiNameList", {
+        get: function () {
+            if (!EmojiListComponent_1._emojiList) {
+                EmojiListComponent_1._emojiList = [];
+                for (var key in emojione_emoji_json__WEBPACK_IMPORTED_MODULE_1___namespace) {
+                    var name_1 = emojione_emoji_json__WEBPACK_IMPORTED_MODULE_1___namespace[key].shortname;
+                    EmojiListComponent_1._emojiList.push(name_1);
+                }
+            }
+            return EmojiListComponent_1._emojiList;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    EmojiListComponent.prototype._getMethod = function (index, size) {
+        var items = this.emojiNameList.slice(index * size, (index + 1) * size);
+        var page = new src_app_models_page__WEBPACK_IMPORTED_MODULE_2__["Page"]();
+        page.items = items;
+        page.index = index;
+        page.count = items.length;
+        page.totalCount = this.emojiNameList.length;
+        return page;
+    };
+    EmojiListComponent.prototype.cancel = function () {
+        this.canceled.emit();
+    };
+    var EmojiListComponent_1;
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], EmojiListComponent.prototype, "emojiClick", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], EmojiListComponent.prototype, "canceled", void 0);
+    EmojiListComponent = EmojiListComponent_1 = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-emoji-list',
+            template: __webpack_require__(/*! ./emoji-list.component.html */ "./src/app/components/emoji-list/emoji-list.component.html"),
+            styles: [__webpack_require__(/*! ./emoji-list.component.css */ "./src/app/components/emoji-list/emoji-list.component.css")]
+        })
+    ], EmojiListComponent);
+    return EmojiListComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/emoji-list/emoji-list.module.ts":
+/*!************************************************************!*\
+  !*** ./src/app/components/emoji-list/emoji-list.module.ts ***!
+  \************************************************************/
+/*! exports provided: EmojiListModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EmojiListModule", function() { return EmojiListModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _emoji_list_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./emoji-list.component */ "./src/app/components/emoji-list/emoji-list.component.ts");
+/* harmony import */ var _emoji_emoji_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../emoji/emoji.module */ "./src/app/components/emoji/emoji.module.ts");
+/* harmony import */ var _pager_pager_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pager/pager.module */ "./src/app/components/pager/pager.module.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+var EmojiListModule = /** @class */ (function () {
+    function EmojiListModule() {
+    }
+    EmojiListModule = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
+            imports: [
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                _emoji_emoji_module__WEBPACK_IMPORTED_MODULE_3__["EmojiModule"],
+                _pager_pager_module__WEBPACK_IMPORTED_MODULE_4__["PagerModule"]
+            ],
+            declarations: [_emoji_list_component__WEBPACK_IMPORTED_MODULE_2__["EmojiListComponent"]],
+            exports: [_emoji_list_component__WEBPACK_IMPORTED_MODULE_2__["EmojiListComponent"]]
+        })
+    ], EmojiListModule);
+    return EmojiListModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/emoji/emoji.component.css":
+/*!******************************************************!*\
+  !*** ./src/app/components/emoji/emoji.component.css ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/components/emoji/emoji.component.html":
+/*!*******************************************************!*\
+  !*** ./src/app/components/emoji/emoji.component.html ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<span class=\"emoji-container\" *ngIf=\"html && html.indexOf('emojione') > -1\" [innerHTML]=\"html\" (click)=\"emojiClicked()\"></span>"
+
+/***/ }),
+
+/***/ "./src/app/components/emoji/emoji.component.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/components/emoji/emoji.component.ts ***!
+  \*****************************************************/
+/*! exports provided: EmojiComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EmojiComponent", function() { return EmojiComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var emojione__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! emojione */ "./node_modules/emojione/lib/js/emojione.js");
+/* harmony import */ var emojione__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(emojione__WEBPACK_IMPORTED_MODULE_1__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var EmojiComponent = /** @class */ (function () {
+    function EmojiComponent() {
+        this.emojiClick = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    EmojiComponent.prototype.ngOnInit = function () {
+        this.html = emojione__WEBPACK_IMPORTED_MODULE_1__["shortnameToImage"](this.name);
+    };
+    EmojiComponent.prototype.emojiClicked = function () {
+        this.emojiClick.emit(this.name);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], EmojiComponent.prototype, "name", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], EmojiComponent.prototype, "emojiClick", void 0);
+    EmojiComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-emoji',
+            template: __webpack_require__(/*! ./emoji.component.html */ "./src/app/components/emoji/emoji.component.html"),
+            styles: [__webpack_require__(/*! ./emoji.component.css */ "./src/app/components/emoji/emoji.component.css")]
+        })
+    ], EmojiComponent);
+    return EmojiComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/emoji/emoji.module.ts":
+/*!**************************************************!*\
+  !*** ./src/app/components/emoji/emoji.module.ts ***!
+  \**************************************************/
+/*! exports provided: EmojiModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EmojiModule", function() { return EmojiModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _emoji_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./emoji.component */ "./src/app/components/emoji/emoji.component.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+var EmojiModule = /** @class */ (function () {
+    function EmojiModule() {
+    }
+    EmojiModule = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
+            imports: [
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"]
+            ],
+            declarations: [_emoji_component__WEBPACK_IMPORTED_MODULE_2__["EmojiComponent"]],
+            exports: [_emoji_component__WEBPACK_IMPORTED_MODULE_2__["EmojiComponent"]]
+        })
+    ], EmojiModule);
+    return EmojiModule;
 }());
 
 
@@ -1774,9 +2075,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1903,9 +2207,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2025,9 +2332,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2146,9 +2456,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 /* harmony import */ var src_app_services_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2307,9 +2620,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2434,7 +2750,7 @@ var LoginModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "input.page-index {\r\n    width: 70px;\r\n}"
 
 /***/ }),
 
@@ -2445,7 +2761,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ng-template #defaultTemplate let-item=\"item\">\r\n  <div>{{item.id}}</div>\r\n</ng-template>\r\n\r\n<div [class]=\"containerClass\" *ngIf=\"page\">\r\n  <template *ngFor=\"let item of page.items; let i = index\"\r\n            [ngTemplateOutlet]=\"itemTemplate || defaultTemplate\"\r\n            [ngTemplateOutletContext]=\"{item: item}\">\r\n  </template>\r\n</div>\r\n\r\n<div class=\"row justify-content-center\">\r\n  <div class=\"col-auto\">\r\n    <div class=\"input-group\">\r\n      <div class=\"input-group-prepend\">\r\n        <button class=\"btn btn-secondary form-control\" (click)=\"next()\">&lt;&lt;</button>\r\n      </div>\r\n      <div class=\"input-group-append input-group-prepend\" *ngIf=\"!isEditing\" style=\"cursor: pointer;\" (click)=\"isEditing = true\">\r\n        <span class=\"input-group-text\">{{ displayedPageIndex }}&nbsp;/&nbsp;{{ pageCount }}</span>\r\n      </div>\r\n      <input type=\"number\" class=\"form-control\" style=\"width: 70px;\" *ngIf=\"isEditing\"\r\n              min=\"1\" [attr.max]=\"pageCount\" [(ngModel)]=\"displayedPageIndex\" />\r\n      <span class=\"input-group-text\" *ngIf=\"isEditing\">\r\n        &nbsp;/&nbsp;{{ pageCount }}&nbsp;\r\n        <a href=\"javascript:void(0)\" (click)=\"setPageIndex()\" *ngIf=\"isEditing\">Go</a>\r\n      </span>\r\n      <div class=\"input-group-append\">\r\n        <button class=\"btn btn-secondary form-control\" (click)=\"next()\">&gt;&gt;</button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<ng-template #defaultTemplate let-item=\"item\">\r\n  <div>{{item.id}}</div>\r\n</ng-template>\r\n\r\n<div [class]=\"containerClass || ''\" *ngIf=\"page\">\r\n  <template *ngFor=\"let item of page.items; let i = index\"\r\n            [ngTemplateOutlet]=\"itemTemplate || defaultTemplate\"\r\n            [ngTemplateOutletContext]=\"{item: item}\">\r\n  </template>\r\n</div>\r\n\r\n<div class=\"form-row justify-content-center align-items-center\">\r\n  <div class=\"col-auto\">\r\n    <div class=\"input-group\">\r\n      <div class=\"input-group-prepend\">\r\n        <button class=\"btn btn-secondary form-control\" (click)=\"previous()\">&lt;&lt;</button>\r\n      </div>\r\n      <a class=\"input-group-append input-group-prepend\" *ngIf=\"!isEditing\" (click)=\"isEditing = true\">\r\n        <span class=\"input-group-text\">{{ displayedPageIndex }}&nbsp;/&nbsp;{{ pageCount }}</span>\r\n      </a>\r\n      <input type=\"number\" class=\"form-control page-index\" *ngIf=\"isEditing\"\r\n              min=\"1\" [attr.max]=\"pageCount\" [(ngModel)]=\"displayedPageIndex\" />\r\n      <span class=\"input-group-text\" *ngIf=\"isEditing\">\r\n        &nbsp;/&nbsp;{{ pageCount }}&nbsp;\r\n        <a class=\"text-primary font-weight-bold\" (click)=\"setPageIndex()\" *ngIf=\"isEditing\">Go</a>\r\n      </span>\r\n      <div class=\"input-group-append\">\r\n        <button class=\"btn btn-secondary form-control\" (click)=\"next()\">&gt;&gt;</button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <a class=\"col-auto text-danger font-weight-bold\" (click)=\"cancel()\" *ngIf=\"cancelButton\">Cancel</a>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2462,9 +2778,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2488,25 +2807,35 @@ var PagerComponent = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.error = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         _this.pageChanged = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        _this.canceled = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         return _this;
     }
     PagerComponent.prototype.ngOnInit = function () {
+        if (this.getMethod && this.getMethodAsync
+            || !this.getMethod && !this.getMethodAsync) {
+            throw Error("Set getMethod or getMethodAsync");
+        }
         this.get(0);
     };
     PagerComponent.prototype.get = function (pageIndex) {
         var _this = this;
-        this.getMethod(pageIndex, this.pageSize).subscribe(function (result) {
-            _this.page = result;
-            _this.pageCount = Math.ceil(_this.page.totalCount / _this.pageSize);
-            _this.displayedPageIndex = result.index + 1;
-            _this.pageChanged.emit(result);
-        }, function (error) {
-            _this.error.emit(error);
-        });
+        if (this.getMethod) {
+            var result = this.getMethod(pageIndex, this.pageSize);
+            this.endGet(result);
+        }
+        else {
+            this.getMethodAsync(pageIndex, this.pageSize).subscribe(function (result) { return _this.endGet(result); }, function (error) { return _this.error.emit(error); });
+        }
+    };
+    PagerComponent.prototype.endGet = function (result) {
+        this.page = result;
+        this.pageCount = Math.ceil(this.page.totalCount / this.pageSize);
+        this.displayedPageIndex = result.index + 1;
+        this.pageChanged.emit(result);
     };
     PagerComponent.prototype.previous = function () {
         if (this.page.index > 0) {
-            this.get(this.page.index - 1);
+            this.get(--this.page.index);
         }
     };
     PagerComponent.prototype.next = function () {
@@ -2527,10 +2856,17 @@ var PagerComponent = /** @class */ (function (_super) {
         this.get(this.page.index);
         this.isEditing = false;
     };
+    PagerComponent.prototype.cancel = function () {
+        this.canceled.emit();
+    };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ContentChild"])(_angular_core__WEBPACK_IMPORTED_MODULE_0__["TemplateRef"]),
         __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["TemplateRef"])
     ], PagerComponent.prototype, "itemTemplate", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Function)
+    ], PagerComponent.prototype, "getMethodAsync", void 0);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Function)
@@ -2544,6 +2880,10 @@ var PagerComponent = /** @class */ (function (_super) {
         __metadata("design:type", String)
     ], PagerComponent.prototype, "containerClass", void 0);
     __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], PagerComponent.prototype, "cancelButton", void 0);
+    __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
     ], PagerComponent.prototype, "error", void 0);
@@ -2551,6 +2891,10 @@ var PagerComponent = /** @class */ (function (_super) {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
     ], PagerComponent.prototype, "pageChanged", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], PagerComponent.prototype, "canceled", void 0);
     PagerComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-pager',
@@ -2610,6 +2954,146 @@ var PagerModule = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/components/reaction-list/reaction-list.component.css":
+/*!**********************************************************************!*\
+  !*** ./src/app/components/reaction-list/reaction-list.component.css ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "app-emoji-list {\r\n    z-index: 1;\r\n    width: 250px;\r\n    max-height: 300px;\r\n}"
+
+/***/ }),
+
+/***/ "./src/app/components/reaction-list/reaction-list.component.html":
+/*!***********************************************************************!*\
+  !*** ./src/app/components/reaction-list/reaction-list.component.html ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"form-row align-items-center\" *ngIf=\"model && model.reactionTypes\">\n  <div class=\"col-auto mr-3\" *ngFor=\"let reactionType of model.reactionTypes\">\n    <app-reaction [reactionType]=\"reactionType\" [isParentDecrypted]=\"isParentDecrypted\"\n      (add)=\"add($event)\" (remove)=\"remove($event)\"></app-reaction>\n  </div>\n  <div class=\"col-auto\" *ngIf=\"isParentDecrypted && isLoggedIn\">\n    <a class=\"text-success font-weight-bold\"\n      (click)=\"startCreate()\">React</a>\n    <app-emoji-list class=\"position-absolute emoji-list\" *ngIf=\"isCreating\" \n      (emojiClick)=\"create($event)\" (canceled)=\"cancelCreate()\"></app-emoji-list>\n  </div>\n</div>\n<div class=\"row\">\n  <app-error-message class=\"col-12\" [error]=\"error\"></app-error-message>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/components/reaction-list/reaction-list.component.ts":
+/*!*********************************************************************!*\
+  !*** ./src/app/components/reaction-list/reaction-list.component.ts ***!
+  \*********************************************************************/
+/*! exports provided: ReactionListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReactionListComponent", function() { return ReactionListComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
+/* harmony import */ var src_app_services_reaction_reaction_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/reaction/reaction.service */ "./src/app/services/reaction/reaction.service.ts");
+/* harmony import */ var src_app_models_article__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/models/article */ "./src/app/models/article.ts");
+/* harmony import */ var src_app_models_comment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/models/comment */ "./src/app/models/comment.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var ReactionListComponent = /** @class */ (function (_super) {
+    __extends(ReactionListComponent, _super);
+    function ReactionListComponent(reactionService) {
+        var _this = _super.call(this) || this;
+        _this.reactionService = reactionService;
+        return _this;
+    }
+    ReactionListComponent.prototype.ngOnInit = function () {
+        if (!this.article && !this.comment
+            || this.article && this.comment) {
+            throw Error("Set article or comment");
+        }
+        if (this.article) {
+            this.model = this.article;
+        }
+        else {
+            this.model = this.comment;
+        }
+    };
+    ReactionListComponent.prototype.add = function (reactionType) {
+        var _this = this;
+        this.reactionService.add(reactionType.id).subscribe(function (result) {
+            reactionType.hasUserReacted = true;
+            reactionType.reactionCount++;
+        }, function (error) { return _this.error = error.toString(); });
+    };
+    ReactionListComponent.prototype.remove = function (reactionType) {
+        var _this = this;
+        this.reactionService.remove(reactionType.id).subscribe(function (result) {
+            reactionType.hasUserReacted = false;
+            reactionType.reactionCount--;
+        }, function (error) { return _this.error = error.toString(); });
+    };
+    ReactionListComponent.prototype.startCreate = function () {
+        this.isCreating = true;
+    };
+    ReactionListComponent.prototype.cancelCreate = function () {
+        this.isCreating = false;
+    };
+    ReactionListComponent.prototype.create = function (name) {
+        var _this = this;
+        var subscriber = this.article
+            ? this.reactionService.createForArticle(this.article.id, name)
+            : this.reactionService.createForComment(this.comment.id, name);
+        subscriber.subscribe(function (result) {
+            _this.model.reactionTypes.push(result);
+            _this.isCreating = false;
+        }, function (error) { return _this.error = error.toString(); });
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", src_app_models_article__WEBPACK_IMPORTED_MODULE_3__["Article"])
+    ], ReactionListComponent.prototype, "article", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", src_app_models_comment__WEBPACK_IMPORTED_MODULE_4__["Comment"])
+    ], ReactionListComponent.prototype, "comment", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ReactionListComponent.prototype, "isParentDecrypted", void 0);
+    ReactionListComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-reaction-list',
+            template: __webpack_require__(/*! ./reaction-list.component.html */ "./src/app/components/reaction-list/reaction-list.component.html"),
+            styles: [__webpack_require__(/*! ./reaction-list.component.css */ "./src/app/components/reaction-list/reaction-list.component.css")]
+        }),
+        __metadata("design:paramtypes", [src_app_services_reaction_reaction_service__WEBPACK_IMPORTED_MODULE_2__["ReactionService"]])
+    ], ReactionListComponent);
+    return ReactionListComponent;
+}(_base_component__WEBPACK_IMPORTED_MODULE_1__["BaseComponent"]));
+
+
+
+/***/ }),
+
 /***/ "./src/app/components/reaction-list/reaction-list.module.ts":
 /*!******************************************************************!*\
   !*** ./src/app/components/reaction-list/reaction-list.module.ts ***!
@@ -2622,6 +3106,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReactionListModule", function() { return ReactionListModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _reaction_list_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./reaction-list.component */ "./src/app/components/reaction-list/reaction-list.component.ts");
+/* harmony import */ var _reaction_reaction_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reaction/reaction.module */ "./src/app/components/reaction/reaction.module.ts");
+/* harmony import */ var _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../error-message/error-message.module */ "./src/app/components/error-message/error-message.module.ts");
+/* harmony import */ var _emoji_list_emoji_list_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../emoji-list/emoji-list.module */ "./src/app/components/emoji-list/emoji-list.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2630,18 +3118,186 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 };
 
 
+
+
+
+
 var ReactionListModule = /** @class */ (function () {
     function ReactionListModule() {
     }
     ReactionListModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
             imports: [
-                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"]
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                _reaction_reaction_module__WEBPACK_IMPORTED_MODULE_3__["ReactionModule"],
+                _error_message_error_message_module__WEBPACK_IMPORTED_MODULE_4__["ErrorMessageModule"],
+                _emoji_list_emoji_list_module__WEBPACK_IMPORTED_MODULE_5__["EmojiListModule"]
             ],
-            declarations: []
+            declarations: [_reaction_list_component__WEBPACK_IMPORTED_MODULE_2__["ReactionListComponent"]],
+            exports: [_reaction_list_component__WEBPACK_IMPORTED_MODULE_2__["ReactionListComponent"]]
         })
     ], ReactionListModule);
     return ReactionListModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/reaction/reaction.component.css":
+/*!************************************************************!*\
+  !*** ./src/app/components/reaction/reaction.component.css ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/components/reaction/reaction.component.html":
+/*!*************************************************************!*\
+  !*** ./src/app/components/reaction/reaction.component.html ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<a (click)=\"clicked()\" *ngIf=\"isLoggedIn && reactionType && isDecrypted(reactionType.name)\">\n  <div class=\"form-row justify-content-center align-items-center\">\n    <app-emoji class=\"col-auto\" [name]=\"reactionType.name | decrypt\"></app-emoji>\n    <div class=\"col-auto\" [ngClass]=\"reactionType.hasUserReacted ? 'font-weight-bold' : ''\">\n      {{ reactionType.reactionCount }}\n    </div>\n  </div>\n</a>\n<div class=\"\" *ngIf=\"!isLoggedIn && reactionType && isDecrypted(reactionType.name)\">\n  <div class=\"form-row justify-content-center align-items-center\">\n    <app-emoji class=\"col-auto\" [name]=\"reactionType.name | decrypt\"></app-emoji>\n    <div class=\"col-auto\">\n      {{ reactionType.reactionCount }}\n    </div>\n  </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/components/reaction/reaction.component.ts":
+/*!***********************************************************!*\
+  !*** ./src/app/components/reaction/reaction.component.ts ***!
+  \***********************************************************/
+/*! exports provided: ReactionComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReactionComponent", function() { return ReactionComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../base-component */ "./src/app/components/base-component.ts");
+/* harmony import */ var src_app_models_reaction_type__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/models/reaction-type */ "./src/app/models/reaction-type.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var ReactionComponent = /** @class */ (function (_super) {
+    __extends(ReactionComponent, _super);
+    function ReactionComponent() {
+        var _this = _super.call(this) || this;
+        _this.add = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        _this.remove = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        return _this;
+    }
+    ReactionComponent.prototype.clicked = function () {
+        if (this.reactionType.hasUserReacted) {
+            this.remove.emit(this.reactionType);
+        }
+        else {
+            this.add.emit(this.reactionType);
+        }
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", src_app_models_reaction_type__WEBPACK_IMPORTED_MODULE_2__["ReactionType"])
+    ], ReactionComponent.prototype, "reactionType", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean)
+    ], ReactionComponent.prototype, "isParentDecrypted", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], ReactionComponent.prototype, "add", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], ReactionComponent.prototype, "remove", void 0);
+    ReactionComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-reaction',
+            template: __webpack_require__(/*! ./reaction.component.html */ "./src/app/components/reaction/reaction.component.html"),
+            styles: [__webpack_require__(/*! ./reaction.component.css */ "./src/app/components/reaction/reaction.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], ReactionComponent);
+    return ReactionComponent;
+}(_base_component__WEBPACK_IMPORTED_MODULE_1__["BaseComponent"]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/reaction/reaction.module.ts":
+/*!********************************************************!*\
+  !*** ./src/app/components/reaction/reaction.module.ts ***!
+  \********************************************************/
+/*! exports provided: ReactionModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReactionModule", function() { return ReactionModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _reaction_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./reaction.component */ "./src/app/components/reaction/reaction.component.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var src_app_pipes_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/pipes/pipes/pipes.module */ "./src/app/pipes/pipes/pipes.module.ts");
+/* harmony import */ var _emoji_emoji_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../emoji/emoji.module */ "./src/app/components/emoji/emoji.module.ts");
+/* harmony import */ var _emoji_list_emoji_list_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../emoji-list/emoji-list.module */ "./src/app/components/emoji-list/emoji-list.module.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+var ReactionModule = /** @class */ (function () {
+    function ReactionModule() {
+    }
+    ReactionModule = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
+            imports: [
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+                src_app_pipes_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_4__["PipesModule"],
+                _emoji_emoji_module__WEBPACK_IMPORTED_MODULE_5__["EmojiModule"],
+                _emoji_list_emoji_list_module__WEBPACK_IMPORTED_MODULE_6__["EmojiListModule"]
+            ],
+            declarations: [_reaction_component__WEBPACK_IMPORTED_MODULE_2__["ReactionComponent"]],
+            exports: [_reaction_component__WEBPACK_IMPORTED_MODULE_2__["ReactionComponent"]]
+        })
+    ], ReactionModule);
+    return ReactionModule;
 }());
 
 
@@ -2926,6 +3582,26 @@ var IfIsOwnerDirective = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/models/article.ts":
+/*!***********************************!*\
+  !*** ./src/app/models/article.ts ***!
+  \***********************************/
+/*! exports provided: Article */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Article", function() { return Article; });
+var Article = /** @class */ (function () {
+    function Article() {
+    }
+    return Article;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/models/category.ts":
 /*!************************************!*\
   !*** ./src/app/models/category.ts ***!
@@ -3020,6 +3696,26 @@ var Page = /** @class */ (function () {
         this.count++;
     };
     return Page;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/models/reaction-type.ts":
+/*!*****************************************!*\
+  !*** ./src/app/models/reaction-type.ts ***!
+  \*****************************************/
+/*! exports provided: ReactionType */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReactionType", function() { return ReactionType; });
+var ReactionType = /** @class */ (function () {
+    function ReactionType() {
+    }
+    return ReactionType;
 }());
 
 
@@ -3181,9 +3877,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../base-auth-service */ "./src/app/services/base-auth-service.ts");
 /* harmony import */ var _crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3275,9 +3974,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../base-auth-service */ "./src/app/services/base-auth-service.ts");
 /* harmony import */ var _crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3505,9 +4207,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../base-auth-service */ "./src/app/services/base-auth-service.ts");
 /* harmony import */ var _crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3580,9 +4285,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../base-auth-service */ "./src/app/services/base-auth-service.ts");
 /* harmony import */ var _crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3710,7 +4418,7 @@ var CryptoService = /** @class */ (function () {
         CryptoService.checkSha();
         return Object(crypto_js__WEBPACK_IMPORTED_MODULE_0__["SHA256"])(data).toString();
     };
-    CryptoService.encryptedTemplate = "<span class=\"bg-dark px-1 my-2\" style=\"font-family: 'Lucida Console'; color: #00FF00; border-radius: 5px \">Encrypted text</span>";
+    CryptoService.encryptedTemplate = "<span class=\"bg-dark px-1 my-2 encrypted\">Encrypted text</span>";
     return CryptoService;
 }());
 
@@ -3742,9 +4450,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../base-auth-service */ "./src/app/services/base-auth-service.ts");
 /* harmony import */ var _crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../crypto/crypto.service */ "./src/app/services/crypto/crypto.service.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3775,19 +4486,25 @@ var ReactionService = /** @class */ (function (_super) {
     ReactionService.prototype.getForComment = function (commentId) {
         return this.get("comment/" + commentId);
     };
-    ReactionService.prototype.setForArticle = function (articleId, reactionType) {
-        return this.post("article/" + articleId, { value: Object(_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__["encrypt"])(reactionType) }, function () {
-            if (!reactionType || !reactionType.length) {
+    ReactionService.prototype.createForArticle = function (articleId, name) {
+        return this.post("article/" + articleId, { value: Object(_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__["encrypt"])(name) }, function () {
+            if (!name || !name.length) {
                 throw Error("Please provide a reaction type.");
             }
         });
     };
-    ReactionService.prototype.setForComment = function (commentId, reactionType) {
-        return this.post("comment/" + commentId, { value: Object(_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__["encrypt"])(reactionType) }, function () {
-            if (!reactionType || !reactionType.length) {
+    ReactionService.prototype.createForComment = function (commentId, name) {
+        return this.post("comment/" + commentId, { value: Object(_crypto_crypto_service__WEBPACK_IMPORTED_MODULE_3__["encrypt"])(name) }, function () {
+            if (!name || !name.length) {
                 throw Error("Please provide a reaction type.");
             }
         });
+    };
+    ReactionService.prototype.add = function (reactionTypeId) {
+        return this.post(reactionTypeId.toString(), null);
+    };
+    ReactionService.prototype.remove = function (reactionTypeId) {
+        return this.delete(reactionTypeId.toString());
     };
     ReactionService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({

@@ -14,8 +14,10 @@ namespace Crypto
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var builder = WebHost.CreateDefaultBuilder(args);
-            builder.UseStartup<Startup>();
+            var builder = WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()
+                .UseIISIntegration()
+                .UseStartup<Startup>();
 
             if (args.Any())
             {

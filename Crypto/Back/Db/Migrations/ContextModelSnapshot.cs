@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Crypto.Back.Db.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(CryptoDbContext))]
     partial class ContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

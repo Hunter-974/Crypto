@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { BaseComponent } from '../base-component';
 import { ReactionService } from 'src/app/services/reaction/reaction.service';
 import { ReactionType } from 'src/app/models/reaction-type';
 import { Article } from 'src/app/models/article';
 import { Comment } from 'src/app/models/comment';
+import { ReactionHub } from 'src/app/services/reaction/reaction-hub';
 
 @Component({
   selector: 'app-reaction-list',
@@ -20,8 +21,12 @@ export class ReactionListComponent extends BaseComponent implements OnInit {
   isCreating: boolean;
   error: string;
 
+  reactionHub: ReactionHub = new ReactionHub();
+
   constructor(private reactionService: ReactionService) {
     super();
+    this.reactionHub.changed.subscribe(
+      reactionType => this.changed(reactionType));
    }
 
   ngOnInit() {
@@ -35,6 +40,8 @@ export class ReactionListComponent extends BaseComponent implements OnInit {
     } else {
       this.model = this.comment;
     }
+
+    this.reactionHub.start();
   }
 
   add(reactionType: ReactionType) {
@@ -77,6 +84,15 @@ export class ReactionListComponent extends BaseComponent implements OnInit {
       },
       error => this.error = error.toString()
     );
+  }
+
+  changed(reactionType: ReactionType) {
+    let existingReactionType = this.model.reactionTypes.find(rt => rt.id == reactionType.id);
+    if (existingReactionType) {
+      existingReactionType.reactionCount = reactionType.reactionCount;
+    } else {
+      this.model.reactionTypes.push(reactionType);
+    }
   }
 
 }
