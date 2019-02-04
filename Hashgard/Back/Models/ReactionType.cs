@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Hashgard.Back.Models
 {
@@ -27,9 +28,10 @@ namespace Hashgard.Back.Models
         public string Name { get; set; }
 
         [NotMapped]
-        public int ReactionCount { get; set; }
+        public int ReactionCount => Reactions?.Count ?? 0;
 
         [NotMapped]
-        public bool HasUserReacted { get; set; }
+        public IEnumerable<long> ReactionUserIds
+            => Reactions?.Select(r => r.UserId);
     }
 }

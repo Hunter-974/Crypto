@@ -7,14 +7,11 @@ namespace Hashgard.Back.Hubs
 {
     public abstract class BaseHub<T> : Hub<T> where T : class, IBaseHubClient
     {
-        public static IHubConnectionManager ConnectionManager { get; private set; }
+        private readonly IHubConnectionManager _connectionManager;
 
         public BaseHub(IHubConnectionManager connectionManager)
         {
-            if (ConnectionManager == null)
-            {
-                ConnectionManager = connectionManager;
-            }
+            _connectionManager = connectionManager;
         }
 
         public override async Task OnConnectedAsync()
@@ -28,14 +25,14 @@ namespace Hashgard.Back.Hubs
 
             if (Context.GetHttpContext().TryGetHubsToken(out var appToken))
             {
-                ConnectionManager.Remove(Context.ConnectionId);
+                _connectionManager.Remove(Context.ConnectionId);
             }
         }
 
         public Guid GetToken()
         {
             var token = Guid.NewGuid();
-            ConnectionManager.Add(token, Context.ConnectionId);
+            _connectionManager.Add(token, Context.ConnectionId);
             return token;
         }
     }

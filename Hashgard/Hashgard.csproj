@@ -11,22 +11,22 @@
 
   <ItemGroup>
     <Compile Remove="Back\Migrations\**" />
+    <Compile Remove="Front\**" />
     <Content Remove="Back\Migrations\**" />
+    <Content Remove="Front\**" />
     <EmbeddedResource Remove="Back\Migrations\**" />
+    <EmbeddedResource Remove="Front\**" />
     <None Remove="Back\Migrations\**" />
+    <None Remove="Front\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Front\angular.json" />
-    <Content Remove="Front\e2e\tsconfig.e2e.json" />
-    <Content Remove="Front\package-lock.json" />
-    <Content Remove="Front\package.json" />
-    <Content Remove="Front\proxy.conf.json" />
-    <Content Remove="Front\src\tsconfig.app.json" />
-    <Content Remove="Front\src\tsconfig.spec.json" />
-    <Content Remove="Front\src\tslint.json" />
-    <Content Remove="Front\tsconfig.json" />
-    <Content Remove="Front\tslint.json" />
+    <Compile Remove="Back\Db\Migrations\20190203125807_SqlServer.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203125807_SqlServer.Designer.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203134508_Init.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203134508_Init.Designer.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203140255_Init.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203140255_Init.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,22 +41,10 @@
 
   <ItemGroup>
     <Folder Include="Back\JsonConverters\" />
-    <Folder Include="Front\dist\" />
-    <Folder Include="Front\src\app\code\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Front\angular.json" />
-    <None Include="Front\e2e\tsconfig.e2e.json" />
-    <None Include="Front\package-lock.json" />
-    <None Include="Front\package.json" />
-    <None Include="Front\proxy.conf.json" />
-    <None Include="Front\src\tsconfig.app.json" />
-    <None Include="Front\src\tsconfig.spec.json" />
-    <None Include="Front\src\tslint.json" />
-    <None Include="Front\tsconfig.json" />
-    <None Include="Front\tslint.json" />
     <None Include="web.config" />
   </ItemGroup>
 
@@ -66,7 +54,7 @@
     </Content>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties Front_4package_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES5</TypeScriptTarget>

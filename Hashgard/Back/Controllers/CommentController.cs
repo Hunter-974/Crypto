@@ -4,6 +4,7 @@ using Hashgard.Back.Requests;
 using Hashgard.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Hashgard.Back.Controllers
 {
@@ -39,27 +40,27 @@ namespace Hashgard.Back.Controllers
         }
 
         [HttpPost("article/{articleId}")]
-        public Comment CreateForArticle(long articleId, [FromBody] Request<string> text)
+        public async Task<Comment> CreateForArticle(long articleId, [FromBody] Request<string> text)
         {
-            return ForLoggedUser(user => _commentService.CreateForArticle(user.Id, articleId, text.Value));
+            return await ForLoggedUser(user => _commentService.CreateForArticleAsync(user.Id, articleId, text.Value));
         }
 
         [HttpPost("comment/{parentId}")]
-        public Comment CreateForComment(long parentId, [FromBody] Request<string> text)
+        public async Task<Comment> CreateForCommentAsync(long parentId, [FromBody] Request<string> text)
         {
-            return ForLoggedUser(user => _commentService.CreateForComment(user.Id, parentId, text.Value));
+            return await ForLoggedUser(user => _commentService.CreateForCommentAsync(user.Id, parentId, text.Value));
         }
 
         [HttpPut("{id}")]
-        public Comment Edit(long id, [FromBody] Request<string> text)
+        public async Task<Comment> Edit(long id, [FromBody] Request<string> text)
         {
-            return ForLoggedUser(user => _commentService.Edit(user.Id, id, text.Value));
+            return await ForLoggedUser(user => _commentService.EditAsync(user.Id, id, text.Value));
         }
 
         [HttpDelete("{id}")]
-        public void Delete(long id)
+        public async Task Delete(long id)
         {
-            ForLoggedUser(user => _commentService.Delete(user.Id, id));
+            await ForLoggedUser(user => _commentService.DeleteAsync(user.Id, id));
         }
     }
 }

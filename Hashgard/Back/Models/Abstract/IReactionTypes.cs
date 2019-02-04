@@ -40,17 +40,6 @@ namespace Hashgard.Back.Models.Abstract
                     entity.ReactionTypes = reactionTypes
                         .OrderByDescending(rt => rt.Reactions.Count())
                         .ToList();
-
-                    foreach (var reactionType in entity.ReactionTypes)
-                    {
-                        reactionType.ReactionCount = reactionType.Reactions.Count();
-
-                        if (userId.HasValue)
-                        {
-                            reactionType.HasUserReacted = reactionType
-                                .Reactions.Any(r => r.UserId == userId.Value);
-                        }
-                    }
                 }
                 else
                 {

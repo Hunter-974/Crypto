@@ -4,6 +4,7 @@ using Hashgard.Back.Requests;
 using Hashgard.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Hashgard.Back.Controllers
 {
@@ -31,27 +32,27 @@ namespace Hashgard.Back.Controllers
         }
 
         [HttpPost("article/{articleId}")]
-        public ReactionType CreateForArticle(long articleId, [FromBody] Request<string> reactionType)
+        public async Task<ReactionType> CreateForArticleAsync(long articleId, [FromBody] Request<string> reactionType)
         {
-            return ForLoggedUser(user => _reactionService.CreateForArticle(user.Id, articleId, reactionType.Value));
+            return await ForLoggedUser(user => _reactionService.CreateForArticleAsync(user.Id, articleId, reactionType.Value));
         }
 
         [HttpPost("comment/{commentId}")]
-        public ReactionType CreateForComment(long commentId, [FromBody] Request<string> reactionType)
+        public async Task<ReactionType> CreateForCommentAsync(long commentId, [FromBody] Request<string> reactionType)
         {
-            return ForLoggedUser(user => _reactionService.CreateForComment(user.Id, commentId, reactionType.Value));
+            return await ForLoggedUser(user => _reactionService.CreateForCommentAsync(user.Id, commentId, reactionType.Value));
         }
 
         [HttpPost("{reactionTypeId}")]
-        public void Add(long reactionTypeId)
+        public async Task<ReactionType> AddAsync(long reactionTypeId)
         {
-            ForLoggedUser(user => _reactionService.Add(user.Id, reactionTypeId));
+            return await ForLoggedUser(user => _reactionService.AddAsync(user.Id, reactionTypeId));
         }
 
         [HttpDelete("{reactionTypeId}")]
-        public void Remove(long reactionTypeId)
+        public async Task<ReactionType> RemoveAsync(long reactionTypeId)
         {
-            ForLoggedUser(user => _reactionService.Remove(user.Id, reactionTypeId));
+            return await ForLoggedUser(user => _reactionService.RemoveAsync(user.Id, reactionTypeId));
         }
     }
 }

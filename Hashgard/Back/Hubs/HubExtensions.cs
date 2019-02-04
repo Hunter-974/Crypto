@@ -11,9 +11,9 @@ namespace Hashgard.Back.Hubs
             T result;
 
             var httpContext = StaticInjector.Get<IHttpContextAccessor>().HttpContext;
-            if (httpContext.TryGetHubsToken(out var appToken))
+            if (httpContext.TryGetHubsToken(out var hubsToken))
             {
-                var excludedIds = BaseHub<T>.ConnectionManager.GetCurrent(appToken);
+                var excludedIds = StaticInjector.Get<IHubConnectionManager>().GetCurrent(hubsToken);
                 result = hubClients.AllExcept(excludedIds);
             }
             else

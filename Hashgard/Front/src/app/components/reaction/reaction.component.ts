@@ -1,6 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { BaseComponent } from '../base-component';
 import { ReactionType } from 'src/app/models/reaction-type';
+import { BaseAuthService } from 'src/app/services/base-auth-service';
 
 @Component({
   selector: 'app-reaction',
@@ -19,13 +20,18 @@ export class ReactionComponent extends BaseComponent {
 
   constructor() {
     super();
-   }
+  }
 
   clicked() {
-    if (this.reactionType.hasUserReacted) {
+    if (this.hasUser) {
       this.remove.emit(this.reactionType);
     } else {
       this.add.emit(this.reactionType);
     }
+  }
+
+  get hasUser(): boolean {
+    return BaseAuthService.isLoggedIn
+      && this.reactionType.reactionUserIds.indexOf(BaseAuthService.userId) > -1;
   }
 }

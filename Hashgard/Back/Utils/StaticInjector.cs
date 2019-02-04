@@ -17,9 +17,9 @@ namespace Hashgard.Back.Utils
             return _serviceProvider.GetService<T>();
         }
 
-        public static void AddStaticInjector(this IServiceCollection serviceCollection)
+        public static void ConfigureStaticInjector(this IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceCollection.BuildServiceProvider();
+            _serviceProvider = serviceProvider;
         }
     }
 }

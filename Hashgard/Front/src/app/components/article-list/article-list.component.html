@@ -5,7 +5,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-12">
-        <app-pager [pageSize]="10" [containerClass]="list-group" [getMethodAsync]="getListMethod">
+        <app-pager [pageSize]="10" [getMethodAsync]="getListMethod">
           <ng-template let-item="item">
             <a class="list-group-item list-group-item-action list-group-item-secondary mb-1" (click)="open(item.id)">
               <div class="row">

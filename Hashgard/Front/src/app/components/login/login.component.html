@@ -2,7 +2,7 @@
   <div class="col-auto input-group" *ngIf="!isLoggedIn">
     <input class="form-control" type="text" [(ngModel)]="name" placeholder="name" />
     <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
-    <input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />
+    <!--<input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />-->
     <div class="input-group-append" *ngIf="!isSigningUp">
       <button class="form-control btn btn-success" (click)="login()">Login</button>
       <button class="form-control btn btn-warning" (click)="startCreating()">Signup</button>
@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div class="col justify-content-end input-group" *ngIf="isLoggedIn">
+  <div class="col-auto justify-content-end input-group" *ngIf="isLoggedIn">
     <div class="input-group-prepend">
       <span class="input-group-text">{{ name }}</span>
     </div>
@@ -24,5 +24,5 @@
 </div>
 
 <div class="row">
-  <app-error-message class="col-12" [error]="error" [addclass]="'text-right'"></app-error-message>
+  <app-error-message class="col-auto" [error]="error" [addclass]="'text-right'"></app-error-message>
 </div>

@@ -14,11 +14,6 @@ namespace Hashgard.Back.Models.Abstract
 
     public static class CompositeExtensions
     {
-
-        public static IIncludableQueryable<TEntity, IList<TEntity>> IncludeChildren<TEntity>(this IQueryable<TEntity> source) where TEntity : Entity, IComposite<TEntity>, new()
-        {
-            return source.Include(e => e.Children);
-        }
     }
 
 }

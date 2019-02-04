@@ -1,7 +1,10 @@
 <div class="card">
   <div class="card-body">
+    <h4 class="mt-2">
+        <a routerLink="/categories" routerLinkActive="active">Browse categories</a>
+    </h4>
 
-    <div class="jumbotron">
+    <div class="jumbotron mt-4">
       <h1 class="display-4">Welcome to Hashgard !</h1>
       <div>
       This is a very simple social network that respects totally your privacy :
@@ -12,11 +15,15 @@
           <a href="https://fr.wikipedia.org/wiki/Advanced_Encryption_Standard" class="text-primary">AES algorithm</a>
           before they are sent over the network, and decrypted before they are displayed,
           using the key that you provide in the top left corner.
+          <a href="https://fr.wikipedia.org/wiki/HyperText_Transfer_Protocol_Secure" class="text-primary">Https protocol</a>
+          adds another security layer.
         </li>
         <li>
           No personal information is never asked : no email address, no phone number...
-          You just sign up with a login and a password, and an optional location.
-          Your session expires after the duration that you specified.
+          You just sign up with a login and a password.
+        </li>
+        <li>
+          No censorship : the only one able to delete an article or a comment it the one who wrote it.
         </li>
       </ul>
       <div class="mt-2">
@@ -24,20 +31,28 @@
         tell it to trusted people only, and only the people that know it
         will ever be able to read your communications.
       </div>
-      <h4 class="mt-2">
-        <a routerLink="/categories" routerLinkActive="active">Browse categories</a>
-      </h4>
-      <div>
-        <h6>Coming soon :</h6>
+
+      <div class="mt-2">
+        <div>This is the very beginning of this project. Feel free to give me remarks :</div>
         <ul>
-          <li>Images in article and comments</li>
-          <li>Filter of encrypted data</li>
-          <li>User list</li>
-          <li>ACL based security for reading/writing categories, articles, comments, reacts</li>
-          <li>Lists for home page : last commented/reacted posts, bookmarks, notifications...</li>
-          <li>Customizable home page ?</li>
+          <li>Set the key "Hello !" (respect the caps).</li>
+          <li>Browse categories, "Projet Hashgard", then create the ones with subjects you want to talk about.</li>
+          <li>Write new posts in the topic you want, comment existing ones, and react to posts and comments.</li>
         </ul>
+        <div>Have fun !</div>
       </div>
+    </div>
+      
+    <div class="mt-2">
+      <h6>Features coming soon :</h6>
+      <ul>
+        <li>Real-time updates of comments (like reactions)</li>
+        <li>User list and direct chat</li>
+        <li>Notifications</li>
+        <li>Custom home page : last commented/reacted posts, bookmarks, notifications...</li>
+        <li>Medias (images, videos ?) in articles and comments</li>
+        <li>Filter of encrypted data</li>
+      </ul>
     </div>
 
   </div>

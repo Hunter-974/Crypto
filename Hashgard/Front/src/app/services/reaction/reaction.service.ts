@@ -45,11 +45,11 @@ export class ReactionService extends BaseAuthService {
     );
   }
 
-  add(reactionTypeId: number): Observable<any> {
-    return this.post(reactionTypeId.toString(), null);
+  add(reactionTypeId: number): Observable<ReactionType> {
+    return this.post<ReactionType>(reactionTypeId.toString(), null);
   }
 
-  remove(reactionTypeId: number): Observable<any> {
-    return this.delete(reactionTypeId.toString());
+  remove(reactionTypeId: number): Observable<ReactionType> {
+    return this.delete<ReactionType>(reactionTypeId.toString());
   }
 }

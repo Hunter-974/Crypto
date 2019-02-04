@@ -5,8 +5,11 @@ using Hashgard.Back.Models.Abstract;
 using Hashgard.Back.Services.Abstract;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Hashgard.Back.Services
 {
@@ -14,10 +17,10 @@ namespace Hashgard.Back.Services
     {
         IList<Reaction> GetListForArticle(long articleId);
         IList<Reaction> GetListForComment(long commentId);
-        ReactionType CreateForArticle(long userId, long articleId, string reactionTypeName);
-        ReactionType CreateForComment(long userId, long commentId, string reactionTypeName);
-        void Add(long userId, long reactionTypeId);
-        void Remove(long userId, long reactionTypeId);
+        Task<ReactionType> CreateForArticleAsync(long userId, long articleId, string reactionTypeName);
+        Task<ReactionType> CreateForCommentAsync(long userId, long commentId, string reactionTypeName);
+        Task<ReactionType> AddAsync(long userId, long reactionTypeId);
+        Task<ReactionType> RemoveAsync(long userId, long reactionTypeId);
     }
 
     public class ReactionService : BaseService, IReactionService
@@ -52,17 +55,17 @@ namespace Hashgard.Back.Services
             return allReactions;
         }
 
-        public ReactionType CreateForArticle(long userId, long articleId, string reactionTypeName)
+        public Task<ReactionType> CreateForArticleAsync(long userId, long articleId, string reactionTypeName)
         {
-            return Create(userId, null, articleId, reactionTypeName);
+            return CreateAsync(userId, null, articleId, reactionTypeName);
         }
 
-        public ReactionType CreateForComment(long userId, long commentId, string reactionTypeName)
+        public Task<ReactionType> CreateForCommentAsync(long userId, long commentId, string reactionTypeName)
         {
-            return Create(userId, commentId, null, reactionTypeName);
+            return CreateAsync(userId, commentId, null, reactionTypeName);
         }
 
-        private ReactionType Create(long userId, long? commentId, long? articleId, string reactionTypeName)
+        private async Task<ReactionType> CreateAsync(long userId, long? commentId, long? articleId, string reactionTypeName)
         {
             ReactionType reactionType = new ReactionType()
             {
@@ -72,53 +75,88 @@ namespace Hashgard.Back.Services
                 Reactions = new []
                 {
                     new Reaction { UserId = userId }
-                },
-                HasUserReacted = true,
-                ReactionCount = 1
+                }
             };
 
             HashgardContext.ReactionTypes.Add(reactionType);
-            HashgardContext.SaveChanges();
+            await HashgardContext.SaveChangesAsync();
 
-            _reactionHubContext.Clients.Others().Changed(reactionType).Wait();
+            await Task.Run(() => 
+                _reactionHubContext.Clients.Others().Changed(reactionType)
+                .ConfigureAwait(false));
 
             return reactionType;
         }
 
-        public void Add(long userId, long reactionTypeId)
+        public async Task<ReactionType> AddAsync(long userId, long reactionTypeId)
         {
-            var exists = HashgardContext.Reactions
-                .Any(r => r.UserId == userId && r.ReactionTypeId == reactionTypeId);
-
-            if (!exists)
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var reaction = new Reaction()
+                var reactionType = HashgardContext.ReactionTypes
+                    .Include(rt => rt.Reactions)
+                    .ForId(reactionTypeId);
+
+                if (reactionType == null)
                 {
-                    UserId = userId,
-                    ReactionTypeId = reactionTypeId
-                };
+                    throw new Exception("Reaction type does not exist.");
+                }
 
-                HashgardContext.Reactions.Add(reaction);
-                HashgardContext.SaveChanges();
+                var reaction = reactionType.Reactions
+                    .FirstOrDefault(r => r.UserId == userId);
 
-                var reactionType = HashgardContext.ReactionTypes.ForId(reactionTypeId);
-                _reactionHubContext.Clients.Others().Changed(reactionType).Wait();
+                if (reaction == null)
+                {
+                    reaction = new Reaction()
+                    {
+                        UserId = userId,
+                        ReactionTypeId = reactionTypeId
+                    };
+
+                    reactionType.Reactions.Add(reaction);
+                    HashgardContext.Update(reactionType);
+
+                    await HashgardContext.SaveChangesAsync();
+                    transaction.Complete();
+
+                    await Task.Run(() => 
+                        _reactionHubContext.Clients.Others().Changed(reactionType)
+                        .ConfigureAwait(false));
+                }
+
+                return reactionType;
             }
         }
 
-        public void Remove(long userId, long reactionTypeId)
+        public async Task<ReactionType> RemoveAsync(long userId, long reactionTypeId)
         {
-            var existing = HashgardContext.Reactions
-                .Where(r => r.UserId == userId && r.ReactionTypeId == reactionTypeId)
-                .FirstOrDefault();
-
-            if (existing != null)
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                HashgardContext.Reactions.Remove(existing);
-                HashgardContext.SaveChanges();
+                var reactionType = HashgardContext.ReactionTypes
+                .Include(rt => rt.Reactions)
+                .ForId(reactionTypeId);
 
-                var reactionType = HashgardContext.ReactionTypes.ForId(reactionTypeId);
-                _reactionHubContext.Clients.Others().Changed(reactionType).Wait();
+                if (reactionType == null)
+                {
+                    throw new Exception("Reaction type does not exist.");
+                }
+
+                var reaction = reactionType.Reactions
+                    .FirstOrDefault(r => r.UserId == userId);
+
+                if (reaction != null)
+                {
+                    reactionType.Reactions.Remove(reaction);
+                    HashgardContext.ReactionTypes.Update(reactionType);
+
+                    await HashgardContext.SaveChangesAsync();
+                    transaction.Complete();
+
+                    await Task.Run(() => 
+                        _reactionHubContext.Clients.Others().Changed(reactionType)
+                        .ConfigureAwait(false));
+                }
+
+                return reactionType;
             }
         }
     }

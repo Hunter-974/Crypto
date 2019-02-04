@@ -49,9 +49,7 @@ namespace Crypto
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IReactionService, ReactionService>();
-            services.AddScoped<IUserService, UserService>();
-
-            services.AddStaticInjector();
+            services.AddScoped<IUserService, UserService>();;
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -95,6 +93,8 @@ namespace Crypto
                     await context.Response.SendFileAsync(filePath);
                 }));
             }
+
+            app.ApplicationServices.ConfigureStaticInjector();
         }
     }
 }

@@ -23,10 +23,6 @@ export abstract class BaseHub {
             .withUrl(`${baseUrl}/${path}`)
             .build();
 
-        if (BaseHub._token) {
-            this.hubConnection.invoke<string>("GetToken")
-        }
-
         this.hubConnection.onclose((err) => this.connect());
     }
 
@@ -43,21 +39,21 @@ export abstract class BaseHub {
         this.hubConnection.start()
         .then(() => {
             console.log(`Connected to hub ${this.path}`);
-            if (!BaseHub._token) {
-                this.getToken();
-            }
+            this.getTokenIfNecessary();
         })
         .catch(err => console.log(`Connection to hub ${this.path} failed`));
     }
 
-    private getToken() {
-        console.log(`Getting app token for hub ${this.path}`);
-        this.hubConnection.invoke<string>("GetToken")
-            .then(token =>  {
-                BaseHub._token = token;
-                console.log(`Got token for hub ${this.path}`)
-            })
-            .catch(err => console.log(`Getting token for hub ${this.path} failed`));
+    private getTokenIfNecessary() {
+        if (!BaseHub.token) {
+            console.log(`Getting app token for hub ${this.path}`);
+            this.hubConnection.invoke<string>("GetToken")
+                .then(token =>  {
+                    BaseHub._token = token;
+                    console.log(`Got token for hub ${this.path}`)
+                })
+                .catch(err => console.log(`Getting token for hub ${this.path} failed`));
+        }
     }
 
     protected on(key: string, handler: (...args: any[]) => void) {

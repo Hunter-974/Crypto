@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Hashgard.Back.Services
 {
@@ -14,9 +16,9 @@ namespace Hashgard.Back.Services
         Page<Article> GetList(long? userId, long categoryId, int index, int count);
         Article Get(long? userId, long id);
         Page<Article> GetAllVersions(long id);
-        Article Create(long userId, long categoryId, string title, string text);
-        Article Edit(long userId, long id, string newTitle, string newText);
-        void Delete(long userId, long id);
+        Task<Article> CreateAsync(long userId, long categoryId, string title, string text);
+        Task<Article> EditAsync(long userId, long id, string newTitle, string newText);
+        Task DeleteAsync(long userId, long id);
     }
 
     public class ArticleService : BaseService, IArticleService
@@ -60,95 +62,118 @@ namespace Hashgard.Back.Services
             return related;
         }
 
-        public Article Create(long userId, long categoryId, string title, string text)
+        public async Task<Article> CreateAsync(long userId, long categoryId, string title, string text)
         {
-            var existing = HashgardContext.Articles.FirstOrDefault(a => a.CategoryId == categoryId && a.Title == title);
-            if (existing != null)
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                throw new Exception("Article title already exists.");
+                var existing = HashgardContext.Articles.FirstOrDefault(a => a.CategoryId == categoryId && a.Title == title);
+                if (existing != null)
+                {
+                    throw new Exception("Article title already exists.");
+                }
+
+                var article = new Article
+                {
+                    UserId = userId,
+                    CategoryId = categoryId,
+                    Title = title,
+                    Text = text,
+                    CorrelationUid = Guid.NewGuid(),
+                    VersionDate = DateTime.Now
+                };
+                HashgardContext.Articles.Add(article);
+
+                await HashgardContext.SaveChangesAsync();
+
+                transaction.Complete();
+
+                return article;
             }
-
-            var article = new Article
-            {
-                UserId = userId,
-                CategoryId = categoryId,
-                Title = title,
-                Text = text,
-                CorrelationUid = Guid.NewGuid(),
-                VersionDate = DateTime.Now
-            };
-            HashgardContext.Articles.Add(article);
-            HashgardContext.SaveChanges();
-
-            return article;
         }
 
-        public Article Edit(long userId, long id, string newTitle, string newText)
+        public async Task<Article> EditAsync(long userId, long id, string newTitle, string newText)
         {
-            var existing = HashgardContext.Articles
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                var existing = HashgardContext.Articles
                 .Include(a => a.Comments)
                 .Include(a => a.ReactionTypes)
                 .FirstOrDefault(a => a.Id == id);
 
-            if (existing == null)
-            {
-                throw new Exception("Article does not exist.");
+                if (existing == null)
+                {
+                    throw new Exception("Article does not exist.");
+                }
+
+                if (existing.UserId != userId)
+                {
+                    throw new Exception("Unauthorized.");
+                }
+
+                var article = new Article()
+                {
+                    UserId = userId,
+                    CategoryId = existing.CategoryId,
+                    CorrelationUid = existing.CorrelationUid,
+                    Title = newTitle,
+                    Text = newText,
+                    VersionDate = DateTime.Now
+                };
+                HashgardContext.Articles.Add(article);
+
+                await HashgardContext.SaveChangesAsync();
+
+                foreach (var comment in existing.Comments)
+                {
+                    comment.ArticleId = article.Id;
+                    HashgardContext.Comments.Update(comment);
+                }
+
+                foreach (var reactionType in existing.ReactionTypes)
+                {
+                    reactionType.ArticleId = article.Id;
+                    HashgardContext.ReactionTypes.Update(reactionType);
+                }
+
+                await HashgardContext.SaveChangesAsync();
+
+                HashgardContext.SetReactionTypes(article, userId, rt => rt.ArticleId);
+
+                transaction.Complete();
+
+                return article;
             }
-
-            if (existing.UserId != userId)
-            {
-                throw new Exception("Unauthorized.");
-            }
-
-            var article = new Article()
-            {
-                UserId = userId,
-                CategoryId = existing.CategoryId,
-                CorrelationUid = existing.CorrelationUid,
-                Title = newTitle,
-                Text = newText,
-                VersionDate = DateTime.Now
-            };
-            HashgardContext.Articles.Add(article);
-
-            HashgardContext.SaveChanges();
-
-            foreach (var comment in existing.Comments)
-            {
-                comment.ArticleId = article.Id;
-                HashgardContext.Comments.Update(comment);
-            }
-
-            foreach (var reactionType in existing.ReactionTypes)
-            {
-                reactionType.ArticleId = article.Id;
-                HashgardContext.ReactionTypes.Update(reactionType);
-            }
-
-            HashgardContext.SaveChanges();
-
-            HashgardContext.SetReactionTypes(article, userId, rt => rt.ArticleId);
-            
-            return article;
         }
 
-        public void Delete(long userId, long id)
+        public async Task DeleteAsync(long userId, long id)
         {
-            var existing = HashgardContext.Articles.ForId(id);
-
-            if (existing == null)
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                throw new Exception("Article does not exist.");
-            }
+                var existing = HashgardContext.Articles
+                    .Include(a => a.Comments).ThenInclude(c => c.Children)
+                    .ForId(id);
 
-            if (existing.UserId != userId)
-            {
-                throw new Exception("Unauthorized.");
-            }
+                if (existing == null)
+                {
+                    throw new Exception("Article does not exist.");
+                }
 
-            var allVersions = HashgardContext.Articles.Where(a => a.CorrelationUid == existing.CorrelationUid);
-            HashgardContext.Articles.RemoveRange(allVersions);
-            HashgardContext.SaveChanges();
+                if (existing.UserId != userId)
+                {
+                    throw new Exception("Unauthorized.");
+                }
+
+                var children = existing.Comments
+                    .Union(existing.Comments.SelectMany(c => c.Children));
+                HashgardContext.Comments.RemoveRange(children);
+
+                var allVersions = HashgardContext.Articles.Where(a => a.CorrelationUid == existing.CorrelationUid);
+                HashgardContext.Articles.RemoveRange(allVersions);
+
+                await HashgardContext.SaveChangesAsync();
+
+                transaction.Complete();
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Hashgard.Back.Requests;
 using Hashgard.Back.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Hashgard.Back.Controllers
 {
@@ -39,21 +40,21 @@ namespace Hashgard.Back.Controllers
         }
 
         [HttpPost]
-        public Article Create([FromBody] CreateArticleRequest request)
+        public async Task<Article> CreateAsync([FromBody] CreateArticleRequest request)
         {
-            return ForLoggedUser(user => _articleService.Create(user.Id, request.CategoryId, request.Title, request.Text));
+            return await ForLoggedUser(user => _articleService.CreateAsync(user.Id, request.CategoryId, request.Title, request.Text));
         }
 
         [HttpPut("{id}")]
-        public Article Edit(long id, [FromBody] EditArticleRequest request)
+        public async Task<Article> EditAsync(long id, [FromBody] EditArticleRequest request)
         {
-            return ForLoggedUser(user => _articleService.Edit(user.Id, id, request.Title, request.Text));
+            return await ForLoggedUser(user => _articleService.EditAsync(user.Id, id, request.Title, request.Text));
         }
 
         [HttpDelete("{id}")]
-        public void Delete(long id)
+        public async Task Delete(long id)
         { 
-            ForLoggedUser(user => _articleService.Delete(user.Id, id));
+            await ForLoggedUser(user => _articleService.DeleteAsync(user.Id, id));
         }
     }
 }
