@@ -2,16 +2,18 @@
 using System;
 using System.Threading.Tasks;
 using Hashgard.Back.Utils;
+using Hashgard.Back.Hubs.Helpers;
 
-namespace Hashgard.Back.Hubs
+namespace Hashgard.Back.Hubs.Abstract
 {
     public abstract class BaseHub<T> : Hub<T> where T : class, IBaseHubClient
     {
-        private readonly IHubConnectionManager _connectionManager;
+        protected IHubConnectionManager ConnectionManager { get; }
+
 
         public BaseHub(IHubConnectionManager connectionManager)
         {
-            _connectionManager = connectionManager;
+            ConnectionManager = connectionManager;
         }
 
         public override async Task OnConnectedAsync()
@@ -23,17 +25,14 @@ namespace Hashgard.Back.Hubs
         {
             await base.OnDisconnectedAsync(exception);
 
-            if (Context.GetHttpContext().TryGetHubsToken(out var appToken))
-            {
-                _connectionManager.Remove(Context.ConnectionId);
-            }
+            ConnectionManager.Disconnect(Context.GetHttpContext(), Context.ConnectionId);
         }
 
-        public Guid GetToken()
+        public Guid SyncToken(Guid? token)
         {
-            var token = Guid.NewGuid();
-            _connectionManager.Add(token, Context.ConnectionId);
-            return token;
+            var newToken = token.HasValue ? token.Value : Guid.NewGuid();
+            ConnectionManager.Add(newToken, Context.ConnectionId);
+            return newToken;
         }
     }
 

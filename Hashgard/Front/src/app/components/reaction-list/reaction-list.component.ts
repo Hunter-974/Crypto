@@ -5,14 +5,13 @@ import { ReactionType } from 'src/app/models/reaction-type';
 import { Article } from 'src/app/models/article';
 import { Comment } from 'src/app/models/comment';
 import { ReactionHub } from 'src/app/services/reaction/reaction-hub';
-import { BaseAuthService } from 'src/app/services/base-auth-service';
 
 @Component({
   selector: 'app-reaction-list',
   templateUrl: './reaction-list.component.html',
   styleUrls: ['./reaction-list.component.css']
 })
-export class ReactionListComponent extends BaseComponent implements OnInit {
+export class ReactionListComponent extends BaseComponent implements OnInit, OnDestroy {
 
   @Input() article: Article;
   @Input() comment: Comment;
@@ -22,13 +21,11 @@ export class ReactionListComponent extends BaseComponent implements OnInit {
   isCreating: boolean;
   error: string;
 
-  reactionHub: ReactionHub = new ReactionHub();
+  reactionHub: ReactionHub;
 
   constructor(private reactionService: ReactionService) {
     super();
-    this.reactionHub.changed.subscribe(
-      reactionType => this.changed(reactionType));
-   }
+  }
 
   ngOnInit() {
     if (!this.article && !this.comment
@@ -42,7 +39,22 @@ export class ReactionListComponent extends BaseComponent implements OnInit {
       this.model = this.comment;
     }
 
-    this.reactionHub.start();
+    this.startHub();
+  }
+
+  ngOnDestroy(): void {
+    this.reactionHub.stop();
+  }
+
+  startHub() {
+    var objectType = this.article ? "article" : "comment";
+
+    this.reactionHub = new ReactionHub(objectType, this.model.id);
+    this.reactionHub.changed.subscribe(reactionType => this.changed(reactionType));
+    this.reactionHub.start().subscribe(
+      () => { }, 
+      err => this.error = err
+    );
   }
 
   add(reactionType: ReactionType) {

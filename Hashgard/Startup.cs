@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Hashgard.Back.Hubs;
 using Hashgard.Back.Utils;
+using Hashgard.Back.Hubs.Helpers;
 
 namespace Crypto
 {

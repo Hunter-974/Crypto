@@ -1,11 +1,13 @@
 using Hashgard.Back.Db;
 using Hashgard.Back.Hubs;
+using Hashgard.Back.Hubs.Helpers;
 using Hashgard.Back.Models;
 using Hashgard.Back.Models.Abstract;
 using Hashgard.Back.Services.Abstract;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +28,6 @@ namespace Hashgard.Back.Services
     public class ReactionService : BaseService, IReactionService
     {
         private readonly IHubContext<ReactionHub, IReactionHubClient> _reactionHubContext;
-
 
         public ReactionService(HashgardContext context, IHubContext<ReactionHub, IReactionHubClient> reactionHubContext) 
             : base(context)
@@ -79,11 +80,10 @@ namespace Hashgard.Back.Services
             };
 
             HashgardContext.ReactionTypes.Add(reactionType);
+
             await HashgardContext.SaveChangesAsync();
 
-            await Task.Run(() => 
-                _reactionHubContext.Clients.Others().Changed(reactionType)
-                .ConfigureAwait(false));
+            RunNotify(reactionType);
 
             return reactionType;
         }
@@ -118,9 +118,7 @@ namespace Hashgard.Back.Services
                     await HashgardContext.SaveChangesAsync();
                     transaction.Complete();
 
-                    await Task.Run(() => 
-                        _reactionHubContext.Clients.Others().Changed(reactionType)
-                        .ConfigureAwait(false));
+                    RunNotify(reactionType);
                 }
 
                 return reactionType;
@@ -151,13 +149,33 @@ namespace Hashgard.Back.Services
                     await HashgardContext.SaveChangesAsync();
                     transaction.Complete();
 
-                    await Task.Run(() => 
-                        _reactionHubContext.Clients.Others().Changed(reactionType)
-                        .ConfigureAwait(false));
+                    RunNotify(reactionType);
                 }
 
                 return reactionType;
             }
+        }
+
+        private void RunNotify(ReactionType reactionType)
+        {
+            ObjectType objectType = ObjectType.Undefined;
+            long objectId = 0;
+
+            if (reactionType.ArticleId.HasValue)
+            {
+                objectType = ObjectType.Article;
+                objectId = reactionType.ArticleId.Value;
+            }
+            else if (reactionType.CommentId.HasValue)
+            {
+                objectType = ObjectType.Comment;
+                objectId = reactionType.CommentId.Value;
+            }
+
+            Task.Run(() => _reactionHubContext.Clients
+                .OtherSubscribers(objectType, objectId)
+                .Changed(reactionType)
+                .ConfigureAwait(false));
         }
     }
 }

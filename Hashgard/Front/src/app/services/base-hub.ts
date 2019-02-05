@@ -1,20 +1,21 @@
 import { HubConnection, HubConnectionBuilder, JsonHubProtocol } from "@aspnet/signalr";
 import { environment } from "src/environments/environment";
+import { Observable } from "rxjs";
 
 export abstract class BaseHub {
     
     private static _token: string = null;
+    private registeredHandlers: string[] = [];
+
+    protected hubConnection: HubConnection;
+    protected handlers: {
+        [key: string]: ((...args: any[]) => void) 
+    } = {};
 
     public static get token(): string {
         return BaseHub._token;
     }
 
-    private hubConnection: HubConnection;
-    private registeredHandlers: string[] = [];
-
-    protected handlers: {
-        [key: string]: ((...args: any[]) => void) 
-    } = {};
 
     constructor(protected path: string) {
         let baseUrl = environment.settings.signalrBaseUrl;
@@ -26,34 +27,73 @@ export abstract class BaseHub {
         this.hubConnection.onclose((err) => this.connect());
     }
 
-    public start() {        
-        for (let key in this.handlers) {
-            this.on(key, this.handlers[key]);
-        }
+    public start() {
+        return new Observable<any>(subscriber => {
 
-        this.connect();
+            for (let key in this.handlers) {
+                this.on(key, this.handlers[key]);
+            }
+
+            this.connect().subscribe(
+                res => {
+                    subscriber.next(res);
+                    subscriber.complete();
+                },
+                err => {
+                    subscriber.error(err);
+                    subscriber.complete();
+                }
+            );
+
+        });
     }
 
     private connect() {
-        console.log(`Connecting to hub ${this.path}`);
-        this.hubConnection.start()
-        .then(() => {
-            console.log(`Connected to hub ${this.path}`);
-            this.getTokenIfNecessary();
-        })
-        .catch(err => console.log(`Connection to hub ${this.path} failed`));
+        return new Observable<any>(subscriber => {
+
+            console.log(`Connecting to hub ${this.path}`);
+            this.hubConnection.start()
+            .then(() => {
+                console.log(`Connected to hub ${this.path}`);
+                this.syncToken().subscribe(
+                    res => {
+                        subscriber.next(res);
+                        subscriber.complete();
+                    }, err =>{
+                        subscriber.error(err);
+                        subscriber.complete();
+                    }
+                );                
+            })
+            .catch(err => {
+                console.log(`Connection to hub ${this.path} failed`);
+                subscriber.error(err);
+                subscriber.complete();
+            });
+
+        });
     }
 
-    private getTokenIfNecessary() {
-        if (!BaseHub.token) {
+    private syncToken() {
+        return new Observable<any>(subscriber => {
+
             console.log(`Getting app token for hub ${this.path}`);
-            this.hubConnection.invoke<string>("GetToken")
+            this.hubConnection.invoke<string>("SyncToken", BaseHub.token)
                 .then(token =>  {
                     BaseHub._token = token;
                     console.log(`Got token for hub ${this.path}`)
+
+                    subscriber.next();
+                    subscriber.complete();
                 })
-                .catch(err => console.log(`Getting token for hub ${this.path} failed`));
-        }
+                .catch(err => {
+                    console.log(`Getting token for hub ${this.path} failed`);
+
+                    subscriber.error(err);
+                    subscriber.complete();
+                });
+
+        });
     }
 
     protected on(key: string, handler: (...args: any[]) => void) {

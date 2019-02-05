@@ -1,11 +1,11 @@
-import { BaseHub } from "../base-hub";
 import { ReactionType } from "src/app/models/reaction-type";
 import { EventEmitter } from "@angular/core";
+import { BaseSubscribeHub } from "../base-subscribe-hub";
 
-export class ReactionHub extends BaseHub {
+export class ReactionHub extends BaseSubscribeHub {
 
-    constructor() {
-        super("reaction");
+    constructor(objectType: string, objectId: number) {
+        super("reaction", objectType, objectId);
         this.handlers = {
             "Changed": reactionType => this.changed.emit(reactionType)
         };
