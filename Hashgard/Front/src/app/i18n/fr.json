@@ -1,0 +1,60 @@
+{
+    "titles": {
+        "main": "Hashgard",
+        "article": "Article",
+        "category": "Catégorie"
+    },
+    "commands": {
+        "common": {
+            "create": "Créer",
+            "edit": "Editer",
+            "delete": "Supprimer",
+            "ok": "Ok",
+            "cancel": "Annuler"
+        },
+        "crypto": {
+            "change": "Changer",
+            "clear": "Effacer"
+        },
+        "login": {
+            "login": "Se connecter",
+            "logout": "Se déconnecter",
+            "signup": "S'enregistrer"
+        }
+    },
+    "fields": {
+        "crypto": {
+            "key": "Clé"
+        },
+        "login": {
+            "name": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "loggedin-name": "Bonjour,&nbsp;<strong>{{value}}</strong>"
+        }
+    },
+    "errors": {},
+
+
+    "home": {
+        "title": "Confidentialité et liberté d'expression",
+        "li1_title": "Inscription anonyme",
+        "li1_text": "Juste un pseudo et un mot de passe sont nécessaires, pas d'adresse email, pas de donnée personnelle.",
+        "li2_title": "Chiffrement de point à point",
+        "li2_text1": "Les clés de chiffrement sont décidées par les utilisateurs.",
+        "li2_text2": "Aucun texte lisible ne passe par internet ni dans nos données.",
+        "li3_title": "Aucune censure possible",
+        "li3_text": "Seules le créateur d'un contenu peut décider de le détruire.",
+        "howto_title": "Comment ça marche ?",
+        "howto_text1": "Il y a des catégories et sous-catégories. Dans une sous-catégorie, il y a des articles. On peut laisser un commentaire sous un article ou sous un autre commentaire, ou une réaction.",
+        "howto_li1_title": "Tu t'inscris, en haut à droite",
+        "howto_li1_text": "si tu as déjà un compte, tu te connectes",
+        "howto_li2_title": "Tu saisis ta clé, en haut à gauche",
+        "howto_li2_info1": "C'est la clé qui te permettra de déchiffrer tout le texte qui a été écrit avec cette clé.",
+        "howto_li2_info2": "C'est donc aussi la clé qui te permet d'écrire tout ce que tu veux, et que seuls ceux qui la possèdent, pourront lire.",
+        "howto_li2_infostrong": "Cette clé garanti l'accès à tes données. Tâchez de vous en rappeler, et attention à qui vous la confiez.",
+        "howto_li3_title": "Tu choisis ou crées une catégorie, puis une sous-catégorie",
+        "howto_li4_title": "Tu choisis ou tu crées un article",
+        "howto_li5_title": "Tu réponds avec des commentaires, ou des réactions (émojis)",
+        "example": "Essaye de taper la clé <strong>Hello !</strong> pour voir apparaitre quelques données existantes. Attention, cette clé est publique, alors n'écris rien d'important avec."
+    }
+}

@@ -1,49 +1,57 @@
 <div class="card">
   <div class="card-body">
     <h4 class="mt-2">
-        <a routerLink="/categories" routerLinkActive="active">Browse categories</a>
+        <a class="text-primary" routerLink="categories" routerLinkActive="active">Voir les catégories</a>
     </h4>
 
     <div class="jumbotron mt-4">
-      <h1 class="display-4">Welcome to Hashgard !</h1>
-      <div>
-      This is a very simple social network that respects totally your privacy :
-      </div>
-      <ul>
+      <h1 class="display-4">{{ "titles.main" | translate }}</h1>
+      <h3>{{ "home.title" | translate }}</h3>
+      <ul class="mt-5">
         <li>
-          All data (except your name) are encrypted with
-          <a href="https://fr.wikipedia.org/wiki/Advanced_Encryption_Standard" class="text-primary">AES algorithm</a>
-          before they are sent over the network, and decrypted before they are displayed,
-          using the key that you provide in the top left corner.
-          <a href="https://fr.wikipedia.org/wiki/HyperText_Transfer_Protocol_Secure" class="text-primary">Https protocol</a>
-          adds another security layer.
+          <h5>{{ "home.li1_title" | translate }}</h5>
+          <p>{{ "home.li1_text" | translate }}</p>
         </li>
         <li>
-          No personal information is never asked : no email address, no phone number...
-          You just sign up with a login and a password.
+          <h5>{{ "home.li2_title" | translate }}</h5>
+          <p>{{ "home.li2_text1" | translate }}</p>
+          <p>{{ "home.li2_text2" | translate }}</p>
         </li>
         <li>
-          No censorship : the only one able to delete an article or a comment it the one who wrote it.
+          <h5>{{ "home.li3_title" | translate }}</h5>
+          <p>{{ "home.li3_text" | translate }}</p>
         </li>
       </ul>
-      <div class="mt-2">
-        When you use Hashgard, you are the only responsible of your encryption key :
-        tell it to trusted people only, and only the people that know it
-        will ever be able to read your communications.
-      </div>
-
-      <div class="mt-2">
-        <div>This is the very beginning of this project. Feel free to give me remarks :</div>
-        <ul>
-          <li>Set the key "Hello !" (respect the caps).</li>
-          <li>Browse categories, "Projet Hashgard", then create the ones with subjects you want to talk about.</li>
-          <li>Write new posts in the topic you want, comment existing ones, and react to posts and comments.</li>
-        </ul>
-        <div>Have fun !</div>
-      </div>
+      <h4 class="mt-5">{{ "home.howto_title" | translate }}</h4>
+      <p>{{ "home.howto_text1" | translate }}</p>
+      <ul>
+        <li>
+          <h5>{{ "home.howto_li1_title" | translate }}</h5>
+          <p>{{ "home.howto_li1_text" | translate }}</p>
+        </li>
+        <div></div>
+        <li>
+          <h5>{{ "home.howto_li2_title" | translate }}</h5>
+          <p>
+            {{ "home.howto_li2_info1" | translate }}<br />
+            {{ "home.howto_li2_info2" | translate }}<br />
+            <strong>{{ "home.howto_li2_infostrong" | translate }}</strong>
+          </p>
+        </li>
+        <li>
+          <h5>{{ "home.howto_li3_title" | translate }}</h5>
+        </li>
+        <li>
+          <h5>{{ "home.howto_li4_title" | translate }}</h5>
+        </li>
+        <li>
+          <h5>{{ "home.howto_li5_title" | translate }}</h5>
+        </li>
+      </ul>
+      <p class="mt-5" [innerHTML]="'home.example' | translate"></p>
     </div>
       
-    <div class="mt-2">
+    <div class="mt-5">
       <h6>Features coming soon :</h6>
       <ul>
         <li>Real-time updates of comments (like reactions)</li>

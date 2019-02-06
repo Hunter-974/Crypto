@@ -1,13 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Route } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+
+const routes: Route[] = [
+  { path: '', component: HomeComponent }
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    TranslateModule,
+    RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent]
+  declarations: [HomeComponent],
+  exports: [
+    RouterModule
+  ]
 })
 export class HomeModule { }

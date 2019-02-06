@@ -6,6 +6,12 @@ import { PipesModule } from 'src/app/pipes/pipes/pipes.module';
 import { ErrorMessageModule } from '../error-message/error-message.module';
 import { DirectivesModule } from 'src/app/directives/directives/directives.module';
 import { CategoryModule } from '../category/category.module';
+import { Route, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+
+const routes: Route[] = [
+  { path: '', component: CategoryListComponent }
+];
 
 @NgModule({
   imports: [
@@ -14,9 +20,14 @@ import { CategoryModule } from '../category/category.module';
     PipesModule,
     ErrorMessageModule,
     DirectivesModule,
-    CategoryModule
+    CategoryModule,
+    TranslateModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [CategoryListComponent],
-  exports: [CategoryListComponent]
+  exports: [
+    CategoryListComponent, 
+    RouterModule
+  ]
 })
 export class CategoryListModule { }
