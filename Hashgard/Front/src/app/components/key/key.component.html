@@ -1,15 +1,18 @@
-<div class="row">
-  <div class="col input-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Key</span>
-    </div>
-    <input class="form-control" type="text" [(ngModel)]="key" *ngIf="edit" />
-    <div class="input-group-append">
-      <button class="form-control btn btn-warning" (click)="change()" *ngIf="!edit">Change</button>
-      <button class="form-control btn btn-danger" (click)="clear()" *ngIf="!edit && hasKey">Clear</button>
-      <button class="form-control btn btn-success" (click)="submit()" *ngIf="edit">OK</button>
-      <button class="form-control btn btn-danger" (click)="cancel()" *ngIf="edit && hasKey">Cancel</button>
-    </div>
+<div class="form-row">
+  <div class="col-auto" *ngIf="edit">
+    <input class="form-control" type="text" placeholder="{{ 'fields.crypto.key' | translate }}" [(ngModel)]="key" />
+  </div>
+  <div class="col-auto" *ngIf="!edit">
+    <button class="form-control btn btn-warning" (click)="change()">{{ "commands.crypto.change" | translate }}</button>
+  </div>
+  <div class="col-auto" *ngIf="!edit && hasKey">
+    <button class="form-control btn btn-danger" (click)="clear()">{{ "commands.crypto.clear" | translate }}</button>
+  </div>
+  <div class="col-auto" *ngIf="edit">
+    <button class="form-control btn btn-success" (click)="submit()">{{ "commands.common.ok" | translate }}</button>
+  </div>
+  <div class="col-auto" *ngIf="edit && hasKey">
+    <button class="form-control btn btn-danger" (click)="cancel()">{{ "commands.common.cancel" | translate }}</button>
   </div>
 </div>
 
