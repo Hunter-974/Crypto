@@ -32,4 +32,5 @@ const routes: Route[] = [
     RouterModule
   ]
 })
+
 export class ArticleModule { }

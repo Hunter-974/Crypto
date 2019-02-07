@@ -11,7 +11,7 @@ using Hashgard.Back.Hubs;
 using Hashgard.Back.Utils;
 using Hashgard.Back.Hubs.Helpers;
 
-namespace Crypto
+namespace Hashgard
 {
     public class Startup
     { 
@@ -30,6 +30,7 @@ namespace Crypto
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddEntityFrameworkSqlite();
+
             var mssqlserverConnectionString = Configuration.GetConnectionString("mssqlserver");
             var sqliteConnectionString = Configuration.GetConnectionString("sqlite");
 
@@ -41,7 +42,11 @@ namespace Crypto
             {
                 services.AddDbContext<HashgardContext>(options => options.UseSqlite(sqliteConnectionString));
             }
-
+            else
+            {
+                throw new System.Exception("connection string not found");
+            }
+            
             services.AddHttpContextAccessor();
 
             services.AddSingleton<IHubConnectionManager, HubConnectionManager>();
@@ -50,7 +55,7 @@ namespace Crypto
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IReactionService, ReactionService>();
-            services.AddScoped<IUserService, UserService>();;
+            services.AddScoped<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

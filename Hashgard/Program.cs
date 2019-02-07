@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Crypto
+namespace Hashgard
 {
     public class Program
     {
@@ -18,6 +19,9 @@ namespace Crypto
                 .UseKestrel()
                 .UseIISIntegration()
                 .UseStartup<Startup>();
+
+            builder.ConfigureAppConfiguration(
+                (webBuilder, configBuilder) => configBuilder.AddJsonFile("./connectionStrings.json"));
 
             if (args.Any())
             {
