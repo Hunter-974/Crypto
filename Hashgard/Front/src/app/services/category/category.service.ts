@@ -14,26 +14,12 @@ export class CategoryService extends BaseAuthService {
     super(http, "category");
   }
 
-  getParents(): Observable<Category[]> {
+  getList(): Observable<Category[]> {
     return this.get<Category[]>("")
   }
 
-  getChildren(parentId: number): Observable<Category[]> {
-    return this.get<Category[]>(`${parentId}`);
-  }
-
-  createParent(name: string): Observable<Category> {
+  create(name: string): Observable<Category> {
     return this.post<Category>("", { value: encrypt(name) },
-      () => {
-        if (!name || !name.length) {
-          throw Error("Please specify a category name.");
-        }
-      }
-    );
-  }
-
-  createChild(parentId: number, name: string): Observable<Category> {
-    return this.post<Category>(`${parentId}`, { value: encrypt(name) },
       () => {
         if (!name || !name.length) {
           throw Error("Please specify a category name.");

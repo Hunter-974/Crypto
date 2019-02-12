@@ -25,39 +25,7 @@
       <li *ngFor="let category of categoryList" class="no-bullet">
 
         <div class="row">
-          <app-category class="col-12" [category]="category" (categoryClick)="openParent(category)"></app-category>
-        </div>
-
-        <div class="row" *ngIf="category.isOpened">
-          <div class="col-12">
-            <ul>
-
-              <li *ngFor="let subCategory of category.children" class="no-bullet">
-                <app-category [category]="subCategory" (categoryClick)="openChild(subCategory.id)"></app-category>
-              </li>
-
-              <li *ngIf="isLoggedIn && isDecrypted(category.name)" class="no-bullet">
-                <div class="row" *ngIf="!category.isWriting">
-                  <div class="col-auto">
-                    <a class="text-success font-weight-bold" (click)="category.isWriting = true">Create</a>
-                  </div>
-                </div>
-
-                <div class="form-row align-items-center" *ngIf="category.isWriting">
-                  <div class="col-auto">
-                    <input type="text" class="form-control" [(ngModel)]="category.newText" />
-                  </div>
-                  <div class="col-auto">
-                    <button class="btn btn-success form-control" (click)="createChild(category)">Create</button>
-                  </div>
-                  <div class="col-auto">
-                    <button class="btn btn-danger form-control" (click)="category.isWriting = false">Cancel</button>
-                  </div>
-                  <app-error-message class="col-auto" [error]="category.error"></app-error-message>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <app-category class="col-12" [category]="category" (categoryClick)="open(category.id)"></app-category>
         </div>
       </li>
 

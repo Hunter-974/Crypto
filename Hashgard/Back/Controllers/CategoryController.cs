@@ -3,10 +3,7 @@ using Hashgard.Back.Models;
 using Hashgard.Back.Requests;
 using Hashgard.Back.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Hashgard.Back.Controllers
 {
@@ -22,21 +19,15 @@ namespace Hashgard.Back.Controllers
         }
 
         [HttpGet]
-        public IList<Category> GetParents()
+        public IList<Category> GetList()
         {
-            return _categoryService.GetParents();
+            return _categoryService.GetList();
         }
 
-        [HttpGet("{parentId}")]
-        public IList<Category> GetChildren(long parentId)
-        {
-            return _categoryService.GetChildren(parentId);
-        }
-
-        [HttpPost("{parentId?}")]
+        [HttpPost]
         public Category Create(long? parentId, [FromBody] Request<string> name)
         {
-            return ForLoggedUser(user => _categoryService.Create(user.Id, name.Value, parentId));
+            return ForLoggedUser(user => _categoryService.Create(user.Id, name.Value));
         }
     }
 }

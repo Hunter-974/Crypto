@@ -4,14 +4,16 @@ using Hashgard.Back.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Hashgard.Back.Db.Migrations
 {
     [DbContext(typeof(HashgardContext))]
-    partial class HashgardContextModelSnapshot : ModelSnapshot
+    [Migration("20190212221230_RemoveCompositeForCategory")]
+    partial class RemoveCompositeForCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

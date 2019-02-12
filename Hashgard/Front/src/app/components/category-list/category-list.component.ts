@@ -44,66 +44,31 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getParentList();
+    this.getList();
   }
 
-  getParentList() {
+  getList() {
     this.categoryError = null;
-    this.categoryService.getParents().subscribe(
+    this.categoryService.getList().subscribe(
       result => { this._categoryList = result; },
-      error => { this.categoryError = error.toString(); }
+      error => this.categoryError = error.toString()
     );
   }
 
-  getChildrenList(parent: Category) {
-    this.subCategoryError = null;
-    this.categoryService.getChildren(parent.id).subscribe(
-      result => {
-        parent.children = result;
-        parent.isOpened = true;
-      },
-      error => {
-        parent.error = error.toString();
-        parent.isOpened = true;
-      }
-    );
-  }
-
-  createParent() {
+  create() {
     this.categoryError = null;
-    this.categoryService.createParent(this.newCategoryName).subscribe(
+    this.categoryService.create(this.newCategoryName).subscribe(
       result => {
         this.newCategoryName = null;
         this.categoryList.push(result);
         this.isWriting = false;
       },
-      error => { this.categoryError = error.toString(); }
+      error => this.categoryError = error.toString()
     );
   }
 
-  createChild(parent: Category) {
-    parent.error = null;
-    this.categoryService.createChild(parent.id, parent.newText).subscribe(
-      result => {
-        parent.newText = null;
-        parent.children.push(result);
-        parent.isWriting = false;
-      },
-      error => { parent.error = error.toString(); }
-    );
-  }
-
-  openParent(parent: Category) {
-    if (parent.isOpened) {
-      parent.isOpened = false;
-    } else {
-      parent.isOpened = true;
-      this.getChildrenList(parent);
-    }
-  }
-
-  openChild(childId: number) {
-    this.router.navigate(["/articles", childId]);
+  open(id: number) {
+    this.router.navigate(["/articles", id]);
   }
 
 }
