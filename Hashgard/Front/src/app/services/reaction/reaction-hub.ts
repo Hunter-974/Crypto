@@ -1,6 +1,6 @@
 import { ReactionType } from "src/app/models/reaction-type";
 import { EventEmitter } from "@angular/core";
-import { BaseSubscribeHub } from "../base-subscribe-hub";
+import { BaseSubscribeHub } from "../hubs/base-subscribe-hub";
 
 export class ReactionHub extends BaseSubscribeHub {
 
