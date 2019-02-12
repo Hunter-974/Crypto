@@ -6,6 +6,7 @@ import { PipesModule } from 'src/app/pipes/pipes/pipes.module';
 import { AuthorDateModule } from '../author-date/author-date.module';
 import { ErrorMessageModule } from '../error-message/error-message.module';
 import { ReactionListModule } from '../reaction-list/reaction-list.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { ReactionListModule } from '../reaction-list/reaction-list.module';
     PipesModule,
     AuthorDateModule,
     ErrorMessageModule,
-    ReactionListModule
+    ReactionListModule,
+    TranslateModule
   ],
   declarations: [CommentComponent],
   exports: [CommentComponent]

@@ -2,7 +2,8 @@
     "titles": {
         "main": "Hashgard",
         "article": "Article",
-        "category": "Catégorie"
+        "category": "Catégorie",
+        "categorylist": "Liste des catégories"
     },
     "commands": {
         "common": {
@@ -20,6 +21,21 @@
             "login": "Se connecter",
             "logout": "Se déconnecter",
             "signup": "S'enregistrer"
+        },
+        "key": {
+            "change": "Changer",
+            "clear": "Effacer"
+        },
+        "commentlist": {
+            "showpreviouscomments": "Voir les commentaires précédents",
+            "showpreviousreplies": "Voir les réponses précédentes",
+            "comment": "Commenter"
+        },
+        "comment": {
+            "reply": "Répondre"
+        },
+        "reactionlist": {
+            "react": "Réagir"
         }
     },
     "fields": {
@@ -30,6 +46,9 @@
             "name": "Nom d'utilisateur",
             "password": "Mot de passe",
             "loggedin-name": "Bonjour,&nbsp;<strong>{{value}}</strong>"
+        },
+        "key": {
+            "key": "Clé"
         }
     },
     "errors": {},

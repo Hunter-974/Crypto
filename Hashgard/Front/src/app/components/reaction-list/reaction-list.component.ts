@@ -39,13 +39,14 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
       this.model = this.comment;
     }
 
-    this.startHub();
+    //this.startHub();
   }
 
   ngOnDestroy(): void {
     this.reactionHub.stop();
   }
 
+  /*
   startHub() {
     var objectType = this.article ? "article" : "comment";
 
@@ -56,6 +57,7 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
       err => this.error = err
     );
   }
+  */
 
   add(reactionType: ReactionType) {
     this.error = null;

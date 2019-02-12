@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <h4>Category list</h4>
+    <h4>{{ "titles.categorylist" | translate }}</h4>
   </div>
   <div class="card-body">
     <ul>
@@ -51,7 +51,7 @@
 
         <div class="row" *ngIf="!isWriting">
           <div class="col-auto">
-            <a class="text-success font-weight-bold" (click)="isWriting = true">Create</a>
+            <a class="text-success font-weight-bold" (click)="isWriting = true">{{ "commands.common.create" | translate }}</a>
           </div>
         </div>
 
@@ -60,10 +60,10 @@
             <input type="text" class="form-control" [(ngModel)]="newCategoryName" />
           </div>
           <div class="col-auto">
-            <button class="btn btn-success form-control" (click)="createParent()">Create</button>
+            <button class="btn btn-success form-control" (click)="createParent()">{{ "commands.common.ok" | translate }}</button>
           </div>
           <div class="col-auto">
-            <button class="btn btn-danger form-control" (click)="isWriting = false">Cancel</button>
+            <button class="btn btn-danger form-control" (click)="isWriting = false">{{ "commands.common.cancel" | translate }}</button>
           </div>
           <app-error-message class="col-auto" [error]="categoryError"></app-error-message>
         </div>

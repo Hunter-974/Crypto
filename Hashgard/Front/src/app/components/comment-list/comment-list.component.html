@@ -2,7 +2,7 @@
   
   <div class="row mb-4" *ngIf="comments && comments.totalCount > comments.count">
     <div class="col-12">
-      <a class="text-primary font-weight-bold" (click)="getForArticle(20, 5)">Show previous comments</a>
+      <a class="text-primary font-weight-bold" (click)="getForArticle(20, 5)">{{ "commands.commentlist.showpreviouscomments" | translate }}</a>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
 
           <div class="row" *ngIf="parent.children.totalCount > parent.children.count">
             <div class="col-12">
-              <a class="text-primary" (click)="getForComment(parent, 50)">Show previous replies</a>
+              <a class="text-primary" (click)="getForComment(parent, 50)">{{ "commands.commentlist.showpreviousreplies" | translate }}</a>
             </div>
           </div>
 
@@ -44,7 +44,7 @@
 
   <div class="row" *ngIf="!isWriting && isLoggedIn && isParentDecrypted">
     <div class="col-auto">
-      <a class="text-success font-weight-bold" (click)="isWriting = true">Comment</a>
+      <a class="text-success font-weight-bold" (click)="isWriting = true">{{ "commands.commentlist.comment" | translate }}</a>
     </div>
   </div>
   

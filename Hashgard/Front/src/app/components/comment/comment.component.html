@@ -5,20 +5,20 @@
     </div>
     <div class="col-auto">
       <a class="text-success font-weight-bold" (click)="reply()"
-        *ngIf="!comment.parentId && isLoggedIn && isDecrypted(comment.text)">Reply</a>
+        *ngIf="!comment.parentId && isLoggedIn && isDecrypted(comment.text)">{{ "commands.comment.reply" | translate }}</a>
     </div>
     <div class="col-auto">
       <a class="text-warning font-weight-bold" (click)="startEdit()"
-        *ngIf="isOwner(comment) && isDecrypted(comment.text)">Edit</a>
+        *ngIf="isOwner(comment) && isDecrypted(comment.text)">{{ "commands.common.edit" | translate }}</a>
     </div>
     <div class="col-auto">
       <a class="text-danger font-weight-bold" (click)="delete()"
-        *ngIf="isOwner(comment) && isDecrypted(comment.text)">Delete</a>
+        *ngIf="isOwner(comment) && isDecrypted(comment.text)">{{ "commands.common.delete" | translate }}</a>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
-      <div class="text-justify" [innerHTML]="comment.text | decrypt"></div>
+      <p class="text-justify" [innerHTML]="comment.text | decrypt"></p>
     </div>
   </div>
   <div class="row">
@@ -34,13 +34,13 @@
   </div>
   <div class="form-row align-items-center">
     <div class="col-auto" *ngIf="isCreating && isLoggedIn && isParentDecrypted">
-      <button class="btn btn-success form-control" (click)="create()">Create</button>
+      <button class="btn btn-success form-control" (click)="create()">{{ "commands.common.ok" | translate }}</button>
     </div>
     <div class="col-auto" *ngIf="isEditing && isLoggedIn && comment && isDecrypted(comment.text)">
-      <button class="btn btn-success form-control" (click)="edit()">Edit</button>
+      <button class="btn btn-success form-control" (click)="edit()">{{ "commands.common.ok" | translate }}</button>
     </div>
     <div class="col-auto">
-      <button class="btn btn-danger form-control" (click)="cancel()">Cancel</button>
+      <button class="btn btn-danger form-control" (click)="cancel()">{{ "commands.common.cancel" | translate }}</button>
     </div>
     <app-error-message class="col-auto" [error]="comment.error"></app-error-message>
     <app-error-message class="col-auto" [error]="'Please log in'"

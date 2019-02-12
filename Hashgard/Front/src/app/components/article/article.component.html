@@ -8,10 +8,10 @@
       <div class="row">
         <app-author-date class="col-auto" [model]="article"></app-author-date>
         <div class="col-auto" *ngIf="!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)">
-          <a class="text-warning font-weight-bold" (click)="startEdit()">Edit</a>
+          <a class="text-warning font-weight-bold" (click)="startEdit()">{{ "commands.common.edit" | translate }}</a>
         </div>
         <div class="col-auto" *ngIf="!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)">
-          <a class="text-danger font-weight-bold" (click)="delete()">Delete</a>
+          <a class="text-danger font-weight-bold" (click)="delete()">{{ "commands.common.delete" | translate }}</a>
         </div>
       </div>
     </div>
@@ -35,8 +35,8 @@
     <div class="form-row align-items-center">
       <div class="col-auto" *ngIf="isEditing && !isCreating">
         <div class="form-inline">
-          <button class="form-control btn btn-success" (click)="edit()" *ngIf="isOwner(article) && isDecrypted(article.title)">Edit</button>
-          <button class="form-control btn btn-danger ml-2" (click)="cancel()">Cancel</button>
+          <button class="form-control btn btn-success" (click)="edit()" *ngIf="isOwner(article) && isDecrypted(article.title)">{{ "commands.common.ok" | translate }}</button>
+          <button class="form-control btn btn-danger ml-2" (click)="cancel()">{{ "commands.common.cancel" | translate }}</button>
         </div>
       </div>
       <div class="col-auto" *ngIf="!isEditing && isCreating && hasKey && isLoggedIn">

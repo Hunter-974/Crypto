@@ -10,12 +10,11 @@ import { BaseComponent } from '../base-component';
 })
 export class LoginComponent extends BaseComponent implements OnInit {
 
-  isLoggedIn: boolean;
   isSigningUp: boolean;
 
   name: string;
   password: string;
-  sessionLifetime: string = "01:00";
+  sessionLifetime: string = "06:00:00";
   
   error: string;
 
@@ -30,9 +29,12 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
   signup() {
     this.error = null;
-    this.authService.signup(this.name, this.password, duration("00:05:00")).subscribe(
-      result => {
+
+    var sessionLifetimeDuration = duration(this.sessionLifetime);
+    this.authService.signup(this.name, this.password, sessionLifetimeDuration).subscribe(
+      () => {
         this.isSigningUp = false;
+        this.password = null;
       },
       error => { this.error = error; }
     );
@@ -42,7 +44,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
     this.error = null;
     var sessionLifetimeDuration = duration(this.sessionLifetime);
     this.authService.login(this.name, this.password, sessionLifetimeDuration).subscribe(
-      result => { },
+      () => {
+        this.password = null;
+      },
       error => { this.error = error.toString(); }
     )
   }
@@ -50,7 +54,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
   logout() {
     this.error = null;
     this.authService.logout().subscribe(
-      result => this.error = null,
+      () => {
+        this.name = null;
+        this.password = null;
+      },
       error => this.error = error
     );
   }

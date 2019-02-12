@@ -4,12 +4,12 @@
     <input class="form-control" type="password" [(ngModel)]="password" placeholder="password" />
     <!--<input class="form-control" type="time" min="00:00" max="23:59" [(ngModel)]="sessionLifetime" />-->
     <div class="input-group-append" *ngIf="!isSigningUp">
-      <button class="form-control btn btn-success" (click)="login()">Login</button>
-      <button class="form-control btn btn-warning" (click)="startCreating()">Signup</button>
+      <button class="form-control btn btn-success" (click)="login()">{{ "commands.common.ok" | translate }}</button>
+      <button class="form-control btn btn-warning" (click)="startCreating()">{{ "commands.login.signup" | translate }}</button>
     </div>
     <div class="input-group-append" *ngIf="isSigningUp">
-      <button class="form-control btn btn-success" (click)="signup()">Signup</button>
-      <button class="form-control btn btn-danger" (click)="cancelCreating()">Cancel</button>
+      <button class="form-control btn btn-success" (click)="signup()">{{ "commands.common.ok" | translate }}</button>
+      <button class="form-control btn btn-danger" (click)="cancelCreating()">{{ "commands.common.cancel" | translate }}</button>
     </div>
   </div>
 
@@ -18,7 +18,7 @@
       <span class="input-group-text">{{ name }}</span>
     </div>
     <div class="input-group-append">
-      <button class="form-control btn btn-danger" value="Logout" (click)="logout()">Logout</button>
+      <button class="form-control btn btn-danger" value="Logout" (click)="logout()">{{ "commands.login.logout" | translate }}</button>
     </div>
   </div>
 </div>
