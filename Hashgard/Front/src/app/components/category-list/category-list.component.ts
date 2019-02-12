@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Category } from 'src/app/models/category';
 import { Router } from '@angular/router';
@@ -11,13 +11,30 @@ import { BaseComponent } from '../base-component';
 })
 export class CategoryListComponent extends BaseComponent implements OnInit {
 
+  showEncrypted: boolean = false;
   isWriting: boolean = false;
-  categoryList: Category[];
   newCategoryName: string;
   newSubCategoryName: string;
   categoryError: string;
   subCategoryError: string;
   openedParentId: number;
+
+  _categoryList: Category[];
+  get categoryList(): Category[] {
+    if (!this._categoryList) {
+      return null;
+    } else if (this.showEncrypted) {
+      return this._categoryList;
+    } else {
+      var decryptedCategoryList: Category[] = [];
+      this._categoryList.map(c => {
+        if (this.isDecrypted(c.name)) {
+          decryptedCategoryList.push(c);
+        }
+      });
+      return decryptedCategoryList;
+    }
+  }
 
   constructor(
     private categoryService: CategoryService,
@@ -33,7 +50,7 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
   getParentList() {
     this.categoryError = null;
     this.categoryService.getParents().subscribe(
-      result => { this.categoryList = result; },
+      result => { this._categoryList = result; },
       error => { this.categoryError = error.toString(); }
     );
   }

@@ -21,7 +21,7 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
   isCreating: boolean;
   error: string;
 
-  reactionHub: ReactionHub;
+  //reactionHub: ReactionHub;
 
   constructor(private reactionService: ReactionService) {
     super();
@@ -43,7 +43,7 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
   }
 
   ngOnDestroy(): void {
-    this.reactionHub.stop();
+    //this.reactionHub.stop();
   }
 
   /*

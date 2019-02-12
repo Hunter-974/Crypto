@@ -1,10 +1,27 @@
 <div class="card">
+
   <div class="card-header">
-    <h4>{{ "titles.categorylist" | translate }}</h4>
+    
+    <div class="row justify-content-between align-items-center">
+      <div class="col-auto">
+        <h4>{{ "titles.categorylist" | translate }}</h4>
+      </div>
+      <div class="col-auto">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input"
+            [(ngModel)]="showEncrypted" id="showEncryptedCheckbox" />
+          <label class="custom-control-label" for="showEncryptedCheckbox">
+            {{ "fields.categorylist.showencrypted" | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+
   </div>
+
   <div class="card-body">
+
     <ul>
-      
       <li *ngFor="let category of categoryList" class="no-bullet">
 
         <div class="row">
@@ -20,7 +37,6 @@
               </li>
 
               <li *ngIf="isLoggedIn && isDecrypted(category.name)" class="no-bullet">
-
                 <div class="row" *ngIf="!category.isWriting">
                   <div class="col-auto">
                     <a class="text-success font-weight-bold" (click)="category.isWriting = true">Create</a>
@@ -39,16 +55,13 @@
                   </div>
                   <app-error-message class="col-auto" [error]="category.error"></app-error-message>
                 </div>
-
               </li>
             </ul>
           </div>
         </div>
-
       </li>
 
       <li *ngIf="isLoggedIn && hasKey" class="no-bullet">
-
         <div class="row" *ngIf="!isWriting">
           <div class="col-auto">
             <a class="text-success font-weight-bold" (click)="isWriting = true">{{ "commands.common.create" | translate }}</a>
@@ -68,7 +81,7 @@
           <app-error-message class="col-auto" [error]="categoryError"></app-error-message>
         </div>
       </li>
-
     </ul>
+
   </div>
 </div>

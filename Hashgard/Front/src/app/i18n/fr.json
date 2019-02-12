@@ -49,6 +49,9 @@
         },
         "key": {
             "key": "Clé"
+        },
+        "categorylist": {
+            "showencrypted": "Voir les données chiffrées"
         }
     },
     "errors": {},
