@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col">
+    <app-live-viewer
+      [categoryId]="categoryId"
+      [title]="'fields.live.you' | translate"
+      [stream]="stream"
+      [playIcon]="faPlay" [pauseIcon]="faPause"
+      (started)="currentStart()" (paused)="currentPause()">
+    </app-live-viewer>
+  </div>
+</div>
+<div class="row">
+  <div class="col-auto" *ngFor="let userId of userRtcConnections">
+    <app-live-viewer *ngIf="userRtcConnections[userId].ready"
+      [categoryId]="categoryId"
+      [title]="userRtcConnections[userId].name"
+      [stream]="userRtcConnections[userId].stream" 
+      [playIcon]="faPlay" [pauseIcon]="faPause"
+      (started)="remoteStart(userId)" (paused)="remotePause(userId)">
+    </app-live-viewer>
+  </div>
+</div>

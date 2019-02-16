@@ -84,6 +84,7 @@ namespace Hashgard
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ReactionHub>($"{signalrPrefix}/reaction");
+                routes.MapHub<WebrtcHub>($"{signalrPrefix}/webrtc");
             });
 
             app.UseMvc();

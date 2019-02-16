@@ -1,0 +1,30 @@
+<div class="card">
+    <div class="card-header">
+      <div class="row justify-content-between">
+        <div class="col-auto">
+          <h4>{{ title }}</h4>
+        </div>
+        <div class="col-auto">
+          <div class="row">
+            <div class="col-auto">
+              <button class="btn btn-success form-control" (click)="start()">
+                <fa-icon [icon]="playIcon"></fa-icon>
+              </button>
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-warning form-control" (click)="pause()">
+                <fa-icon [icon]="pauseIcon"></fa-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <video #video width="800" height="600" controls></video>
+        </div>
+      </div>
+    </div>
+  </div>

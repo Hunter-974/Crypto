@@ -30,7 +30,10 @@ export class AuthService extends BaseAuthService {
       },
       (result) => {
         BaseAuthService.token = result.token;
-        BaseAuthService._userId = result.userId;
+        BaseAuthService._user = {
+          id: result.userId,
+          name: name
+        };
       }
     );
   }
@@ -49,7 +52,10 @@ export class AuthService extends BaseAuthService {
       },
       (result) => {
         BaseAuthService.token = result.token;
-        BaseAuthService._userId = result.userId;
+        BaseAuthService._user = {
+          id: result.userId,
+          name: name
+        };
       }
     );
   }
@@ -58,8 +64,8 @@ export class AuthService extends BaseAuthService {
 
     return this.post("logout", null,
       null,
-      result => {
-        BaseAuthService._userId = null;
+      () => {
+        BaseAuthService._user = null;
         BaseAuthService.token = null;
       }
     );

@@ -2,20 +2,26 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from "@angular/common/http
 import { environment } from "../../environments/environment";
 import { Observable, Subscriber } from "rxjs";
 import { BaseHub } from "./base-hub";
+import { User } from "../models/user";
 
 export class BaseAuthService {
 
   private baseUrl: string;
 
   protected static token: string = null;
-  protected static _userId: number = null;
+  protected static _user: User = null;
 
   public static get userId(): number {
-    return BaseAuthService._userId;
+    return BaseAuthService._user ? BaseAuthService._user.id : null;
+  }
+
+  public static get user(): User {
+    return BaseAuthService._user;
   }
 
   public static get isLoggedIn(): boolean {
-    return BaseAuthService.userId != undefined && BaseAuthService.userId != null;
+    return BaseAuthService._user && BaseAuthService._user.id 
+      ? true : false; // Vieux hack de merde
   };
 
   public static isOwner(model: any): boolean {

@@ -23,11 +23,15 @@ import { HomeComponent } from './components/home/home.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { ArticleListComponent } from './components/article-list/article-list.component';
 import { ArticleComponent } from './components/article/article.component';
+import { LiveComponent } from './components/live/live.component';
+import { LiveModule } from './components/live/live.module';
+import { WebrtcHub } from './services/webrtc/webrtc.hub';
 
 const routes: Route[] = [
   { path: '', component: HomeComponent },
   { path: 'categories', component: CategoryListComponent },
   { path: 'articles/:categoryId', component: ArticleListComponent },
+  { path: 'live/:categoryId', component: LiveComponent },
   { path: 'article/:id', component: ArticleComponent },
   { path: 'article/new/:categoryId', component: ArticleComponent }  
 ]
@@ -43,6 +47,7 @@ const routes: Route[] = [
     CategoryListModule,
     ArticleListModule,
     ArticleModule,
+    LiveModule,
     PipesModule,
     DirectivesModule,
     BrowserModule,
@@ -55,7 +60,8 @@ const routes: Route[] = [
     ArticleService,
     CategoryService,
     CommentService,
-    ReactionService
+    ReactionService,
+    WebrtcHub
   ],
   bootstrap: [AppComponent]
 })

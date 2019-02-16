@@ -3,7 +3,8 @@ export const environment = {
     settings: {
         production: true,
         apiBaseUrl: "/api",
-        signalrBaseUrl: "/notif"
+        signalrBaseUrl: "/notif",
+        webrtcBaseUrl: "/webrtc"
     }
 }
   

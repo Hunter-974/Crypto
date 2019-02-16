@@ -1,5 +1,6 @@
 import { BaseAuthService } from "../services/base-auth-service";
 import { CryptoService } from "../services/crypto/crypto.service";
+import { User } from "../models/user";
 
 export class BaseComponent {
     
@@ -10,6 +11,10 @@ export class BaseComponent {
   get userId(): number {
     return BaseAuthService.userId;
   };
+
+  get user(): User {
+    return BaseAuthService.user;
+  }
 
   isOwner(model: any): boolean {
     return BaseAuthService.isOwner(model);

@@ -1,9 +1,11 @@
 {
     "titles": {
         "main": "Hashgard",
+        "articlelist": "Articles",
         "article": "Article",
         "category": "Catégorie",
-        "categorylist": "Liste des catégories"
+        "categorylist": "Liste des catégories",
+        "live": "Live"
     },
     "commands": {
         "common": {
@@ -52,6 +54,9 @@
         },
         "categorylist": {
             "showencrypted": "Voir les données chiffrées"
+        },
+        "live": {
+            "you": "Vous"
         }
     },
     "errors": {},
