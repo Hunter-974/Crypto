@@ -1,9 +1,14 @@
 import { BaseAuthService } from "../services/base-auth-service";
 import { CryptoService } from "../services/crypto/crypto.service";
 import { User } from "../models/user";
+import { LoggerService } from "../services/logger/logger.service";
 
 export class BaseComponent {
     
+  constructor(protected logger: LoggerService) {
+
+  }
+  
   get isLoggedIn(): boolean {
     return BaseAuthService.isLoggedIn;
   };

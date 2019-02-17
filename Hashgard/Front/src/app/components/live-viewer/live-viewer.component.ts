@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { BaseComponent } from '../base-component';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-live-viewer',
@@ -20,7 +21,7 @@ export class LiveViewerComponent extends BaseComponent {
     if (this.videoRef && this._stream) {
       let nativeVideo: HTMLVideoElement = this.videoRef.nativeElement;
       nativeVideo.onloadedmetadata = (e) => {
-        nativeVideo.play().catch(err => this.error = err.toString());
+        nativeVideo.play().catch(err => this.logger.error(err));
       };
       nativeVideo.srcObject = this._stream;
     }
@@ -38,8 +39,8 @@ export class LiveViewerComponent extends BaseComponent {
 
   error: string;
 
-  constructor() { 
-    super();
+  constructor(logger: LoggerService) { 
+    super(logger);
   }
 
   start() {

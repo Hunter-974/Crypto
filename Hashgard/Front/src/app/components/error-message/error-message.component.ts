@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-error-message',
@@ -11,8 +12,8 @@ export class ErrorMessageComponent extends BaseComponent implements OnInit {
   @Input() error: string;
   @Input() addclass: string;
 
-  constructor() {
-    super();
+  constructor(logger: LoggerService) {
+    super(logger);
    }
 
   ngOnInit() {

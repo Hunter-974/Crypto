@@ -5,6 +5,7 @@ import { ReactionType } from 'src/app/models/reaction-type';
 import { Article } from 'src/app/models/article';
 import { Comment } from 'src/app/models/comment';
 import { ReactionHub } from 'src/app/services/reaction/reaction-hub';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-reaction-list',
@@ -23,8 +24,10 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
 
   //reactionHub: ReactionHub;
 
-  constructor(private reactionService: ReactionService) {
-    super();
+  constructor(
+    private reactionService: ReactionService,
+    logger: LoggerService) {
+    super(logger);
   }
 
   ngOnInit() {
@@ -69,7 +72,7 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
           reactionType.reactionCount = result.reactionCount;
         }
       },
-      error => this.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -83,7 +86,7 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
           reactionType.reactionCount = result.reactionCount;
         }
       },
-      error => this.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -105,7 +108,7 @@ export class ReactionListComponent extends BaseComponent implements OnInit, OnDe
 
     subscriber.subscribe(
       result => this.addOrUpdate(result),
-      error => this.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 

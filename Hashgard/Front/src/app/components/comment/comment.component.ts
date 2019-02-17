@@ -4,6 +4,7 @@ import { BaseComponent } from '../base-component';
 import { CommentService } from 'src/app/services/comment/comment.service';
 import { decrypt } from 'src/app/services/crypto/crypto.service';
 import { Page } from 'src/app/models/page';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-comment',
@@ -27,8 +28,10 @@ export class CommentComponent extends BaseComponent implements OnInit {
 
   newText: string;
 
-  constructor(private commentService: CommentService) {
-    super();
+  constructor(
+    private commentService: CommentService,
+    logger: LoggerService) {
+    super(logger);
    }
 
   ngOnInit() {
@@ -58,7 +61,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
         this.created.emit(result);
         this.newText = null;
       },
-      error => this.comment.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -68,7 +71,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
     {
       this.newText = decrypt(this.comment.text);
     } catch (ex) {
-      this.comment.error = ex.toString();
+      this.logger.error(ex)
     }
   }
 
@@ -82,7 +85,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
         this.newText = null;
         this.edited.emit(result);
       },
-      error => this.comment.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -90,7 +93,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
     if (confirm("Are you sure you want to delete this comment ?")) {
       this.commentService.remove(this.comment.id).subscribe(
         () => this.deleted.emit(this.comment),
-        error => this.comment.error = error.toString()
+        error => this.logger.error(error)
       );
     }
   }

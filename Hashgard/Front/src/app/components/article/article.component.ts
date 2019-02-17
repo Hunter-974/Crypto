@@ -7,6 +7,7 @@ import { BaseComponent } from '../base-component';
 import { decrypt } from 'src/app/services/crypto/crypto.service';
 import { Comment } from 'src/app/models/comment';
 import { Page } from 'src/app/models/page';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-article',
@@ -27,9 +28,10 @@ export class ArticleComponent extends BaseComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
-    activatedRoute: ActivatedRoute
+    activatedRoute: ActivatedRoute,
+    logger: LoggerService
   ) {
-    super();
+    super(logger);
     let snapshot = activatedRoute.snapshot;
     if (snapshot.url.some(u => u.path == "new")) {
       this.isCreating = true;
@@ -48,7 +50,7 @@ export class ArticleComponent extends BaseComponent implements OnInit {
   getArticle() {
     this.articleService.getArticle(this.articleId).subscribe(
       result => { this.article = result; },
-      error => this.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -56,7 +58,7 @@ export class ArticleComponent extends BaseComponent implements OnInit {
     this.error = null;
     this.articleService.create(this.categoryId, this.newTitle, this.newText).subscribe(
       result => this.router.navigate(["/article", result.id]),
-      error => this.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -75,7 +77,7 @@ export class ArticleComponent extends BaseComponent implements OnInit {
         this.article = result;
         this.isEditing = false;
       },
-      error => this.error = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -84,7 +86,7 @@ export class ArticleComponent extends BaseComponent implements OnInit {
       this.error = null;
       this.articleService.remove(this.article.id).subscribe(
         () => this.router.navigate(["/categories"]),
-        error => this.error = error.toString()
+        error => this.logger.error(error)
       );
     }
   }

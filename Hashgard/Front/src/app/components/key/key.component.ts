@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../base-component';
 import { CryptoService } from 'src/app/services/crypto/crypto.service';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-key',
@@ -13,8 +14,8 @@ export class KeyComponent extends BaseComponent implements OnInit {
   key: string;
   error: string;
 
-  constructor() {
-    super();
+  constructor(logger: LoggerService) {
+    super(logger);
    }
 
   ngOnInit() {
@@ -35,7 +36,7 @@ export class KeyComponent extends BaseComponent implements OnInit {
       this.key = null;
       this.edit = false;
     } catch (ex) {
-      this.error = ex.toString();
+      this.logger.error(ex)
     }
   }
 
@@ -48,7 +49,7 @@ export class KeyComponent extends BaseComponent implements OnInit {
   cancel() {
     this.error = null;
     if (!this.hasKey) {
-      this.error = Error("Please provide a key.").toString();
+      this.logger.error(Error("Please provide a key."))
     }
 
     this.key = null;

@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/models/page';
 import { Observable } from 'rxjs';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-article-list',
@@ -21,9 +22,10 @@ export class ArticleListComponent extends BaseComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private router: Router,
-    activatedRoute: ActivatedRoute
+    activatedRoute: ActivatedRoute,
+    logger: LoggerService
   ) {
-    super();
+    super(logger);
     this.categoryId = parseInt(activatedRoute.snapshot.paramMap.get("categoryId"));
   }
 

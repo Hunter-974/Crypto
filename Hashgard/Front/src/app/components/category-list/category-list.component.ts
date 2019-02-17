@@ -3,6 +3,7 @@ import { CategoryService } from 'src/app/services/category/category.service';
 import { Category } from 'src/app/models/category';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-category-list',
@@ -38,9 +39,10 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
-    private router: Router
+    private router: Router,
+    logger: LoggerService
   ) { 
-    super();
+    super(logger);
   }
 
   ngOnInit() {
@@ -51,7 +53,7 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
     this.categoryError = null;
     this.categoryService.getList().subscribe(
       result => { this._categoryList = result; },
-      error => this.categoryError = error.toString()
+      error => this.logger.error(error)
     );
   }
 
@@ -63,7 +65,7 @@ export class CategoryListComponent extends BaseComponent implements OnInit {
         this.categoryList.push(result);
         this.isWriting = false;
       },
-      error => this.categoryError = error.toString()
+      error => this.logger.error(error)
     );
   }
 

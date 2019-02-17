@@ -7,6 +7,7 @@ import { BaseComponent } from '../base-component';
 import { User } from 'src/app/models/user';
 import { decrypt, encrypt } from 'src/app/services/crypto/crypto.service';
 import { faPlay, faPause, faVideo } from '@fortawesome/free-solid-svg-icons';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-live',
@@ -39,9 +40,10 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
 
   constructor(
     private webrtcHub: WebrtcHub,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    logger: LoggerService) {
 
-    super();
+    super(logger);
   }
 
   ngOnInit() {
@@ -55,29 +57,49 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   initHubEvents() {
+    console.log("begin initHubEvents");
+    
     this.webrtcHub.closed.subscribe(err => {
-      this.error = err;
+      this.logger.error(err)
       this.startHub(() => {});
     });
 
     this.webrtcHub.offered.subscribe(obj => this.onRtcOffer(obj.user, obj.offer));
     this.webrtcHub.answered.subscribe(obj => this.onRtcAnswer(obj.user, obj.answer));
+
+    console.log("end initHubEvents");
   }
 
   startHub(callback: () => void) {
+    this.logger.message("begin startHub");
+    
     this.webrtcHub.start()
-      .then(() => this.webrtcHub.listen(this.categoryId)
-        .then(callback)
-        .catch(err2 => this.error = err2.toString()))
-      .catch(err1 => this.error = err1.toString());
+      .then(() => {
+        this.logger.message("begin hub.listen");
+        this.webrtcHub.listen(this.categoryId)
+        .then(() => {
+          callback();
+          this.logger.message("begin hub.listen");
+        })
+        .catch(err2 => this.logger.error(err2))
+      })
+      .catch(err1 => this.logger.error(err1));
   }
 
   stopHub(callback: () => void) {
+    this.logger.message("begin hub stopListening");
+
     this.webrtcHub.stopListening(this.categoryId)
-      .then(() => this.webrtcHub.stop()
-        .then(callback)
-        .catch(err2 => this.error = err2.toString()))
-      .catch(err1 => this.error = err1.toString());
+      .then(() => {
+        this.logger.message("end hub stopListening, begin hub stop");
+        this.webrtcHub.stop()
+        .then(() => {
+          this.logger.message("end hub stop");
+          callback();
+        })
+        .catch(err2 => this.logger.error(err2));
+      })
+      .catch(err1 => this.logger.error(err1));
   }
 
   createUserData(user: User): RTCPeerConnection {
@@ -133,6 +155,7 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     this.userData[user.id] = userData
 
     connection.ontrack = ev => {
+      this.logger.message("received track")
       if (ev.streams && ev.streams.length) {
         userData.stream = ev.streams[0];
         userData.ready = true
@@ -150,33 +173,43 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       iceRestart: false
     };
 
+    this.logger.message("begin createOffer");
     new RTCPeerConnection().createOffer(offerOptions)
       .then(offer => {
+        this.logger.message("end createOffer, begin hub offer");
         this.currentOffer = offer;
         let offerString = JSON.stringify(offer);
-        this.webrtcHub.offer(this.categoryId, this.user, offerString);
+        this.webrtcHub.offer(this.categoryId, this.user, offerString)
+          .then(() => this.logger.message("end hub offer"))
+          .catch(err => this.logger.error(err));
       })
-      .catch(err => this.error = err);
+      .catch(err => this.logger.error(err));
   }
 
   onRtcAnswer(user: User, answer: string) {
-    if (user && user.id && this.isDecrypted(answer)) {
+    this.logger.message("hub answer received");
 
+    if (user && user.id && this.isDecrypted(answer)) {
       let userRtcConnection = this.userData[user.id].connection;
 
       let then = () => {
         let decryptedAnswer = JSON.parse(decrypt(answer));
-        userRtcConnection.setLocalDescription(this.currentOffer)
-          .then(() => userRtcConnection.setRemoteDescription(decryptedAnswer)
-            .catch(err => this.error = err.toString()))
-          .catch(err => this.error = err.toString());
+        this.logger.message("begin setRemoteDescription");
+        userRtcConnection.setRemoteDescription(decryptedAnswer)
+          .then(() => this.logger.message("end setRemoteDescription"))
+          .catch(err2 => this.logger.error(err2));
       }
 
       if (!userRtcConnection) {
         userRtcConnection = this.createUserData(user);
+
+        this.logger.message("begin setLocalDescription");
         userRtcConnection.setLocalDescription(this.currentOffer)
-          .then(then)
-          .catch(err => this.error = err.toString());
+          .then(() => {
+            this.logger.message("end setLocalDescription");
+            then();
+          })
+          .catch(err => this.logger.error(err));
       } else {
         then();
       }
@@ -184,6 +217,8 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   onRtcOffer(user: User, offer: string) {
+    this.logger.message("hub offer received");
+
     if (user && user.id && user.name && this.isDecrypted(offer)) {
 
       let userRtcConnection = this.userData[user.id].connection;
@@ -192,9 +227,13 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       }
 
       let decryptedOffer = JSON.parse(decrypt(offer));
+      this.logger.message("begin setRemoteDescription");
       userRtcConnection.setRemoteDescription(decryptedOffer)
-        .then(() => this.sendRtcAnswer(userRtcConnection))
-        .catch(err => this.error = err.toString());
+        .then(() => {
+          this.logger.message("end setRemoteDescription");
+          this.sendRtcAnswer(userRtcConnection);
+        })
+        .catch(err => this.logger.error(err));
     }
   }
 
@@ -203,12 +242,16 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       voiceActivityDetection: false
     };
 
+    this.logger.message("begin createAnswer");
     userRtcConnection.createAnswer(answerOptions)
       .then((answer) => {
+        this.logger.message("end createAnswer, begin hub answer");
         let encryptedAnswer = JSON.stringify(answer);
-        this.webrtcHub.answer(this.categoryId, this.user, encryptedAnswer);
+        this.webrtcHub.answer(this.categoryId, this.user, encryptedAnswer)
+          .then(() => this.logger.message("end hub answer"))
+          .catch(err => this.logger.error(err));
       })
-      .catch();
+      .catch(err => this.logger.error(err));
   }
 
   startStreaming() {
@@ -221,8 +264,10 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
         audio: true 
       };
 
+      this.logger.message("begin getUserMedia");
       navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
+          this.logger.message("end getUserMedia");
           this.stream = stream;
           let videoTracks = stream.getVideoTracks();
           let audioTracks = stream.getAudioTracks();
@@ -231,15 +276,17 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
             let userData = this.userData[userId];
             if (userData.connection) {
               if (videoTracks && videoTracks.length) {
+                this.logger.message("add video track for user " + userData.name);
                 userData.connection.addTrack(videoTracks[0]);
               }
               if (audioTracks && audioTracks.length) {
+                this.logger.message("add audio track for user " + userData.name);
                 userData.connection.addTrack(audioTracks[0]);
               }
             }
           }
         })
-        .catch(err => this.error = err.toString());
+        .catch(err => this.logger.error(err));
     }
   }
 

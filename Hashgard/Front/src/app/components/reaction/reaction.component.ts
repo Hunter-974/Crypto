@@ -2,6 +2,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { BaseComponent } from '../base-component';
 import { ReactionType } from 'src/app/models/reaction-type';
 import { BaseAuthService } from 'src/app/services/base-auth-service';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-reaction',
@@ -18,8 +19,8 @@ export class ReactionComponent extends BaseComponent {
 
   isWriting: boolean;
 
-  constructor() {
-    super();
+  constructor(logger: LoggerService) {
+    super(logger);
   }
 
   clicked() {

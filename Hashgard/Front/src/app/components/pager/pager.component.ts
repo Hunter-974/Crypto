@@ -2,6 +2,7 @@ import { Component, OnInit, ContentChild, TemplateRef, Input, Output, EventEmitt
 import { Page } from 'src/app/models/page';
 import { Observable } from 'rxjs';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-pager',
@@ -26,8 +27,8 @@ export class PagerComponent extends BaseComponent implements OnInit {
   @Output() pageChanged: EventEmitter<any> = new EventEmitter<any>();
   @Output() canceled: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() {
-    super();
+  constructor(logger: LoggerService) {
+    super(logger);
    }
 
   ngOnInit() {

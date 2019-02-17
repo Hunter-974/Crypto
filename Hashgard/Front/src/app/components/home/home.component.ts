@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +9,8 @@ import { BaseComponent } from '../base-component';
 })
 export class HomeComponent extends BaseComponent implements OnInit {
 
-  constructor() {
-    super();
+  constructor(logger: LoggerService) {
+    super(logger);
    }
 
   ngOnInit() {

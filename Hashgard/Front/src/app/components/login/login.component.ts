@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { duration } from 'moment';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-login',
@@ -19,9 +20,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
   error: string;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    logger: LoggerService
   ) {
-    super();
+    super(logger);
    }
 
   ngOnInit() {
@@ -36,7 +38,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.isSigningUp = false;
         this.password = null;
       },
-      error => { this.error = error; }
+      error => this.logger.error(error)
     );
   }
 
@@ -47,7 +49,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
       () => {
         this.password = null;
       },
-      error => { this.error = error.toString(); }
+      error => this.logger.error(error)
     )
   }
 
@@ -58,7 +60,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.name = null;
         this.password = null;
       },
-      error => this.error = error
+      error => this.logger.error(error)
     );
   }
 

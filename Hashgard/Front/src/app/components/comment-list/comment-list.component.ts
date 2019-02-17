@@ -3,6 +3,7 @@ import { CommentService } from 'src/app/services/comment/comment.service';
 import { Page } from 'src/app/models/page';
 import { Comment } from 'src/app/models/comment';
 import { BaseComponent } from '../base-component';
+import { LoggerService } from 'src/app/services/logger/logger.service';
 
 @Component({
   selector: 'app-comment-list',
@@ -20,8 +21,10 @@ export class CommentListComponent extends BaseComponent implements OnInit {
   error: string;
   isWriting: boolean;
 
-  constructor(private commentService: CommentService) { 
-    super();
+  constructor(
+    private commentService: CommentService,
+    logger: LoggerService) { 
+    super(logger);
   }
 
   ngOnInit() {
@@ -38,7 +41,7 @@ export class CommentListComponent extends BaseComponent implements OnInit {
         this.comments.addPageBefore(result)
         this.changed.emit(this.comments);
       },
-      error => this.error = error
+      error => this.logger.error(error)
     );
   }
 
@@ -51,7 +54,7 @@ export class CommentListComponent extends BaseComponent implements OnInit {
         comment.children.addPageBefore(result);
         this.changed.emit(this.comments);
       },
-      error => comment.error = error
+      error => this.logger.error(error)
     );
   }
 
