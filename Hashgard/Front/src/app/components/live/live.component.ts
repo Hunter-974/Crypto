@@ -8,6 +8,8 @@ import { User } from 'src/app/models/user';
 import { decrypt, encrypt } from 'src/app/services/crypto/crypto.service';
 import { faPlay, faPause, faVideo } from '@fortawesome/free-solid-svg-icons';
 import { LoggerService } from 'src/app/services/logger/logger.service';
+import { LiveUserData } from 'src/app/models/live-user-data';
+import { RtcConfig } from 'src/app/models/rtc-config';
 
 @Component({
   selector: 'app-live',
@@ -25,13 +27,8 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
 
   stream: MediaStream;
   currentOffer: RTCSessionDescriptionInit;
-  userData: {
-    [userId: number]: {
-      name: string,
-      connection: RTCPeerConnection,
-      stream: MediaStream,
-      ready: boolean
-    }
+  userDataDict: {
+    [userId: number]: LiveUserData
   } = {};
 
   get isStarted(): boolean {
@@ -60,12 +57,15 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     console.log("begin initHubEvents");
     
     this.webrtcHub.closed.subscribe(err => {
-      this.logger.error(err)
-      this.startHub(() => {});
+      if (err) {
+        this.logger.error(err)
+        this.startHub(() => {});
+      }
     });
 
-    this.webrtcHub.offered.subscribe(obj => this.onRtcOffer(obj.user, obj.offer));
+    this.webrtcHub.offered.subscribe(obj => this.onRtcOffer(obj.user, obj.offer, obj.senderCid));
     this.webrtcHub.answered.subscribe(obj => this.onRtcAnswer(obj.user, obj.answer));
+    this.webrtcHub.iceCandidateReceived.subscribe(obj => this.onRtcIceCandidate(obj.user, obj.iceCandidate));
 
     console.log("end initHubEvents");
   }
@@ -87,72 +87,30 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   stopHub(callback: () => void) {
-    this.logger.message("begin hub stopListening");
-
-    this.webrtcHub.stopListening(this.categoryId)
-      .then(() => {
-        this.logger.message("end hub stopListening, begin hub stop");
-        this.webrtcHub.stop()
-        .then(() => {
-          this.logger.message("end hub stop");
-          callback();
-        })
-        .catch(err2 => this.logger.error(err2));
-      })
-      .catch(err1 => this.logger.error(err1));
+    this.logger.message("begin hub stop");
+    this.webrtcHub.stop()
+    .then(() => {
+      this.logger.message("end hub stop");
+      callback();
+    })
+    .catch(err => this.logger.error(err));
   }
 
   createUserData(user: User): RTCPeerConnection {
-    let config: RTCConfiguration = {
-      iceServers: [
-        { urls:'stun:stun01.sipphone.com' },
-        { urls:'stun:stun.ekiga.net' },
-        { urls:'stun:stun.fwdnet.net' },
-        { urls:'stun:stun.ideasip.com' },
-        { urls:'stun:stun.iptel.org' },
-        { urls:'stun:stun.rixtelecom.se' },
-        { urls:'stun:stun.schlund.de' },
-        { urls:'stun:stun.l.google.com:19302' },
-        { urls:'stun:stun1.l.google.com:19302' },
-        { urls:'stun:stun2.l.google.com:19302' },
-        { urls:'stun:stun3.l.google.com:19302' },
-        { urls:'stun:stun4.l.google.com:19302' },
-        { urls:'stun:stunserver.org' },
-        { urls:'stun:stun.softjoys.com' },
-        { urls:'stun:stun.voiparound.com' },
-        { urls:'stun:stun.voipbuster.com' },
-        { urls:'stun:stun.voipstunt.com' },
-        { urls:'stun:stun.voxgratia.org' },
-        { urls:'stun:stun.xten.com' },
-        {
-          urls: 'turn:numb.viagenie.ca',
-          credential: 'muazkh',
-          username: 'webrtc@live.com'
-        },
-        {
-          urls: 'turn:192.158.29.39:3478?transport=udp',
-          credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-          username: '28224511:1379330808'
-        },
-        {
-          urls: 'turn:192.158.29.39:3478?transport=tcp',
-          credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-          username: '28224511:1379330808'
-        }
-      ],
-      iceTransportPolicy: "all",
-    };
+    let connection = new RTCPeerConnection();
 
-    let connection = new RTCPeerConnection(config);
-
-    var userData = {
+    var userData: LiveUserData = {
       name: user.name,
       connection: connection,
       stream: null,
       ready: false
     };
 
-    this.userData[user.id] = userData
+    this.userDataDict[user.id] = userData
+
+    connection.onicecandidate = ev => {
+      this.webrtcHub.iceCandidate
+    }
 
     connection.ontrack = ev => {
       this.logger.message("received track")
@@ -186,42 +144,15 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       .catch(err => this.logger.error(err));
   }
 
-  onRtcAnswer(user: User, answer: string) {
-    this.logger.message("hub answer received");
-
-    if (user && user.id && this.isDecrypted(answer)) {
-      let userRtcConnection = this.userData[user.id].connection;
-
-      let then = () => {
-        let decryptedAnswer = JSON.parse(decrypt(answer));
-        this.logger.message("begin setRemoteDescription");
-        userRtcConnection.setRemoteDescription(decryptedAnswer)
-          .then(() => this.logger.message("end setRemoteDescription"))
-          .catch(err2 => this.logger.error(err2));
-      }
-
-      if (!userRtcConnection) {
-        userRtcConnection = this.createUserData(user);
-
-        this.logger.message("begin setLocalDescription");
-        userRtcConnection.setLocalDescription(this.currentOffer)
-          .then(() => {
-            this.logger.message("end setLocalDescription");
-            then();
-          })
-          .catch(err => this.logger.error(err));
-      } else {
-        then();
-      }
-    }
-  }
-
-  onRtcOffer(user: User, offer: string) {
+  onRtcOffer(user: User, offer: string, senderCid: string) {
     this.logger.message("hub offer received");
 
     if (user && user.id && user.name && this.isDecrypted(offer)) {
 
-      let userRtcConnection = this.userData[user.id].connection;
+      let userRtcConnection;
+      if (this.userDataDict[user.id]) {
+        userRtcConnection = this.userDataDict[user.id].connection;
+      }
       if (!userRtcConnection) {
         userRtcConnection = this.createUserData(user);
       }
@@ -231,13 +162,13 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       userRtcConnection.setRemoteDescription(decryptedOffer)
         .then(() => {
           this.logger.message("end setRemoteDescription");
-          this.sendRtcAnswer(userRtcConnection);
+          this.sendRtcAnswer(userRtcConnection, senderCid);
         })
         .catch(err => this.logger.error(err));
     }
   }
 
-  sendRtcAnswer(userRtcConnection: RTCPeerConnection) {
+  sendRtcAnswer(userRtcConnection: RTCPeerConnection, senderCid: string) {
     let answerOptions: RTCAnswerOptions = {
       voiceActivityDetection: false
     };
@@ -246,12 +177,67 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     userRtcConnection.createAnswer(answerOptions)
       .then((answer) => {
         this.logger.message("end createAnswer, begin hub answer");
-        let encryptedAnswer = JSON.stringify(answer);
-        this.webrtcHub.answer(this.categoryId, this.user, encryptedAnswer)
+        let encryptedAnswer = encrypt(JSON.stringify(answer));
+        this.webrtcHub.answer(this.categoryId, this.user, encryptedAnswer, senderCid)
           .then(() => this.logger.message("end hub answer"))
           .catch(err => this.logger.error(err));
       })
       .catch(err => this.logger.error(err));
+  }
+
+  onRtcAnswer(user: User, answer: string) {
+    this.logger.message("hub answer received");
+
+    if (user && user.id && this.isDecrypted(answer)) {
+
+      let userRtcConnection;
+      if (this.userDataDict[user.id]) {
+        userRtcConnection = this.userDataDict[user.id].connection;
+      }
+      if (!userRtcConnection) {
+        userRtcConnection = this.createUserData(user);
+      }
+
+      this.logger.message("begin setLocalDescription");
+      userRtcConnection.setLocalDescription(this.currentOffer)
+        .then(() => {
+          this.logger.message("end setLocalDescription");
+          let decryptedAnswer = JSON.parse(decrypt(answer));
+          this.logger.message("begin setRemoteDescription");
+          userRtcConnection.setRemoteDescription(decryptedAnswer)
+            .then(() => this.logger.message("end setRemoteDescription"))
+            .catch(err2 => this.logger.error(err2));
+        })
+        .catch(err1 => this.logger.error(err1));
+    }
+  }
+
+  sendRtcIceCandidate(user: User, iceCandidate: RTCIceCandidate) {
+    this.logger.message("begin send ice candidate");
+
+    var encryptedIceCandidate = encrypt(JSON.stringify(iceCandidate));
+    this.webrtcHub.iceCandidate(this.categoryId, this.user, encryptedIceCandidate)
+      .then(() => this.logger.message("end send ice candidate"))
+      .catch(err => this.logger.error(err));
+  }
+
+  onRtcIceCandidate(user: User, iceCandidate: string) {
+    this.logger.message("ice candidate received");
+    if (user && user.id && this.isDecrypted(iceCandidate)) {
+
+      let userRtcConnection: RTCPeerConnection;
+      if (this.userDataDict[user.id]) {
+        userRtcConnection = this.userDataDict[user.id].connection;
+        let decryptedIceCandidate = JSON.parse(decrypt(iceCandidate));
+
+        this.logger.message("begin add ice candidate");
+        userRtcConnection.addIceCandidate(decryptedIceCandidate)
+          .then(() => {
+            this.logger.message("end add ice candidate");
+          })
+          .catch(err => this.logger.error(err));
+      }
+    }
   }
 
   startStreaming() {
@@ -272,8 +258,8 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
           let videoTracks = stream.getVideoTracks();
           let audioTracks = stream.getAudioTracks();
 
-          for (let userId in this.userData) {
-            let userData = this.userData[userId];
+          for (let userId in this.userDataDict) {
+            let userData = this.userDataDict[userId];
             if (userData.connection) {
               if (videoTracks && videoTracks.length) {
                 this.logger.message("add video track for user " + userData.name);

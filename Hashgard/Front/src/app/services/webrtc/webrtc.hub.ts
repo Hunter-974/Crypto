@@ -11,8 +11,9 @@ export class WebrtcHub {
 
   private hubConnection: HubConnection;
 
-  public offered: EventEmitter<{ offer: string, user: User }> = new EventEmitter();
+  public offered: EventEmitter<{ offer: string, user: User, senderCid: string }> = new EventEmitter();
   public answered: EventEmitter<{ answer: string, user: User }> = new EventEmitter();
+  public iceCandidateReceived: EventEmitter<{ iceCandidate: string, user: User }> = new EventEmitter();
   public closed: EventEmitter<Error> = new EventEmitter();
 
   public constructor() {
@@ -23,10 +24,12 @@ export class WebrtcHub {
       .build();
 
     this.hubConnection.onclose(err => this.closed.emit(err));
-    this.hubConnection.on("Offer",
-      (user: User, offer: string) => this.offered.emit({ offer: offer, user: user }));
-    this.hubConnection.on("Answer",
-      (user: User, answer: string) => this.answered.emit({ answer: answer, user: user }));
+
+    this.hubConnection.on("Offer", (user: User, offer: string, senderCid: string) => 
+      this.offered.emit({ offer: offer, user: user, senderCid: senderCid }));
+
+    this.hubConnection.on("Answer", (user: User, answer: string) =>
+      this.answered.emit({ answer: answer, user: user }));
   }
 
   public start(): Promise<any> {
@@ -41,15 +44,15 @@ export class WebrtcHub {
     return this.hubConnection.invoke("Listen", categoryId);
   }
 
-  public stopListening(categoryId: number): Promise<any> {
-    return this.hubConnection.invoke("StopListening", categoryId);
-  }
-
   public offer(categoryId: number, user: User, offer: string) {
     return this.hubConnection.invoke("Offer", categoryId, user, encrypt(offer));
   }
 
-  public answer(categoryId: number, user: User, answer: string) {
-    return this.hubConnection.invoke("Answer", categoryId, user, encrypt(answer));
+  public answer(categoryId: number, user: User, answer: string, senderCid: string) {
+    return this.hubConnection.invoke("Answer", categoryId, user, encrypt(answer), senderCid);
+  }
+
+  public iceCandidate(categoryId: number, user: User, iceCandidate: string) {
+    return this.hubConnection.invoke("IceCandidate", categoryId, user, encrypt(iceCandidate));
   }
 }

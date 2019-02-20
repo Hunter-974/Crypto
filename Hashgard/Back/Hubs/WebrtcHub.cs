@@ -13,59 +13,41 @@ namespace Hashgard.Back.Hubs
 {
     public class WebrtcHub : Hub<IWebrtcHubClient>
     {
-        private IDictionary<long, IDictionary<string, byte>> _listenerConnectionIds;
-
+        private static IDictionary<long, IDictionary<string, byte>> _listenerConnectionIds
+            = new ConcurrentDictionary<long, IDictionary<string, byte>>();
 
         public WebrtcHub()
         {
-            _listenerConnectionIds = new ConcurrentDictionary<long, IDictionary<string, byte>>();
         }
 
-        public Task Listen(long categoryId)
+        private string GetGroupName(long categoryId) => $"Live_{categoryId}";
+
+
+        public async Task Listen(long categoryId)
         {
-            IDictionary<string, byte> connectionIdSet = new ConcurrentDictionary<string, byte>();
-            if (!_listenerConnectionIds.TryAdd(categoryId, connectionIdSet))
-            {
-                connectionIdSet = _listenerConnectionIds[categoryId];
-            }
-
-            connectionIdSet.TryAdd(Context.ConnectionId, default(byte));
-
-            return Task.CompletedTask;
-        }
-
-        public Task StopListening(long categoryId)
-        {
-            if (_listenerConnectionIds.TryGetValue(categoryId, out var connectionIdSet))
-            {
-                connectionIdSet.Remove(Context.ConnectionId);
-            }
-
-            return Task.CompletedTask;
+            await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(categoryId));
         }
 
         public async Task Offer(long categoryId, User user, string offer)
         {
-            if (_listenerConnectionIds.TryGetValue(categoryId, out var connectionIdSet))
-            {
-                var listeners = Clients.Clients(connectionIdSet.Select(kvp => kvp.Key).ToArray());
-                await listeners.Offer(user, offer);
-            }
+            await Clients.OthersInGroup(GetGroupName(categoryId)).Offer(user, offer, Context.ConnectionId);
         }
 
-        public async Task Answer(long categoryId, User user, string answer)
+        public async Task Answer(long categoryId, User user, string answer, string senderCid)
         {
-            if (_listenerConnectionIds.TryGetValue(categoryId, out var connectionIdSet))
-            {
-                var listeners = Clients.Clients(connectionIdSet.Select(kvp => kvp.Key).ToArray());
-                await listeners.Answer(user, answer);
-            }
+           await Clients.Client(senderCid).Answer(user, answer);
+        }
+
+        public async Task IceCandidate(long categoryId, User user, string iceCandidate)
+        {
+            await Clients.OthersInGroup(GetGroupName(categoryId)).IceCandidateReceived(user, iceCandidate);
         }
     }
 
     public interface IWebrtcHubClient
     {
-        Task Offer(User user, string offer);
+        Task Offer(User user, string offer, string senderCid);
         Task Answer(User user, string answer);
+        Task IceCandidateReceived(User user, string iceCandidate);
     }
 }

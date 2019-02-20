@@ -8,6 +8,10 @@ export class BaseComponent {
   constructor(protected logger: LoggerService) {
 
   }
+
+  onConnected() {
+
+  }
   
   get isLoggedIn(): boolean {
     return BaseAuthService.isLoggedIn;
