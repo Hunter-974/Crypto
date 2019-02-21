@@ -38,9 +38,8 @@ export class LiveViewerComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     let nativeVideo: HTMLVideoElement = this.videoRef.nativeElement;
-    nativeVideo.onloadedmetadata = (e) => {
-      nativeVideo.play()
-        .catch(err => this.logger.error(err));
+    nativeVideo.oncanplay = (e) => {
+      nativeVideo.play().catch(err => this.logger.error(err));
     };
   }
 

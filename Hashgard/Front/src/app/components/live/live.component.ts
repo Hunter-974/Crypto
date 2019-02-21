@@ -5,8 +5,7 @@ import { WebrtcHub } from 'src/app/services/webrtc/webrtc.hub';
 import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '../base-component';
 import { User } from 'src/app/models/user';
-import { decrypt, encrypt } from 'src/app/services/crypto/crypto.service';
-import { faPlay, faPause, faVideo, faStop } from '@fortawesome/free-solid-svg-icons';
+import { decrypt } from 'src/app/services/crypto/crypto.service';
 import { LoggerService } from 'src/app/services/logger/logger.service';
 import { LiveUserData } from 'src/app/models/live-user-data';
 import { RtcConfig } from 'src/app/models/rtc-config';
@@ -22,7 +21,6 @@ import { CategoryService } from 'src/app/services/category/category.service';
 export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
 
   isHubReady: boolean;
-  isNegociating: boolean;
   categoryId: number;
   category: Category;
   error: string;
@@ -85,35 +83,61 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   globalStop() {
-    this.stopHub();
+    this.logger.message("begin global stop");
+
+    if (this.stream) {
+      for (let track of this.stream.getTracks()) {
+        track.stop();
+      }
+    }
+    this.logger.message("stopped local stream");
+
     for (let userId in this.userDataDict) {
       let userData = this.userDataDict[userId];
-      if (userData && userData.connection) {
-        try {
-          userData.connection.close();
-        } catch (err) {
-          this.logger.error(err);
-        }
-      }
+      this.stopStream(userData);
       delete this.userDataDict[userId];
     }
+    this.logger.message("stopped remote streams");
+
+    this.stopHub();
+
+    this.logger.message("end global stop");
   }
 
   startStream(userData: LiveUserData) {
     let callback = (stream: MediaStream) => {
       this.logger.message("add tracks");
       for (let track of stream.getTracks()) {
-        userData.connection.addTrack(track);
+        userData.connection.addTrack(track, stream);
       }
     };
 
     this.startMediaIfNeeded(userData, callback);
   }
 
-  
-
   stopStream(userData: LiveUserData) {
+    this.logger.message("begin stop stream");
+    if (userData.stream) {
+      for(let track of userData.stream.getTracks()) {
+        try {
+          track.stop();
+        } catch (err) {
+          this.logger.error(err);
+        }
+      }
+      userData.stream = null;
 
+      if (userData.connection) {
+        try {
+          userData.connection.close();
+        } catch (err) {
+          this.logger.error(err);
+        }
+        userData.connection = null;
+      }
+    }
+    
+    this.logger.message("end stop stream");
   }
 
   startMediaIfNeeded(userData: LiveUserData, 
@@ -149,11 +173,11 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   startHub() {
-    this.logger.message("begin start hub");
+    this.logger.message("begin hub start");
     
     this.webrtcHub.start()
       .then(() => {
-        this.logger.message("end start hub");
+        this.logger.message("end hub start");
         this.sendRtcListen();
       })
       .catch(err1 => this.logger.error(err1));
@@ -202,20 +226,12 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       if (ev.streams && ev.streams.length) {
         userData.stream = ev.streams[0];
       }
-
-      let callback = (stream: MediaStream) => {
-        this.logger.message("add tracks");
-        for (let track of stream.getTracks()) {
-          userData.connection.addTrack(track);
-        }
-      };
-      this.startMediaIfNeeded(userData, callback);
     };
 
     connection.onnegotiationneeded = ev => {
-      if (!this.isNegociating) {
-        setTimeout(() => this.isNegociating = false, 15000);
-        this.isNegociating = true;
+      if (!userData.isNegotiating) {
+        setTimeout(() => userData.isNegotiating = false, 15000);
+        userData.isNegotiating = true;
         this.logger.message("negotiation needed");
         this.createOffer(userData);
       }
@@ -306,7 +322,7 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     this.webrtcHub.answer(userData.cid, answerString)
       .then(() => {
         this.logger.message("end send hub answer");
-        this.isNegociating = false;
+        userData.isNegotiating = false;
       })
       .catch(err => this.logger.error(err));
   }
@@ -331,11 +347,11 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   onRtcOffer(obj: RtcSignalData) {
-    this.isNegociating = true;
     this.logger.message("hub offer received");
 
     let userData = this.userDataDict[obj.user.id];
     if (userData && this.isDecrypted(obj.data)) {
+      userData.isNegotiating = true;
 
       let offer = JSON.parse(decrypt(obj.data));
       this.setRemoteDescription(offer, userData,
@@ -353,7 +369,7 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       this.logger.message("begin set remote description")
 
       this.setRemoteDescription(answer, userData,
-        (description, userData) => this.isNegociating = false);
+        (description, userData) => userData.isNegotiating = false);
     }
   }
 

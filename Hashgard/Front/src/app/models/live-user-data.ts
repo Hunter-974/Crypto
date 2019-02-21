@@ -5,4 +5,5 @@ export class LiveUserData {
     cid: string;
     connection: RTCPeerConnection;
     stream: MediaStream;
+    isNegotiating: boolean;
 }
