@@ -3,6 +3,8 @@ import { environment } from 'src/environments/environment';
 import { HubConnectionBuilder, JsonHubProtocol, HubConnection } from '@aspnet/signalr';
 import { User } from 'src/app/models/user';
 import { encrypt } from '../crypto/crypto.service';
+import { BaseAuthService } from '../base-auth-service';
+import { RtcSignalData } from 'src/app/models/rtc-signal-data';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +13,15 @@ export class WebrtcHub {
 
   private hubConnection: HubConnection;
 
-  public offered: EventEmitter<{ offer: string, user: User, senderCid: string }> = new EventEmitter();
-  public answered: EventEmitter<{ answer: string, user: User }> = new EventEmitter();
-  public iceCandidateReceived: EventEmitter<{ iceCandidate: string, user: User }> = new EventEmitter();
+  private get userToken() {
+    return BaseAuthService.token;
+  }
+
+  public userJoined: EventEmitter<RtcSignalData> = new EventEmitter();
+  public welcomed: EventEmitter<RtcSignalData> = new EventEmitter();
+  public offered: EventEmitter<RtcSignalData> = new EventEmitter();
+  public answered: EventEmitter<RtcSignalData> = new EventEmitter();
+  public iceCandidateReceived: EventEmitter<RtcSignalData> = new EventEmitter();
   public closed: EventEmitter<Error> = new EventEmitter();
 
   public constructor() {
@@ -25,11 +33,21 @@ export class WebrtcHub {
 
     this.hubConnection.onclose(err => this.closed.emit(err));
 
-    this.hubConnection.on("Offer", (user: User, offer: string, senderCid: string) => 
-      this.offered.emit({ offer: offer, user: user, senderCid: senderCid }));
 
-    this.hubConnection.on("Answer", (user: User, answer: string) =>
-      this.answered.emit({ answer: answer, user: user }));
+    this.hubConnection.on("UserJoined", (user: User, cid: string) => 
+      this.userJoined.emit(new RtcSignalData(null, user, cid)));
+
+    this.hubConnection.on("Welcome", (user: User, cid: string) => 
+      this.welcomed.emit(new RtcSignalData(null, user, cid)));
+
+    this.hubConnection.on("Offer", (offer: string, user: User, cid: string) => 
+      this.offered.emit(new RtcSignalData(offer, user, cid)));
+
+    this.hubConnection.on("Answer", (answer: string, user: User, cid: string) =>
+      this.answered.emit(new RtcSignalData(answer, user, cid)));
+
+    this.hubConnection.on("IceCandidate", (iceCandidate: string, user: User, cid: string) => 
+      this.iceCandidateReceived.emit(new RtcSignalData(iceCandidate, user, cid)));
   }
 
   public start(): Promise<any> {
@@ -41,18 +59,22 @@ export class WebrtcHub {
   }
 
   public listen(categoryId: number): Promise<any> {
-    return this.hubConnection.invoke("Listen", categoryId);
+    return this.hubConnection.invoke("Listen", this.userToken, categoryId);
   }
 
-  public offer(categoryId: number, user: User, offer: string) {
-    return this.hubConnection.invoke("Offer", categoryId, user, encrypt(offer));
+  public welcome(toCid: string) {
+    return this.hubConnection.invoke("Welcome", this.userToken, toCid);
   }
 
-  public answer(categoryId: number, user: User, answer: string, senderCid: string) {
-    return this.hubConnection.invoke("Answer", categoryId, user, encrypt(answer), senderCid);
+  public offer(toCid: string, offer: string) {
+    return this.hubConnection.invoke("Offer", this.userToken, toCid, encrypt(offer));
   }
 
-  public iceCandidate(categoryId: number, user: User, iceCandidate: string) {
-    return this.hubConnection.invoke("IceCandidate", categoryId, user, encrypt(iceCandidate));
+  public answer(toCid: string, answer: string) {
+    return this.hubConnection.invoke("Answer", this.userToken, toCid, encrypt(answer));
+  }
+
+  public iceCandidate(toCid: string, iceCandidate: string) {
+    return this.hubConnection.invoke("IceCandidate", this.userToken, toCid, encrypt(iceCandidate));
   }
 }

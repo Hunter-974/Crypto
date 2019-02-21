@@ -1,6 +1,8 @@
+import { User } from "./user";
+
 export class LiveUserData {
-    name: string;
+    user: User;
+    cid: string;
     connection: RTCPeerConnection;
     stream: MediaStream;
-    ready: boolean;
 }

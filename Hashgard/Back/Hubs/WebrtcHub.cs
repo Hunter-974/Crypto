@@ -1,53 +1,129 @@
-﻿using Hashgard.Back.Hubs.Abstract;
-using Hashgard.Back.Hubs.Helpers;
-using Hashgard.Back.Models;
-using Hashgard.Back.Requests;
+﻿using Hashgard.Back.Models;
+using Hashgard.Back.Services;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hashgard.Back.Hubs
 {
     public class WebrtcHub : Hub<IWebrtcHubClient>
     {
-        private static IDictionary<long, IDictionary<string, byte>> _listenerConnectionIds
-            = new ConcurrentDictionary<long, IDictionary<string, byte>>();
+        private readonly IUserService _userService;
 
-        public WebrtcHub()
+
+        public WebrtcHub(IUserService userService)
         {
+            _userService = userService;
         }
 
-        private string GetGroupName(long categoryId) => $"Live_{categoryId}";
+
+        private string GetGroupName(long categoryId) 
+            => $"Live_{categoryId}";
 
 
-        public async Task Listen(long categoryId)
+        protected User GetLoggedUser(string tokenString)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(categoryId));
+            User user = null;
+
+            if (Guid.TryParse(tokenString, out var token))
+            {
+                user = _userService.GetAuthenticatedUser(token);
+            }
+
+            return user;
         }
 
-        public async Task Offer(long categoryId, User user, string offer)
+        protected Task<T> ForLoggedUser<T>(string tokenString, Func<User, Task<T>> execute) where T : class, new()
         {
-            await Clients.OthersInGroup(GetGroupName(categoryId)).Offer(user, offer, Context.ConnectionId);
+            var user = GetLoggedUser(tokenString);
+            Task<T> entityTask;
+
+            if (user == null)
+            {
+                try
+                {
+                    throw new Exception("Unauthorized");
+                }
+                catch (Exception ex)
+                {
+                    entityTask = Task.FromException<T>(ex);
+                }
+            }
+            else
+            {
+                entityTask = execute(user);
+            }
+
+            return entityTask;
         }
 
-        public async Task Answer(long categoryId, User user, string answer, string senderCid)
+        protected Task ForLoggedUser(string tokenString, Func<User, Task> execute)
         {
-           await Clients.Client(senderCid).Answer(user, answer);
+            var user = GetLoggedUser(tokenString);
+            Task task;
+
+            if (user == null)
+            {
+                try
+                {
+                    throw new Exception("Unauthorized");
+                }
+                catch (Exception ex)
+                {
+                    task = Task.FromException(ex);
+                }
+            }
+            else
+            {
+                task = execute(user);
+            }
+
+            return task;
         }
 
-        public async Task IceCandidate(long categoryId, User user, string iceCandidate)
+
+        public Task Listen(string tokenString, long categoryId)
         {
-            await Clients.OthersInGroup(GetGroupName(categoryId)).IceCandidateReceived(user, iceCandidate);
+            return ForLoggedUser(tokenString, async user =>
+            {
+                var groupName = GetGroupName(categoryId);
+                var cid = Context.ConnectionId;
+                await Groups.AddToGroupAsync(cid, groupName);
+                await Clients.OthersInGroup(groupName).UserJoined(user, cid);
+            });
+        }
+
+        public Task Welcome(string tokenString, string toCid)
+        {
+            return ForLoggedUser(tokenString, user => 
+                Clients.Client(toCid).Welcome(user, Context.ConnectionId));
+        }
+
+        public Task Offer(string tokenString, string toCid, string offer)
+        {
+            return ForLoggedUser(tokenString, user => 
+                Clients.Client(toCid).Offer(offer, user, Context.ConnectionId));
+        }
+
+        public Task Answer(string tokenString, string toCid, string answer)
+        {
+            return ForLoggedUser(tokenString, user => 
+                Clients.Client(toCid).Answer(answer, user, Context.ConnectionId));
+        }
+
+        public Task IceCandidate(string tokenString, string toCid, string iceCandidate)
+        {
+            return ForLoggedUser(tokenString, user =>
+                Clients.Client(toCid).IceCandidateReceived(iceCandidate, user, Context.ConnectionId));
         }
     }
 
     public interface IWebrtcHubClient
     {
-        Task Offer(User user, string offer, string senderCid);
-        Task Answer(User user, string answer);
-        Task IceCandidateReceived(User user, string iceCandidate);
+        Task UserJoined(User user, string cid);
+        Task Welcome(User user, string cid);
+        Task Offer(string offer, User user, string cid);
+        Task Answer(string answer, User user, string cid);
+        Task IceCandidateReceived(string iceCandidate, User user, string cid);
     }
 }

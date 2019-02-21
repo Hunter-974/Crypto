@@ -38,6 +38,10 @@
         },
         "reactionlist": {
             "react": "Réagir"
+        },
+        "live": {
+            "connect": "Se connecter au Live",
+            "disconnect": "Se déconnecter"
         }
     },
     "fields": {
@@ -59,7 +63,11 @@
             "you": "Vous"
         }
     },
-    "errors": {},
+    "errors": {
+        "live": {
+            "loginkey": "Authentifiez vous et définissez la bonne clé afin de pouvoir accéder au Live."
+        }
+    },
 
 
     "home": {

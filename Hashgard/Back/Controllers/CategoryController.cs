@@ -24,6 +24,12 @@ namespace Hashgard.Back.Controllers
             return _categoryService.GetList();
         }
 
+        [HttpGet("{id}")]
+        public Category Get(long id)
+        {
+            return _categoryService.Get(id);
+        }
+
         [HttpPost]
         public Category Create(long? parentId, [FromBody] Request<string> name)
         {

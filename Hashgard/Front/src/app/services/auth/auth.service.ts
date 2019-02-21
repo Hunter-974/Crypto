@@ -29,7 +29,7 @@ export class AuthService extends BaseAuthService {
         }
       },
       (result) => {
-        BaseAuthService.token = result.token;
+        BaseAuthService._token = result.token;
         BaseAuthService._user = {
           id: result.userId,
           name: name
@@ -51,7 +51,7 @@ export class AuthService extends BaseAuthService {
         }
       },
       (result) => {
-        BaseAuthService.token = result.token;
+        BaseAuthService._token = result.token;
         BaseAuthService._user = {
           id: result.userId,
           name: name
@@ -66,7 +66,7 @@ export class AuthService extends BaseAuthService {
       null,
       () => {
         BaseAuthService._user = null;
-        BaseAuthService.token = null;
+        BaseAuthService._token = null;
       }
     );
   }

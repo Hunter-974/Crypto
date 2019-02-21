@@ -6,14 +6,24 @@
         </div>
         <div class="col-auto">
           <div class="row">
-            <div class="col-auto">
-              <button class="btn btn-success form-control" (click)="start()">
-                <fa-icon [icon]="playIcon"></fa-icon>
+            <div class="col-auto" *ngIf="playButton">
+              <button class="btn btn-secondary form-control" (click)="play()">
+                <fa-icon [icon]="faPlay"></fa-icon>
               </button>
             </div>
-            <div class="col-auto">
+            <div class="col-auto" *ngIf="pauseButton">
               <button class="btn btn-warning form-control" (click)="pause()">
-                <fa-icon [icon]="pauseIcon"></fa-icon>
+                <fa-icon [icon]="faPause"></fa-icon>
+              </button>
+            </div>
+            <div class="col-auto" *ngIf="recordButton">
+              <button class="btn btn-secondary form-control" (click)="record()">
+                <fa-icon [icon]="faVideo"></fa-icon>
+              </button>
+            </div>
+            <div class="col-auto" *ngIf="stopButton">
+              <button class="btn btn-danger form-control" (click)="stop()">
+                <fa-icon [icon]="faStop"></fa-icon>
               </button>
             </div>
           </div>
@@ -23,7 +33,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col">
-          <video #video width="800" height="600" controls></video>
+          <video #video width="300" height="200" controls [srcObject]="stream"></video>
         </div>
       </div>
     </div>

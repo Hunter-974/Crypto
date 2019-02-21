@@ -18,6 +18,10 @@ export class CategoryService extends BaseAuthService {
     return this.get<Category[]>("")
   }
 
+  getCategory(id: number): Observable<Category> {
+    return this.get<Category>(id.toString());
+  }
+
   create(name: string): Observable<Category> {
     return this.post<Category>("", { value: encrypt(name) },
       () => {

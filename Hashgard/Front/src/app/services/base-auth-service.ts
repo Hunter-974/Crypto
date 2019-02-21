@@ -8,7 +8,7 @@ export class BaseAuthService {
 
   private baseUrl: string;
 
-  protected static token: string = null;
+  protected static _token: string = null;
   protected static _user: User = null;
 
   public static get userId(): number {
@@ -17,6 +17,10 @@ export class BaseAuthService {
 
   public static get user(): User {
     return BaseAuthService._user;
+  }
+
+  public static get token(): string {
+    return this._token;
   }
 
   public static get isLoggedIn(): boolean {
