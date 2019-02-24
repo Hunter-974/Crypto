@@ -46,8 +46,8 @@ export class WebrtcHub {
     this.hubConnection.on("Answer", (answer: string, user: User, cid: string) =>
       this.answered.emit(new RtcSignalData(answer, user, cid)));
 
-    this.hubConnection.on("IceCandidate", (iceCandidate: string, user: User, cid: string) => 
-      this.iceCandidateReceived.emit(new RtcSignalData(iceCandidate, user, cid)));
+    this.hubConnection.on("IceCandidate", (iceCandidate: string, user: User, cid: string, direction: string) => 
+      this.iceCandidateReceived.emit(new RtcSignalData(iceCandidate, user, cid, direction)));
   }
 
   public start(): Promise<any> {
@@ -74,7 +74,7 @@ export class WebrtcHub {
     return this.hubConnection.invoke("Answer", this.userToken, toCid, encrypt(answer));
   }
 
-  public iceCandidate(toCid: string, iceCandidate: string) {
-    return this.hubConnection.invoke("IceCandidate", this.userToken, toCid, encrypt(iceCandidate));
+  public iceCandidate(toCid: string, direction: string, iceCandidate: string) {
+    return this.hubConnection.invoke("IceCandidate", this.userToken, toCid, direction, encrypt(iceCandidate));
   }
 }

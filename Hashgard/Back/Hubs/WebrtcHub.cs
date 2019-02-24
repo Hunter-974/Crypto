@@ -111,10 +111,11 @@ namespace Hashgard.Back.Hubs
                 Clients.Client(toCid).Answer(answer, user, Context.ConnectionId));
         }
 
-        public Task IceCandidate(string tokenString, string toCid, string iceCandidate)
+        public Task IceCandidate(string tokenString, string toCid, string direction, string iceCandidate)
         {
+            var toDirection = direction == "in" ? "out" : "in";
             return ForLoggedUser(tokenString, user =>
-                Clients.Client(toCid).IceCandidateReceived(iceCandidate, user, Context.ConnectionId));
+                Clients.Client(toCid).IceCandidate(iceCandidate, user, Context.ConnectionId, toDirection));
         }
     }
 
@@ -124,6 +125,11 @@ namespace Hashgard.Back.Hubs
         Task Welcome(User user, string cid);
         Task Offer(string offer, User user, string cid);
         Task Answer(string answer, User user, string cid);
-        Task IceCandidateReceived(string iceCandidate, User user, string cid);
+        Task IceCandidate(string iceCandidate, User user, string cid, string direction);
+    }
+
+    public enum IceCandidateDirection
+    {
+        In, Out
     }
 }

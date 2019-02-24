@@ -5,9 +5,9 @@ import { WebrtcHub } from 'src/app/services/webrtc/webrtc.hub';
 import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '../base-component';
 import { User } from 'src/app/models/user';
-import { decrypt } from 'src/app/services/crypto/crypto.service';
+import { decrypt, encrypt } from 'src/app/services/crypto/crypto.service';
 import { LoggerService } from 'src/app/services/logger/logger.service';
-import { LiveUserData } from 'src/app/models/live-user-data';
+import { LiveUserData, LiveUserConnectionData } from 'src/app/models/live-user-data';
 import { RtcConfig } from 'src/app/models/rtc-config';
 import { RtcSignalData } from 'src/app/models/rtc-signal-data';
 import { Category } from 'src/app/models/category';
@@ -20,12 +20,14 @@ import { CategoryService } from 'src/app/services/category/category.service';
 })
 export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
 
+  private static readonly heartbeatInterval = 2500;
+  private static readonly heartbeatCountTimeout = 10;
+
   isHubReady: boolean;
   categoryId: number;
   category: Category;
   error: string;
 
-  stream: MediaStream;
   userDataDict: {
     [userId: number]: LiveUserData
   } = {};
@@ -67,8 +69,8 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.webrtcHub.userJoined.subscribe(obj => this.onRtcUserJoin(obj));
-    this.webrtcHub.welcomed.subscribe(obj => this.onRtcWelcome(obj));
+    this.webrtcHub.userJoined.subscribe(obj => this.onUserJoin(obj));
+    this.webrtcHub.welcomed.subscribe(obj => this.onWelcome(obj));
     this.webrtcHub.offered.subscribe(obj => this.onRtcOffer(obj));
     this.webrtcHub.answered.subscribe(obj => this.onRtcAnswer(obj));
     this.webrtcHub.iceCandidateReceived.subscribe(obj => this.onRtcIceCandidate(obj));
@@ -85,13 +87,6 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   globalStop() {
     this.logger.message("begin global stop");
 
-    if (this.stream) {
-      for (let track of this.stream.getTracks()) {
-        track.stop();
-      }
-    }
-    this.logger.message("stopped local stream");
-
     for (let userId in this.userDataDict) {
       let userData = this.userDataDict[userId];
       this.stopStream(userData);
@@ -105,55 +100,92 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   startStream(userData: LiveUserData) {
-    let callback = (stream: MediaStream) => {
-      this.logger.message("add tracks");
-      for (let track of stream.getTracks()) {
-        userData.connection.addTrack(track, stream);
-      }
-    };
+    if (this.isSettingsReady) {
+    this.logger.message("begin start stream");
 
-    this.startMediaIfNeeded(userData, callback);
+      let callback = (stream: MediaStream) => {
+        this.logger.message("add tracks");
+        for (let track of stream.getTracks()) {
+          userData.out.stream = stream;
+          userData.out.connection.addTrack(track, stream);
+        }
+      };
+
+      this.createStreamIfNeeded(userData, callback);
+      this.logger.message("end start stream");
+    }
   }
 
   stopStream(userData: LiveUserData) {
     this.logger.message("begin stop stream");
-    if (userData.stream) {
-      for(let track of userData.stream.getTracks()) {
-        try {
-          track.stop();
-        } catch (err) {
-          this.logger.error(err);
-        }
-      }
-      userData.stream = null;
 
-      if (userData.connection) {
-        try {
-          userData.connection.close();
-        } catch (err) {
-          this.logger.error(err);
-        }
-        userData.connection = null;
+    userData.out.stream = null;
+
+    this.resetTimeout(userData.out);
+    this.heartbeatInterval(userData.out, true);
+
+    if (userData.out.channel) {
+      try {
+        userData.out.channel.close();
+      } catch (err) {
+        this.logger.error(err);
       }
     }
-    
+
+    if (userData.out.connection) {
+      try {
+        userData.out.connection.close();
+      } catch (err) {
+        this.logger.error(err);
+      }
+    }
+
     this.logger.message("end stop stream");
   }
 
-  startMediaIfNeeded(userData: LiveUserData, 
+  resetInConnection(userData: LiveUserData) {
+    this.logger.message("begin close in connection");
+
+    userData.in.stream = null;
+    
+    this.resetTimeout(userData.in);
+    this.heartbeatInterval(userData.in, true);
+
+    if (userData.in.channel) {
+      try {
+        userData.in.channel.close();
+      } catch (err) {
+        this.logger.error(err);
+      }
+    }
+
+    if (userData.in.connection) {
+      try {
+        userData.in.connection.close();
+      } catch (err) {
+        this.logger.error(err);
+      }
+    }
+
+    this.logger.message("end close in connection");
+
+    this.createInConnection(userData);
+  }
+
+  createStreamIfNeeded(userData: LiveUserData, 
     callback: (stream: MediaStream, userData: LiveUserData) => void) {
 
     if (this.isSettingsReady) {
-      if (this.stream) {
-        callback(this.stream, userData);
+      if (userData.out.stream) {
+        callback(userData.out.stream, userData);
       }
       else {
-        this.startMedia(stream => callback(stream, userData));
+        this.createStream(stream => callback(stream, userData));
       }
     }
   }
 
-  startMedia(callback: (stream: MediaStream) => void) {
+  createStream(callback: (stream: MediaStream) => void) {
     let constraints = {
       video: {
         width: 800,
@@ -166,7 +198,6 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
         this.logger.message("end getUserMedia");
-        this.stream = stream;
         callback(stream);
       })
       .catch(err => this.logger.error(err));
@@ -193,7 +224,7 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     .catch(err => this.logger.error(err));
   }
 
-  createUserData(user: User, cid: string) {
+  createUserDataIfNeeded(user: User, cid: string) {
     let userData = this.userDataDict[user.id];
 
     if (!userData) {
@@ -201,41 +232,155 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
       userData.user = user;
       userData.cid = cid;
       this.userDataDict[user.id] = userData
-      this.createConnection(userData);
     } else {
       userData.cid = cid;
+      userData.user.name = user.name;
     }
+
+    this.createInConnection(userData);
+    this.createOutConnection(userData);
 
     return userData;
   }
 
-  createConnection(userData: LiveUserData) {
+  createInConnection(userData: LiveUserData) {
+    this.logger.message("creating new in connection");
+
     let connection = new RTCPeerConnection(new RtcConfig());
-    userData.connection = connection;
+    userData.in.connection = connection;
 
     connection.onicecandidate = ev => {
-      this.logger.message("received ice candidate");
-      var iceCandidate = JSON.stringify(ev.candidate)
-      this.webrtcHub.iceCandidate(userData.cid, iceCandidate)
-        .then(() => this.logger.message("end send ice candidate"))
-        .catch(err => this.logger.error(err));
+      let direction = "in";
+      this.logger.message("received ice candidate " + direction);
+      this.sendRtcIceCandidate(ev.candidate, userData, direction);
     }
 
     connection.ontrack = ev => {
       this.logger.message("received track");
       if (ev.streams && ev.streams.length) {
-        userData.stream = ev.streams[0];
+        userData.in.stream = ev.streams[0];
       }
     };
 
+    connection.onconnectionstatechange = ev => {
+      let state = userData.in.connection.connectionState;
+      this.logger.message("in connection state changed to " + state);
+      if (state == 'disconnected' || state == 'closed' || state == 'failed') {
+        this.createInConnection(userData);
+      }
+    };
+
+    connection.ondatachannel = ev => {
+      this.logger.message("data channel received");
+      if (ev.channel.label == "status") {
+        userData.in.channel = ev.channel;
+        this.initStatusDataChannelEvents(userData.in, 
+          () => this.resetInConnection(userData));
+      }
+    };
+  }
+
+  createOutConnection(userData: LiveUserData) {
+    this.logger.message("creating new out connection");
+
+    let connection = new RTCPeerConnection(new RtcConfig());
+    userData.out.connection = connection;
+
+    connection.onicecandidate = ev => {
+      let direction = "out";
+      this.logger.message("received ice candidate " + direction);
+      this.sendRtcIceCandidate(ev.candidate, userData, direction);
+    }
+
     connection.onnegotiationneeded = ev => {
-      if (!userData.isNegotiating) {
-        setTimeout(() => userData.isNegotiating = false, 15000);
-        userData.isNegotiating = true;
+      if (!userData.out.isNegotiating) {
+        userData.out.isNegotiating = true;
         this.logger.message("negotiation needed");
         this.createOffer(userData);
       }
     };
+
+    connection.onconnectionstatechange = ev => {
+      let state = userData.out.connection.connectionState;
+      this.logger.message("in connection state changed to " + state);
+      if (state == 'disconnected' || state == 'closed' || state == 'failed') {
+        this.createOutConnection(userData);
+      }
+    };
+
+    this.createStatusDataChannel(userData);
+  }
+
+  createStatusDataChannel(userData: LiveUserData) {
+    let options: RTCDataChannelInit = {}
+    userData.out.channel = userData.out.connection.createDataChannel("status", options);
+    this.initStatusDataChannelEvents(userData.out,
+      () => this.stopStream(userData));
+  }
+
+  initStatusDataChannelEvents(connectionData: LiveUserConnectionData,
+    resetCallback: () => void) {
+
+    let channel = connectionData.channel;
+
+    channel.onopen = ev => {
+      this.logger.message("status channel opened");
+      this.resetTimeout(connectionData, resetCallback);
+      this.heartbeatInterval(connectionData, false);
+    }
+
+    channel.onclose = ev => {
+      this.logger.message("status channel closed");
+      resetCallback();
+    }
+
+    channel.onerror = ev => {
+      this.logger.error(ev.error);
+      resetCallback();
+    }
+
+    channel.onmessage = ev => {
+      this.logger.message("status channel message");
+      this.onRtcStatusChannelMessage(ev.data, connectionData, resetCallback);
+    }
+  }
+
+  sendStatusChannelMessage(data: string, connectionData: LiveUserConnectionData) {
+    this.logger.message("sending on status channel : " + data);
+    connectionData.channel.send(data);
+  }
+
+  onRtcStatusChannelMessage(data: string, connectionData: LiveUserConnectionData,
+    resetCallback: () => void) {
+    
+    if (data == "heartbeat") {
+      this.resetTimeout(connectionData, resetCallback)
+    }
+  }
+
+  resetTimeout(connectionData: LiveUserConnectionData, resetCallback: () => void = null) {
+    if (connectionData.resetTimeoutHandle) {
+      clearTimeout(connectionData.resetTimeoutHandle);
+      connectionData.resetTimeoutHandle = null;
+    }
+    if (resetCallback) {
+      connectionData.resetTimeoutHandle = setTimeout(() => {
+        this.logger.message("timed out");
+        resetCallback();
+      }, 25000);
+    }
+  }
+
+  heartbeatInterval(connectionData: LiveUserConnectionData, clear: boolean) {
+    if (clear && connectionData.heartbeatIntervalHandle) {
+      clearInterval(connectionData.heartbeatIntervalHandle);
+      connectionData.heartbeatIntervalHandle = null;
+    }
+    if (!clear) {
+      connectionData.heartbeatIntervalHandle = setInterval(() => {
+        this.sendStatusChannelMessage("heartbeat", connectionData);
+      }, LiveComponent.heartbeatInterval);
+    } 
   }
 
   createOffer(userData: LiveUserData) {
@@ -247,31 +392,37 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     };
 
     this.logger.message("begin createOffer");
-    userData.connection.createOffer(offerOptions)
+    userData.out.connection.createOffer(offerOptions)
       .then(offer => {
         this.logger.message("end createOffer");
-        this.setLocalDescription(offer, userData, (description, userData) => this.sendRtcOffer(description, userData));
+        this.setLocalDescription(offer, userData.out,
+          () => this.sendRtcOffer(offer, userData));
       })
       .catch(err => this.logger.error(err));
   }
 
-  setLocalDescription(description: RTCSessionDescriptionInit, userData: LiveUserData, 
-    callback: (description: RTCSessionDescriptionInit, userdata: LiveUserData) => void) {
+  setLocalDescription(
+    description: RTCSessionDescriptionInit,
+    connectionData: LiveUserConnectionData,
+    callback: () => void) {
+
     this.logger.message("begin set local description");
-    userData.connection.setLocalDescription(description).then(() => {
+    connectionData.connection.setLocalDescription(description).then(() => {
       this.logger.message("end set local description");
-      if (callback) callback(description, userData);
+      if (callback) callback();
     })
     .catch(err => this.logger.error(err));
   }
 
-  setRemoteDescription(description: RTCSessionDescriptionInit, userData: LiveUserData, 
-    callback: (description: RTCSessionDescriptionInit, userdata: LiveUserData) => void) {
-      
+  setRemoteDescription(
+    description: RTCSessionDescriptionInit,
+    connectionData: LiveUserConnectionData,
+    callback: () => void) {
+
     this.logger.message("begin set remote description");
-    userData.connection.setRemoteDescription(description).then(() => {
+    connectionData.connection.setRemoteDescription(description).then(() => {
       this.logger.message("end set remote description");
-      if (callback) callback(description, userData);
+      if (callback) callback();
     })
     .catch(err => this.logger.error(err));
   }
@@ -282,11 +433,11 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     };
 
     this.logger.message("begin createAnswer");
-    userData.connection.createAnswer(answerOptions)
+    userData.in.connection.createAnswer(answerOptions)
       .then((answer) => {
         this.logger.message("end createAnswer");
-        this.setLocalDescription(answer, userData, 
-          (answer, userData) => this.sendRtcAnswer(answer, userData));
+        this.setLocalDescription(answer, userData.in, 
+          () => this.sendRtcAnswer(answer, userData));
       })
       .catch(err => this.logger.error(err));
   }
@@ -322,72 +473,74 @@ export class LiveComponent extends BaseComponent implements OnInit, OnDestroy {
     this.webrtcHub.answer(userData.cid, answerString)
       .then(() => {
         this.logger.message("end send hub answer");
-        userData.isNegotiating = false;
+        userData.in.isNegotiating = false;
       })
       .catch(err => this.logger.error(err));
   }
 
-  sendRtcIceCandidate(iceCandidate: RTCIceCandidate, userData: LiveUserData) {
+  sendRtcIceCandidate(iceCandidate: RTCIceCandidate, userData: LiveUserData, direction: string) {
     var iceCandidateString = JSON.stringify(iceCandidate);
-    this.logger.message("begin send ice candidate");
-    this.webrtcHub.iceCandidate(userData.cid, iceCandidateString)
-      .then(() => this.logger.message("end send ice candidate"))
+    this.logger.message("begin send ice candidate " + direction);
+    this.webrtcHub.iceCandidate(userData.cid, direction, iceCandidateString)
+      .then(() => this.logger.message("end send ice candidate " + direction))
       .catch(err => this.logger.error(err));
   }
 
-  onRtcUserJoin(obj: RtcSignalData) {
+  onUserJoin(obj: RtcSignalData) {
     this.logger.message("hub user joined");
-    this.createUserData(obj.user, obj.cid);
+    this.createUserDataIfNeeded(obj.user, obj.cid);
     this.webrtcHub.welcome(obj.cid);
   }
 
-  onRtcWelcome(obj: RtcSignalData) {
+  onWelcome(obj: RtcSignalData) {
     this.logger.message("hub welcome received");
-    this.createUserData(obj.user, obj.cid)
+    this.createUserDataIfNeeded(obj.user, obj.cid)
   }
 
   onRtcOffer(obj: RtcSignalData) {
-    this.logger.message("hub offer received");
-
     let userData = this.userDataDict[obj.user.id];
-    if (userData && this.isDecrypted(obj.data)) {
-      userData.isNegotiating = true;
-
-      let offer = JSON.parse(decrypt(obj.data));
-      this.setRemoteDescription(offer, userData,
-        (description, userData) => this.createAnswer(userData));
+    if (userData && !userData.in.isNegotiating) {
+      this.logger.message("hub offer received");
+      if (this.isDecrypted(obj.data)) {
+        userData.in.isNegotiating = true;
+        let offer = JSON.parse(decrypt(obj.data));
+        this.setRemoteDescription(offer, userData.in,
+          () => this.createAnswer(userData));
+      }
     }
   }
 
   onRtcAnswer(obj: RtcSignalData) {
     this.logger.message("hub answer received");
-
     let userData = this.userDataDict[obj.user.id];
     if (userData && this.isDecrypted(obj.data)) {
-
       let answer = JSON.parse(decrypt(obj.data));
       this.logger.message("begin set remote description")
-
-      this.setRemoteDescription(answer, userData,
-        (description, userData) => userData.isNegotiating = false);
+      this.setRemoteDescription(answer, userData.out,
+        () => userData.out.isNegotiating = false);
     }
   }
 
   onRtcIceCandidate(obj: RtcSignalData) {
-    this.logger.message("ice candidate received");
     if (this.isDecrypted(obj.data)) {
 
-      let userRtcConnection: RTCPeerConnection;
       if (this.userDataDict[obj.user.id]) {
-        
-        userRtcConnection = this.userDataDict[obj.user.id].connection;
-        let decryptedIceCandidate = JSON.parse(decrypt(obj.data));
+        this.logger.message("hub ice candidate received " + obj.direction);
+        let userData = this.userDataDict[obj.user.id];
 
-        this.logger.message("begin add ice candidate");
+        let userRtcConnection: RTCPeerConnection;
+        if (obj.direction == "in") {
+          userRtcConnection = userData.in.connection;
+        } else if (obj.direction == "out") {
+          userRtcConnection = userData.out.connection;
+        } else {
+          throw Error("direction must be 'in' or 'out'");
+        }
+
+        let decryptedIceCandidate = JSON.parse(decrypt(obj.data));
+        this.logger.message("begin add ice candidate " + obj.direction);
         userRtcConnection.addIceCandidate(decryptedIceCandidate)
-          .then(() => {
-            this.logger.message("end add ice candidate");
-          })
+          .then(() => this.logger.message("end add ice candidate " + obj.direction))
           .catch(err => this.logger.error(err));
       }
     }

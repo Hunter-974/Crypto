@@ -9,28 +9,20 @@
   </div>
 </div>
 
-<div class="row text-align-center justify-content-center" *ngIf="isSettingsReady && isHubReady">
-  <div class="col-auto mb-3">
-    <button class="btn btn-danger" (click)="globalStop()">
-      {{ "commands.live.disconnect" | translate }}
-    </button>
+<div *ngIf="isSettingsReady && isHubReady">
+  <div class="row text-align-center justify-content-center">
+    <div class="col-auto mb-3">
+      <button class="btn btn-danger" (click)="globalStop()">
+        {{ "commands.live.disconnect" | translate }}
+      </button>
+    </div>
   </div>
-  <div class="col-12"></div>
-
-  <div class="col-auto">
-    <app-live-viewer
-      [categoryId]="categoryId"
-      [title]="'fields.live.you' | translate"
-      [stream]="stream">
-    </app-live-viewer>
-  </div>
-  <div class="col-auto" *ngFor="let userDataKv of userDataDict | keyvalue">
-    <app-live-viewer
-      [categoryId]="categoryId"
-      [title]="userDataKv.value.user.name"
-      [stream]="userDataKv.value.stream" 
-      [recordButton]="true" [stopButton]="true"
-      (recorded)="startStream(userDataKv.value)" (stopped)="stopStream(userDataKv.value)">
-    </app-live-viewer>
+  <div class="row">
+    <div class="col-auto" *ngFor="let userDataKv of userDataDict | keyvalue">
+      <app-live-viewer
+        [categoryId]="categoryId" [userData]="userDataKv.value"
+        (recorded)="startStream(userDataKv.value)" (stopped)="stopStream(userDataKv.value)">
+      </app-live-viewer>
+    </div>
   </div>
 </div>

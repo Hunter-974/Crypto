@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, ElementRef, Output, EventEmitter, OnInit }
 import { BaseComponent } from '../base-component';
 import { IconDefinition, faVideo, faPlay, faStop, faPause } from '@fortawesome/free-solid-svg-icons';
 import { LoggerService } from 'src/app/services/logger/logger.service';
+import { LiveUserData } from 'src/app/models/live-user-data';
 
 @Component({
   selector: 'app-live-viewer',
@@ -11,44 +12,24 @@ import { LoggerService } from 'src/app/services/logger/logger.service';
 export class LiveViewerComponent extends BaseComponent implements OnInit {
 
   @Input() categoryId: number;
-  @Input() title: string;
-  @Input() recordButton: boolean;
-  @Input() playButton: IconDefinition;
-  @Input() pauseButton: IconDefinition;
-  @Input() stopButton: IconDefinition;
-  @Input() stream: MediaStream;
+  @Input() userData: LiveUserData;
 
-  @Output() played: EventEmitter<any> = new EventEmitter();
-  @Output() paused: EventEmitter<any> = new EventEmitter();
   @Output() recorded: EventEmitter<any> = new EventEmitter();
   @Output() stopped: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild("video") videoRef: ElementRef;
+  @ViewChild("videoIn") videoInRef: ElementRef;
+  @ViewChild("videoOut") videoOutRef: ElementRef;
 
   error: string;
 
   faVideo = faVideo;
-  faPlay = faPlay;
   faStop = faStop;
-  faPause = faPause;
 
   constructor(logger: LoggerService) { 
     super(logger);
   }
 
   ngOnInit() {
-    let nativeVideo: HTMLVideoElement = this.videoRef.nativeElement;
-    nativeVideo.oncanplay = (e) => {
-      nativeVideo.play().catch(err => this.logger.error(err));
-    };
-  }
-
-  play() {
-    this.played.emit();
-  }
-
-  pause() {
-    this.paused.emit();
   }
 
   record() {

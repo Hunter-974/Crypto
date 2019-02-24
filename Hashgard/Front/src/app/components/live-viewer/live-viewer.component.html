@@ -1,40 +1,33 @@
 <div class="card">
-    <div class="card-header">
-      <div class="row justify-content-between">
-        <div class="col-auto">
-          <h4>{{ title }}</h4>
-        </div>
-        <div class="col-auto">
-          <div class="row">
-            <div class="col-auto" *ngIf="playButton">
-              <button class="btn btn-secondary form-control" (click)="play()">
-                <fa-icon [icon]="faPlay"></fa-icon>
-              </button>
-            </div>
-            <div class="col-auto" *ngIf="pauseButton">
-              <button class="btn btn-warning form-control" (click)="pause()">
-                <fa-icon [icon]="faPause"></fa-icon>
-              </button>
-            </div>
-            <div class="col-auto" *ngIf="recordButton">
-              <button class="btn btn-secondary form-control" (click)="record()">
-                <fa-icon [icon]="faVideo"></fa-icon>
-              </button>
-            </div>
-            <div class="col-auto" *ngIf="stopButton">
-              <button class="btn btn-danger form-control" (click)="stop()">
-                <fa-icon [icon]="faStop"></fa-icon>
-              </button>
-            </div>
+  <div class="card-header">
+    <div class="form-row justify-content-between align-items-center">
+      <div class="col-auto">
+        <h4>{{ userData.user.name }}</h4>
+      </div>
+      <div class="col-auto">
+        <div class="row justify-content-right align-items-center">
+          <div class="col-auto">
+            <button class="btn btn-secondary form-control" (click)="record()">
+              <fa-icon [icon]="faVideo"></fa-icon>
+            </button>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-danger form-control" (click)="stop()">
+              <fa-icon [icon]="faStop"></fa-icon>
+            </button>
           </div>
         </div>
       </div>
     </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col">
-          <video #video width="300" height="200" [srcObject]="stream"></video>
-        </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col" ng-show="userData.in.stream">
+        <video #videoIn autoplay width="300" height="200" [srcObject]="userData.in.stream"></video>
+      </div>
+      <div class="col" ng-show="userData.out.stream">
+        <video #videoOut autoplay width="300" height="200" [srcObject]="userData.out.stream"></video>
       </div>
     </div>
   </div>
+</div>
