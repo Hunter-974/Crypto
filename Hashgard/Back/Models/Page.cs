@@ -27,7 +27,7 @@ namespace Hashgard.Back.Models
         {
             var orderedSource = orderByDirection == OrderBy.Asc
                 ? source.OrderBy(orderBy) : source.OrderByDescending(orderBy);
-            var items = orderedSource.Skip(index).Take(count).ToList();
+            var items = orderedSource.Skip(index * count).Take(count).ToList();
             return new Page<T>()
             {
                 Items = items,
