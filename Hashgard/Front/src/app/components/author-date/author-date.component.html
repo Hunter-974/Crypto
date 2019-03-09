@@ -1,0 +1,4 @@
+<div *ngIf="model">
+  <span class="text-danger" *ngIf="model.user">{{ model.user.name }} (#{{ model.user.id }})</span>&nbsp;
+  <span class="text-info" *ngIf="model.versionDate">{{ model.versionDate | date:"dd/MM/yyyy HH:mm" }}</span>
+</div>

@@ -1,0 +1,26 @@
+a {
+    cursor: pointer !important;
+}
+
+p {
+    white-space: pre-wrap;
+}
+
+span.encrypted {
+    font-family: 'Lucida Console';
+    color: #00FF00;
+    border-radius: 5px;
+}
+
+img.emojione {
+    height: 24px;
+    width: 24px;
+    margin: 3px;
+}
+
+span.emoji-container::slotted {
+    display: none;
+}
+span.emoji-container > img {
+    display: block;
+}

@@ -1,0 +1,72 @@
+<div class="card">
+
+  <div class="card-header">
+    <div *ngIf="!isEditing && article">
+      <div class="row">
+        <h5 class="col-12" [innerHTML]="article.title | decrypt"></h5>
+      </div>
+      <div class="row">
+        <app-author-date class="col-auto" [model]="article"></app-author-date>
+        <div class="col-auto" *ngIf="!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)">
+          <a class="text-warning font-weight-bold" (click)="startEdit()">{{ "commands.common.edit" | translate }}</a>
+        </div>
+        <div class="col-auto" *ngIf="!isEditing && !isCreating && article && isOwner(article) && isDecrypted(article.title)">
+          <a class="text-danger font-weight-bold" (click)="delete()">{{ "commands.common.delete" | translate }}</a>
+        </div>
+      </div>
+    </div>
+    
+    <input class="form-control" type="text" [(ngModel)]="newTitle" *ngIf="isEditing || isCreating" />
+  </div>
+
+  <div class="card-body">
+    
+    <div class="row">
+      <p class="col-12 text-justify" *ngIf="!isEditing && !isCreating && article" [innerHTML]="article.text | decrypt"></p>
+      <div class="col-12 form-group" *ngIf="isEditing || isCreating">
+        <textarea class="form-control" type="text" [(ngModel)]="newText" rows="20"></textarea>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="article">
+      <app-reaction-list class="col-12" [article]="article" [isParentDecrypted]="isDecrypted(article.title)"></app-reaction-list>
+    </div>
+
+    <div class="form-row align-items-center">
+      <div class="col-auto" *ngIf="isEditing && !isCreating">
+        <div class="form-inline">
+          <button class="form-control btn btn-success" (click)="edit()" *ngIf="isOwner(article) && isDecrypted(article.title)">{{ "commands.common.ok" | translate }}</button>
+          <button class="form-control btn btn-danger ml-2" (click)="cancel()">{{ "commands.common.cancel" | translate }}</button>
+        </div>
+      </div>
+      <div class="col-auto" *ngIf="!isEditing && isCreating && hasKey && isLoggedIn">
+        <button class="form-control btn btn-success" (click)="create()" *ngIf="isCreating">Create</button>
+      </div>
+      <div class="col-auto" *ngIf="(isCreating || isEditing)">
+        <app-error-message [error]="'Please log in'"
+          *ngIf="!isLoggedIn"></app-error-message>
+        <app-error-message [error]="'Please provide a key'"
+          *ngIf="!hasKey"></app-error-message>
+        <app-error-message [error]="'Please provide the key that has been used to write this article'"
+          *ngIf="isEditing && hasKey && article && !isDecrypted(article.title)"></app-error-message>
+        <app-error-message [error]="'You cannot edit this article'"
+          *ngIf="isEditing && isLoggedIn && !isOwner(article)"></app-error-message>
+        <app-error-message [error]="error"></app-error-message>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+<div class="card mt-2">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <app-comment-list *ngIf="article" [articleId]="article.id"
+          [isParentDecrypted]="isDecrypted(article.title)"
+          (changed)="refreshComments($event)"></app-comment-list>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptEnabled>false</TypeScriptEnabled>
+    <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Back\Migrations\**" />
+    <Compile Remove="Front\**" />
+    <Content Remove="Back\Migrations\**" />
+    <Content Remove="Front\**" />
+    <EmbeddedResource Remove="Back\Migrations\**" />
+    <EmbeddedResource Remove="Front\**" />
+    <None Remove="Back\Migrations\**" />
+    <None Remove="Front\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Back\Db\Migrations\20190203125807_SqlServer.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203125807_SqlServer.Designer.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203134508_Init.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203134508_Init.Designer.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203140255_Init.cs" />
+    <Compile Remove="Back\Db\Migrations\20190203140255_Init.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".well-known\acme-challenge\example" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Back\JsonConverters\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="web.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+
+</Project>

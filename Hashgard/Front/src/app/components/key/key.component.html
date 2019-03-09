@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ "fields.key.key" | translate }}</span>
+    </div>
+    <input class="form-control" type="text" [(ngModel)]="key" *ngIf="edit" />
+    <div class="input-group-append">
+      <button class="form-control btn btn-warning" (click)="change()" *ngIf="!edit">{{ "commands.key.change" | translate }}</button>
+      <button class="form-control btn btn-danger" (click)="clear()" *ngIf="!edit && hasKey">{{ "commands.key.clear" | translate }}</button>
+      <button class="form-control btn btn-success" (click)="submit()" *ngIf="edit">{{ "commands.common.ok" | translate }}</button>
+      <button class="form-control btn btn-danger" (click)="cancel()" *ngIf="edit && hasKey">{{ "commands.common.cancel" | translate }}</button>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <app-error-message class="col-12" [error]="error"></app-error-message>
+</div>

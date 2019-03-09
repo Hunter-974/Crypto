@@ -1,0 +1,28 @@
+<div class="row text-align-center justify-content-center" *ngIf="!isHubReady">
+  <div class="col-auto" *ngIf="!isSettingsReady">
+    <app-error-message [error]="'errors.live.loginkey' | translate"></app-error-message>
+  </div>
+  <div class="col-auto" *ngIf="isSettingsReady">
+    <button class="btn btn-success" (click)="globalStart()">
+      {{ "commands.live.connect" | translate }}
+    </button>
+  </div>
+</div>
+
+<div *ngIf="isSettingsReady && isHubReady">
+  <div class="row text-align-center justify-content-center">
+    <div class="col-auto mb-3">
+      <button class="btn btn-danger" (click)="globalStop()">
+        {{ "commands.live.disconnect" | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-auto" *ngFor="let userDataKv of userDataDict | keyvalue">
+      <app-live-viewer
+        [categoryId]="categoryId" [userData]="userDataKv.value"
+        (recorded)="startStream(userDataKv.value)" (stopped)="stopStream(userDataKv.value)">
+      </app-live-viewer>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-auto">
+        <h4>{{ "titles.articlelist" | translate }}</h4>
+      </div>
+      <div class="col-auto">
+        <a [routerLink]="['/live', categoryId]" routerLinkActive="active">
+          <h4>{{ "titles.live" | translate }}</h4>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <app-pager [pageSize]="10" [getMethodAsync]="getListMethod">
+          <ng-template let-item="item">
+            <a class="list-group-item list-group-item-action list-group-item-secondary mb-1" (click)="open(item.id)">
+              <div class="row">
+                <div class="col-12">
+                  <h5 [innerHTML]="item.title | decrypt"></h5>
+                </div>
+              </div>
+              <div class="row">
+                <app-author-date class="col-12" [model]="item"></app-author-date>
+              </div>
+              <div class="row">
+                <app-reaction-list class="col-12" [article]="item"></app-reaction-list>
+              </div>
+            </a>
+          </ng-template>
+        </app-pager>
+      </div>
+      
+    </div>
+    <div class="row">
+      <div class="col-auto">
+        <button class="form-control btn btn-success" (click)="create()">{{ "commands.common.create" | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>

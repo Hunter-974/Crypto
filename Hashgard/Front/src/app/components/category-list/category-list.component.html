@@ -1,0 +1,55 @@
+<div class="card">
+
+  <div class="card-header">
+    
+    <div class="row justify-content-between align-items-center">
+      <div class="col-auto">
+        <h4>{{ "titles.categorylist" | translate }}</h4>
+      </div>
+      <div class="col-auto">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input"
+            [(ngModel)]="showEncrypted" id="showEncryptedCheckbox" />
+          <label class="custom-control-label" for="showEncryptedCheckbox">
+            {{ "fields.categorylist.showencrypted" | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card-body">
+
+    <ul>
+      <li *ngFor="let category of categoryList" class="no-bullet">
+
+        <div class="row">
+          <app-category class="col-12" [category]="category" (categoryClick)="open(category.id)"></app-category>
+        </div>
+      </li>
+
+      <li *ngIf="isLoggedIn && hasKey" class="no-bullet">
+        <div class="row" *ngIf="!isWriting">
+          <div class="col-auto">
+            <a class="text-success font-weight-bold" (click)="isWriting = true">{{ "commands.common.create" | translate }}</a>
+          </div>
+        </div>
+
+        <div class="form-row align-items-center" *ngIf="isWriting">
+          <div class="col-auto">
+            <input type="text" class="form-control" [(ngModel)]="newCategoryName" />
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-success form-control" (click)="createParent()">{{ "commands.common.ok" | translate }}</button>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-danger form-control" (click)="isWriting = false">{{ "commands.common.cancel" | translate }}</button>
+          </div>
+          <app-error-message class="col-auto" [error]="categoryError"></app-error-message>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>

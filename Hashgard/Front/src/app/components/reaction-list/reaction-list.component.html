@@ -1,0 +1,15 @@
+<div class="form-row align-items-center" *ngIf="model && model.reactionTypes">
+  <div class="col-auto mr-3" *ngFor="let reactionType of model.reactionTypes">
+    <app-reaction [reactionType]="reactionType" [isParentDecrypted]="isParentDecrypted"
+      (add)="add($event)" (remove)="remove($event)"></app-reaction>
+  </div>
+  <div class="col-auto" *ngIf="isParentDecrypted && isLoggedIn">
+    <a class="text-success font-weight-bold"
+      (click)="startCreate()">{{ "commands.reactionlist.react" | translate }}</a>
+    <app-emoji-list class="position-absolute emoji-list" *ngIf="isCreating" 
+      (emojiClick)="create($event)" (canceled)="cancelCreate()"></app-emoji-list>
+  </div>
+</div>
+<div class="row">
+  <app-error-message class="col-12" [error]="error"></app-error-message>
+</div>

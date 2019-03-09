@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="mt-2">
+        <a class="text-primary" [routerLink]="['categories']" routerLinkActive="active">Voir les catégories</a>
+    </h4>
+
+    <div class="jumbotron mt-4">
+      <h1 class="display-4">{{ "titles.main" | translate }}</h1>
+      <h3>{{ "home.title" | translate }}</h3>
+      <ul class="mt-5">
+        <li>
+          <h5>{{ "home.li1_title" | translate }}</h5>
+          <p>{{ "home.li1_text" | translate }}</p>
+        </li>
+        <li>
+          <h5>{{ "home.li2_title" | translate }}</h5>
+          <p>{{ "home.li2_text1" | translate }}</p>
+          <p>{{ "home.li2_text2" | translate }}</p>
+        </li>
+        <li>
+          <h5>{{ "home.li3_title" | translate }}</h5>
+          <p>{{ "home.li3_text" | translate }}</p>
+        </li>
+      </ul>
+      <h4 class="mt-5">{{ "home.howto_title" | translate }}</h4>
+      <p>{{ "home.howto_text1" | translate }}</p>
+      <ul>
+        <li>
+          <h5>{{ "home.howto_li1_title" | translate }}</h5>
+          <p>{{ "home.howto_li1_text" | translate }}</p>
+        </li>
+        <div></div>
+        <li>
+          <h5>{{ "home.howto_li2_title" | translate }}</h5>
+          <p>
+            {{ "home.howto_li2_info1" | translate }}<br />
+            {{ "home.howto_li2_info2" | translate }}<br />
+            <strong>{{ "home.howto_li2_infostrong" | translate }}</strong>
+          </p>
+        </li>
+        <li>
+          <h5>{{ "home.howto_li3_title" | translate }}</h5>
+        </li>
+        <li>
+          <h5>{{ "home.howto_li4_title" | translate }}</h5>
+        </li>
+        <li>
+          <h5>{{ "home.howto_li5_title" | translate }}</h5>
+        </li>
+      </ul>
+      <p class="mt-5" [innerHTML]="'home.example' | translate"></p>
+    </div>
+      
+    <div class="mt-5">
+      <h6>Features coming soon :</h6>
+      <ul>
+        <li>Real-time updates of comments (like reactions)</li>
+        <li>User list and direct chat</li>
+        <li>Notifications</li>
+        <li>Custom home page : last commented/reacted posts, bookmarks, notifications...</li>
+        <li>Medias (images, videos ?) in articles and comments</li>
+        <li>Filter of encrypted data</li>
+      </ul>
+    </div>
+
+  </div>
+</div>

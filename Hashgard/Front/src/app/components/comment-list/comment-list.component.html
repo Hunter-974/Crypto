@@ -1,0 +1,56 @@
+<div *ngIf="comments && comments.items">
+  
+  <div class="row mb-4" *ngIf="comments && comments.totalCount > comments.count">
+    <div class="col-12">
+      <a class="text-primary font-weight-bold" (click)="getForArticle(20, 5)">{{ "commands.commentlist.showpreviouscomments" | translate }}</a>
+    </div>
+  </div>
+
+  <div class="row mb-4" *ngFor="let parent of comments.items">
+    <div class="col-12">
+
+      <div class="row">
+        <app-comment class="col-12" [comment]="parent" 
+          (replying)="replying($event)"
+          (deleted)="parentDeleted($event)"></app-comment>
+      </div>
+
+      <div class="row" *ngIf="parent.children">
+        <div class="col-12 pl-5">
+
+          <div class="row" *ngIf="parent.children.totalCount > parent.children.count">
+            <div class="col-12">
+              <a class="text-primary" (click)="getForComment(parent, 50)">{{ "commands.commentlist.showpreviousreplies" | translate }}</a>
+            </div>
+          </div>
+
+          <div class="row mt-2" *ngFor="let child of parent.children.items">
+            <app-comment class="col-12" [comment]="child"
+              (deleted)="childDeleted($event, parent)"></app-comment>
+          </div>
+
+          <div class="row mt-2" *ngIf="parent.isWriting">
+            <app-comment class="col-12" [isCreating]="true" [parentId]="parent.id"
+              [isParentDecrypted]="isDecrypted(parent.text)"
+              (created)="childCreated($event, parent)"
+              (canceled)="createChildCanceled($event, parent)"></app-comment>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!isWriting && isLoggedIn && isParentDecrypted">
+    <div class="col-auto">
+      <a class="text-success font-weight-bold" (click)="isWriting = true">{{ "commands.commentlist.comment" | translate }}</a>
+    </div>
+  </div>
+  
+  <div class="row align-items-center" *ngIf="isWriting">
+    <app-comment class="col-12" [isCreating]="true" [articleId]="articleId" [isParentDecrypted]="isParentDecrypted"
+      (created)="parentCreated($event)"
+      (canceled)="createParentCanceled()"></app-comment>
+  </div>
+</div>

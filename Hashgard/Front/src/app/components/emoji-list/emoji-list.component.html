@@ -1,0 +1,10 @@
+<div class="card">
+  <div class="card-body p-1">
+    <app-pager class="pager" [containerClass]="'form-row mb-2'"
+      [pageSize]="48" [getMethod]="getMethod" [cancelButton]="true" (canceled)="cancel()">
+      <ng-template let-item="item">
+        <app-emoji class="col-2 emoji" [name]="item" (emojiClick)="emojiClicked($event)"></app-emoji>
+      </ng-template>
+    </app-pager>
+  </div>
+</div>
