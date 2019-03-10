@@ -1,38 +1,22 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { HubConnectionBuilder, JsonHubProtocol, HubConnection } from '@aspnet/signalr';
 import { User } from 'src/app/models/user';
 import { encrypt } from '../crypto/crypto.service';
-import { BaseAuthService } from '../base-auth-service';
 import { RtcSignalData } from 'src/app/models/rtc-signal-data';
+import { BaseHub } from '../base-hub';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebrtcHub {
-
-  private hubConnection: HubConnection;
-
-  private get userToken() {
-    return BaseAuthService.token;
-  }
+export class WebrtcHub extends BaseHub {
 
   public userJoined: EventEmitter<RtcSignalData> = new EventEmitter();
   public welcomed: EventEmitter<RtcSignalData> = new EventEmitter();
   public offered: EventEmitter<RtcSignalData> = new EventEmitter();
   public answered: EventEmitter<RtcSignalData> = new EventEmitter();
   public iceCandidateReceived: EventEmitter<RtcSignalData> = new EventEmitter();
-  public closed: EventEmitter<Error> = new EventEmitter();
 
   public constructor() {
-    let signalrBaseUrl = environment.settings.signalrBaseUrl;
-    this.hubConnection = new HubConnectionBuilder()
-      .withHubProtocol(new JsonHubProtocol())
-      .withUrl(`${signalrBaseUrl}/webrtc`)
-      .build();
-
-    this.hubConnection.onclose(err => this.closed.emit(err));
-
+    super("webrtc");
 
     this.hubConnection.on("UserJoined", (user: User, cid: string) => 
       this.userJoined.emit(new RtcSignalData(null, user, cid)));
@@ -48,18 +32,6 @@ export class WebrtcHub {
 
     this.hubConnection.on("IceCandidate", (iceCandidate: string, user: User, cid: string, direction: string) => 
       this.iceCandidateReceived.emit(new RtcSignalData(iceCandidate, user, cid, direction)));
-  }
-
-  public start(): Promise<any> {
-    return this.hubConnection.start();
-  }
-
-  public stop(): Promise<any> {
-    return this.hubConnection.stop();
-  }
-
-  public listen(categoryId: number): Promise<any> {
-    return this.hubConnection.invoke("Listen", this.userToken, categoryId);
   }
 
   public welcome(toCid: string) {

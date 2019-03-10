@@ -26,6 +26,7 @@ import { ArticleComponent } from './components/article/article.component';
 import { LiveComponent } from './components/live/live.component';
 import { LiveModule } from './components/live/live.module';
 import { WebrtcHub } from './services/webrtc/webrtc.hub';
+import { ChatHub } from './services/chat/chat.hub';
 
 const routes: Route[] = [
   { path: '', component: HomeComponent },
@@ -61,7 +62,8 @@ const routes: Route[] = [
     CategoryService,
     CommentService,
     ReactionService,
-    WebrtcHub
+    WebrtcHub,
+    ChatHub
   ],
   bootstrap: [AppComponent]
 })

@@ -1,96 +1,20 @@
-﻿using Hashgard.Back.Models;
+﻿using Hashgard.Back.Hubs.Abstract;
+using Hashgard.Back.Models;
 using Hashgard.Back.Services;
-using Microsoft.AspNetCore.SignalR;
-using System;
 using System.Threading.Tasks;
 
 namespace Hashgard.Back.Hubs
 {
-    public class WebrtcHub : Hub<IWebrtcHubClient>
+    public class WebrtcHub : BaseHub<IWebrtcHubClient>
     {
-        private readonly IUserService _userService;
-
-
         public WebrtcHub(IUserService userService)
+            : base (userService, "Live")
         {
-            _userService = userService;
         }
 
-
-        private string GetGroupName(long categoryId) 
-            => $"Live_{categoryId}";
-
-
-        protected User GetLoggedUser(string tokenString)
+        protected override Task AfterListenAsync(User user, string groupName, string connectionId)
         {
-            User user = null;
-
-            if (Guid.TryParse(tokenString, out var token))
-            {
-                user = _userService.GetAuthenticatedUser(token);
-            }
-
-            return user;
-        }
-
-        protected Task<T> ForLoggedUser<T>(string tokenString, Func<User, Task<T>> execute) where T : class, new()
-        {
-            var user = GetLoggedUser(tokenString);
-            Task<T> entityTask;
-
-            if (user == null)
-            {
-                try
-                {
-                    throw new Exception("Unauthorized");
-                }
-                catch (Exception ex)
-                {
-                    entityTask = Task.FromException<T>(ex);
-                }
-            }
-            else
-            {
-                entityTask = execute(user);
-            }
-
-            return entityTask;
-        }
-
-        protected Task ForLoggedUser(string tokenString, Func<User, Task> execute)
-        {
-            var user = GetLoggedUser(tokenString);
-            Task task;
-
-            if (user == null)
-            {
-                try
-                {
-                    throw new Exception("Unauthorized");
-                }
-                catch (Exception ex)
-                {
-                    task = Task.FromException(ex);
-                }
-            }
-            else
-            {
-                task = execute(user);
-            }
-
-            return task;
-        }
-
-
-        public Task Listen(string tokenString, long categoryId)
-        {
-            return ForLoggedUser(tokenString, async user =>
-            {
-                var groupName = GetGroupName(categoryId);
-                var cid = Context.ConnectionId;
-                await Groups.AddToGroupAsync(cid, groupName);
-                await Clients.OthersInGroup(groupName).UserJoined(user, cid);
-            });
+            return Clients.OthersInGroup(groupName).UserJoined(user, connectionId);
         }
 
         public Task Welcome(string tokenString, string toCid)
@@ -119,7 +43,7 @@ namespace Hashgard.Back.Hubs
         }
     }
 
-    public interface IWebrtcHubClient
+    public interface IWebrtcHubClient : IHubClient
     {
         Task UserJoined(User user, string cid);
         Task Welcome(User user, string cid);

@@ -16,6 +16,8 @@ namespace Hashgard.Back.Db
         public virtual DbSet<ReactionType> ReactionTypes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Attachment> Attachments { get; set; }
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+        public virtual DbSet<ChatView> ChatMessageViews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -5,7 +5,8 @@
         "article": "Article",
         "category": "Catégorie",
         "categorylist": "Liste des catégories",
-        "live": "Live"
+        "live": "Live",
+        "chat": "Discussion"
     },
     "commands": {
         "common": {
