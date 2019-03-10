@@ -1,0 +1,7 @@
+language: csharp
+solution: Hashgard.sln
+mono: none
+dotnet: 2.2.102
+script:
+ - dotnet restore
+ 
